@@ -1,0 +1,13 @@
+:root {
+  /* colors */
+  --my_black: #474a51;
+  --my_grey: #f4f4f4;
+  --my_lazur: #04fee0;
+  --my_orange: #fc7900;
+  --my_lite_grey: #676666;
+  --error: #df2727;
+  /* font-size */
+  --f0: calc(0.3vh + 10px);
+  --f1: calc(0.5vh + 11px);
+  --f2: calc(0.7vh + 13px);
+}

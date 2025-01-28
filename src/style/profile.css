@@ -1,0 +1,5 @@
+.container_pass_profile {
+  display: flex;
+  flex-direction: column;
+  min-width: 30%;
+}

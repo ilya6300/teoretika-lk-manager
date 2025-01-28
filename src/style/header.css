@@ -1,0 +1,25 @@
+.header_container {
+  width: 13vw;
+  height: 100vh;
+  min-width: 70px;
+  max-width: 200px;
+  background: #474a51;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0;
+  border-radius: 0 8px 8px 0;
+}
+.nav_link {
+  color: var(--my_grey);
+  font-size: 18px;
+}
+.nav_link:hover {
+  color: var(--my_lazur);
+}
+.header_container_pages {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}

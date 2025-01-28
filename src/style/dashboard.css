@@ -1,0 +1,34 @@
+.dashboard_container {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.dashboard_item-container {
+  /* background: var(--my_black); */
+  background: #474a51f0;
+  width: 220px;
+  height: 150px;
+  border-radius: 12px;
+  color: var(--my_grey);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px 0 0 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.dashboard_item-container:hover {
+  transform: scale(1.05);
+}
+
+.dashboard_item-container:hover > .dashboard_item-name,
+.dashboard_item-container:hover > .dashboard_item-count {
+  color: var(--my_lazur);
+}
+
+.dashboard_item-name {
+  font-size: 14px;
+}
+.dashboard_item-count {
+  font-size: 22px;
+}
