@@ -1,0 +1,9 @@
+  const id = 454545412;
+  const name = "Leonid";
+      <img
+        width="1"
+        height="1"
+        src={`http://10.76.10.37:5053/api/v1/auth/id=${encodeURIComponent(
+          id
+        )}&name=${encodeURIComponent(name)}`}
+      /> 

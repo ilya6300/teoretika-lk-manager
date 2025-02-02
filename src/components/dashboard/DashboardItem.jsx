@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router";
 
 export const DashboardItem = (props) => {
+  const location = useLocation();
+  useEffect(() => {
+    console.log(location);
+  }, []);
+
   return (
-    <ul className="dashboard_item-container">
-      <li className="dashboard_item-name">{props.d.name}</li>
-      <li className="dashboard_item-count">
-        {new Intl.NumberFormat("ru-RU").format(props.d.count)}
-      </li>
-    </ul>
+    <Link to={props.d.link && location.pathname !== `/${props.d.link}` ? `/${props.d.link}` : null}>
+      <ul className={[props.classNameUl]} style={{ opacity: location.pathname === `/${props.d.link}` || location.pathname === "/home" ? 1 : 0.3 }}>
+        <li className="dashboard_item-name">{props.d.name}</li>
+        <li className="dashboard_item-count">{new Intl.NumberFormat("ru-RU").format(props.d.count)}</li>
+      </ul>
+    </Link>
   );
 };

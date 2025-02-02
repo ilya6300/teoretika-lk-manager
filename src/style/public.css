@@ -9,12 +9,16 @@ a.active {
   justify-content: flex-start;
   flex-direction: column;
   background: #f4f4f4;
+  align-items: center;
 }
 .main_children {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
+  flex-direction: column;
+  max-width: 1200px;
+  width: 100%;
 }
 .main_title {
   color: var(--my_lite_grey);
@@ -47,4 +51,11 @@ a.active {
   color: var(--my_lite_grey);
   font-size: var(--f2);
   text-align: center;
+}
+.list_container {
+  width: 100%;
+}
+.title_table {
+  text-align: center;
+  color: black !important;
 }
