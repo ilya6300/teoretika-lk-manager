@@ -58,7 +58,7 @@ export const Auth = () => {
 
   return (
     <div className="login_container">
-      <h1 className="login_title">МАСТ ТЕОРЕТИКА</h1>
+      <h1 className="login_title">МАСТ ТЕОРИКА</h1>
       <form className="login_form_container">
         <p className="login_form_title">Авторизуйтесь</p>
         <div className="login_form_container-input">

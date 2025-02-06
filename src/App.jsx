@@ -40,16 +40,16 @@ const App = () => {
   return (
     <Routes>
       <Route path="login" element={<Auth />} />
-      {/* <Route element={<PrivateRoute />}> */}
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="profile" element={<UserProfile />} />
-        <Route index path="home" element={<Home />} />
-        <Route path="clients" element={<Clients />} />
-        <Route path="clients/:mast_id" element={<ClientCard />} />
-        <Route path="email" element={<EmailPage />} />
+      <Route element={<PrivateRoute />}>
+        <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route index path="home" element={<Home />} />
+          <Route path="clients" element={<Clients />} />
+          <Route path="clients/:mast_id" element={<ClientCard />} />
+          <Route path="email" element={<EmailPage />} />
+        </Route>
       </Route>
-      {/* </Route> */}
     </Routes>
   );
 };

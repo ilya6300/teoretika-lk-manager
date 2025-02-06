@@ -12,11 +12,11 @@
   border-radius: 0 6px 6px 0;
 }
 .nav_link {
-  color: var(--my_grey);
-  font-size: 18px;
+  color: var(--my_grey) !important;
+  font-size: 18px !important;
 }
 .nav_link:hover {
-  color: var(--my_lazur);
+  color: var(--my_lazur) !important;
 }
 .header_container_pages {
   display: flex;

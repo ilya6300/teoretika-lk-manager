@@ -9,6 +9,7 @@ class apiRequest {
         email: _email,
         password: _password,
       });
+      if (!res) return;
       return res;
     } catch (e) {
       console.log(e);
@@ -20,6 +21,7 @@ class apiRequest {
 
   getProfile = async () => {
     const res = await req("my_profile");
+    if (!res) return;
     console.log(res.data.data);
     return res.data.data;
   };

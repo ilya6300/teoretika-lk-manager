@@ -1,5 +1,5 @@
 a.active {
-  color: #04fee0;
+  color: #04fee0 !important;
 }
 
 .main_container {
@@ -51,6 +51,12 @@ a.active {
   color: var(--my_lite_grey);
   font-size: var(--f2);
   text-align: center;
+}
+.grey_text_body {
+  color: var(--my_lite_grey);
+  font-size: var(--f1);
+  text-align: center;
+  font-weight: bold;
 }
 .list_container {
   width: 100%;

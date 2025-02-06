@@ -1,4 +1,5 @@
 .container_email_service {
+  overflow: auto;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -12,7 +13,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5vh;
-border: 1px solid var(--my_orange);
+  border: 1px solid var(--my_lite_grey);
   background: none;
   padding: 3px 6px;
   border-radius: 4px;
@@ -26,54 +27,59 @@ border: 1px solid var(--my_orange);
 .preview_email {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  height: 60%;
-border: 1px solid var(--my_orange);
+  align-items: center;
+  min-height: 60%;
+  border: 1px solid var(--my_lite_grey);
   background: none;
-  padding: 3px 6px;
+  padding: 0 6px 3px;
   border-radius: 4px;
-  margin: 1vh 1vw;
+  margin: 0 1vw 1vh;
+  justify-content: center;
 }
 .inpt_email,
 .txtarea_email {
   width: 100%;
-border: 1px solid var(--my_orange);
+  border: 1px solid var(--my_lite_grey);
   background: none;
   padding: 3px 6px;
   border-radius: 4px;
 }
-.txtarea_email {
-  min-height: 65vh;
-}
-.row_field {
-  margin-bottom: 0.5vh;
-  color: var(--my_lite_grey);
-  font-size: var(--f1);
-}
-.title_email {
-  margin: 2vh 0;
-}
-.wh_img_container {
+.preview_title_container {
+  position: sticky;
+  top: 0;
   display: flex;
-  gap: 5%;
-  margin-bottom: 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 5vh;
+  max-height: 50px;
+  padding: 0 2vw;
+  background: #f4f4f4de;
+  align-items: center;
 }
-.w_img_email {
+.preview_title_size_icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
-.h_img_email {
+.full_screen_preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
 }
-.wh_inpt {
-  background: none;
-border: 1px solid var(--my_orange);
-  background: none;
-  padding: 3px 6px;
-  border-radius: 4px;
-  margin-top: 5px;
-}
-.img_options_email {
-  color: var(--my_lite_grey);
-  font-size: var(--f1);
+.selected_container {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
+  padding-bottom: 10%;
+}
+.title_prev_border {
+  border: 1px solid var(--my_black);
+  margin: 0 1vw 2px;
 }
