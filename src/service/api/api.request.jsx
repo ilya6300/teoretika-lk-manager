@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../../config.json";
 import { req } from "./api.config";
+import { data } from "react-router";
 
 class apiRequest {
   login = async (_email, _password) => {
@@ -30,6 +31,19 @@ class apiRequest {
     await req.patch("my_profile/change_password", {
       password: pass,
     });
+  };
+
+  postHTMLTemplate = async () => {
+    try {
+      // Временные
+      const data = [
+        { name: "hello", data: "<body><h1>Привет!</h1><p>Как дела?</p></body" },
+        { name: "hi", data: "<body><h1>Hi!!!!</h1><p>Как, hi, дела?</p></body" },
+      ];
+      // const res =
+    } catch (e) {
+      console.error(e);
+    }
   };
 }
 export default new apiRequest();
