@@ -93,8 +93,11 @@
   justify-content: center;
   background: #75747414;
   cursor: pointer;
+  transition: all 0.4s ease;
+}
+.drop_html_container:hover {
+  border: 4px dashed var(--my_lazur);
 }
 .active_dashed {
   border: 4px dashed var(--my_lazur);
-  color: var(--my_lazur);
 }

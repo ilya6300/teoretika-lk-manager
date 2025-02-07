@@ -26,7 +26,9 @@ a.active {
   padding: 0.5vh 1vw;
 }
 .hidden {
-  visibility: hidden;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 .container_main_top {
   padding: 8vh 3vw;
@@ -64,4 +66,11 @@ a.active {
 .title_table {
   text-align: center;
   color: black !important;
+}
+.btn_action_title {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.btn_action_title:hover {
+  color: var(--my_lazur);
 }

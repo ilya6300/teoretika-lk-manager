@@ -7,9 +7,9 @@ export const ListHtmlTemplate = () => {
 
   return (
     <div>
-      <button>
-        <Link to={`/newhtml`}>+</Link>
-      </button>
+      <Link to={`/newhtml`}>
+        <button>+</button>
+      </Link>
     </div>
   );
 };
