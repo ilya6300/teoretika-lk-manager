@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { PageComponent } from "../components/PageComponent";
 import iconFullScreen from "../images/icons/full-screen-icon.png";
+import { Button_v1 } from "../UI/components/Button_v1";
 
 export const NewTemplateHtml = () => {
   const [clsPreview, setClsPreview] = useState("preview_email_container");
@@ -31,9 +32,10 @@ export const NewTemplateHtml = () => {
       refPreview.current.innerHTML = reader.result;
     };
     setFileUpload(true);
-
     reader.readAsText(file);
-    setClsDrop("hidden");
+    setTimeout(() => {
+      setClsDrop("hidden");
+    }, 20);
   };
 
   const onChangeSizePreview = () => {
@@ -46,9 +48,7 @@ export const NewTemplateHtml = () => {
 
   const dragOver = (e) => {
     e.preventDefault();
-    if (clsDrop !== "hidden") {
-      setClsDrop("grey_text_body drop_html_container active_dashed");
-    }
+    setClsDrop("grey_text_body drop_html_container active_dashed");
   };
 
   const drop = (e) => {
@@ -56,15 +56,11 @@ export const NewTemplateHtml = () => {
     refFile.current.files = e.dataTransfer.files;
     selectFile(e.dataTransfer.files);
     console.log(clsDrop);
-    if (clsDrop !== "hidden") {
-      setClsDrop("grey_text_body drop_html_container");
-    }
+    setClsDrop("grey_text_body drop_html_container");
   };
 
   const dragExit = (e) => {
-    if (clsDrop !== "hidden") {
-      setClsDrop("grey_text_body drop_html_container");
-    }
+    setClsDrop("grey_text_body drop_html_container");
   };
 
   const clickInput = () => {
@@ -87,44 +83,32 @@ export const NewTemplateHtml = () => {
               Новый шаблон
             </h1>
           </div>
-
-          <div
-            onDragLeave={dragExit}
-            onDragOver={dragOver}
-            onDrop={drop}
-            className={clsDrop}
-            ref={refDropArea}
-            onClick={clickInput}
-          >
-            Перетащите файл, из допустимых форматов: html, txt
+          <div className="h100 left_func_container">
+            {fileUpload ? (
+              <div>
+                <input type="text" className="name_inpt_email" placeholder="Введите уникальное название" />
+                <div className="btn_container">
+                  <Button_v1 name="Сбросить" />
+                  <Button_v1 name="Сохранить" />
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div onDragLeave={dragExit} onDragOver={dragOver} onDrop={drop} className={clsDrop} ref={refDropArea} onClick={clickInput}>
+              Перетащите файл, из допустимых форматов: html, txt
+            </div>
+            <input ref={refFile} type="file" accept=".txt, .html" className="hidden" onChange={selectFile} />
           </div>
-          <input
-            ref={refFile}
-            type="file"
-            accept=".txt, .html"
-            className="hidden"
-            onChange={selectFile}
-          />
         </div>
         <div className={clsPreview}>
           <div className="preview_title_container title_prev_border">
             <h1 className="title_page">Предпросмотр</h1>
-            <img
-              className="preview_title_size_icon"
-              src={iconFullScreen}
-              alt=""
-              onClick={onChangeSizePreview}
-            />
+            <img className="preview_title_size_icon" src={iconFullScreen} alt="" onClick={onChangeSizePreview} />
           </div>
 
           <div className="preview_email" ref={refPreview}>
-            {!fileUpload ? (
-              <span className="grey_text_body">
-                Загрузите файл сайта/письма, чтобы увидеть его в предпросмотре
-              </span>
-            ) : (
-              <></>
-            )}
+            {!fileUpload ? <span className="grey_text_body">Загрузите файл сайта/письма, чтобы увидеть его в предпросмотре</span> : <></>}
           </div>
         </div>
       </div>

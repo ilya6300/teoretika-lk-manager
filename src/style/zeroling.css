@@ -6,6 +6,7 @@ App {
   font-family: Montserrat;
   box-sizing: border-box;
   margin: 0;
+  font-size: var(--f0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

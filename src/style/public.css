@@ -17,7 +17,7 @@ a.active {
   justify-content: center;
   height: 100%;
   flex-direction: column;
-  max-width: 1200px;
+  max-width: 1366px;
   width: 100%;
 }
 .main_title {
@@ -73,4 +73,14 @@ a.active {
 }
 .btn_action_title:hover {
   color: var(--my_lazur);
+}
+.h100 {
+  height: 100%;
+}
+.btn_container {
+  display: flex;
+  justify-content: flex-end;
+  width: 90%;
+  gap: 5%;
+  margin: 15px 0;
 }

@@ -101,3 +101,18 @@
 .active_dashed {
   border: 4px dashed var(--my_lazur);
 }
+.left_func_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 300px;
+}
+.name_inpt_email {
+  width: 90%;
+  height: 30px;
+  border: none;
+  border-bottom: 1px solid var(--my_orange);
+  border-radius: 5px;
+  background: var(--my_orange_5);
+  padding: 2px 5px;
+}

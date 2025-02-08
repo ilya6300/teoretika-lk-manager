@@ -71,3 +71,18 @@
   background: var(--my_orange);
   color: var(--my_grey);
 }
+.btn_v1 {
+  cursor: pointer;
+  padding: 5px 8px;
+  min-width: 92px;
+  border: 1px solid var(--my_orange);
+  border-radius: 5px;
+  color: var(--my_lite_grey);
+  font-size: revert;
+  position: relative;
+  transition: all 0.6s ease;
+}
+.btn_v1:hover {
+  background: var(--my_orange);
+  color: white;
+}
