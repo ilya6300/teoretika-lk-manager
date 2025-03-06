@@ -10,20 +10,25 @@ a.active {
   flex-direction: column;
   background: #f4f4f4;
   align-items: center;
+  overflow: hidden;
 }
 .main_children {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100%;
   flex-direction: column;
-  max-width: 1366px;
+  max-width: 1500px;
   width: 100%;
+  padding: 2vh 2vw;
+  gap: 20px;
 }
 .main_title {
+  width: 100%;
+  font-size: var(--f2);
   color: var(--my_lite_grey);
   text-align: end;
-  padding: 0.5vh 1vw;
+  padding: 1vh 2vw;
 }
 .hidden {
   visibility: hidden !important;
@@ -31,23 +36,36 @@ a.active {
   height: 0 !important;
 }
 .container_main_top {
-  padding: 8vh 3vw;
+  padding: 1vh 3vw;
   display: flex;
   flex-direction: column;
   gap: 1vh;
+  width: 100%;
+  position: relative;
+  background: #f4f4f4;
+  overflow: auto;
 }
 .container_50 {
   width: 50%;
+}
+.w50 {
+  width: 50%;
+}
+.container_block_50 {
+  width: 50%;
+  height: 85vh;
 }
 .container_main_flx_btwn {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 15px;
 }
 .btn_modal_container {
   display: flex;
   justify-content: space-around;
   flex-direction: row-reverse;
+  max-width: 320px;
 }
 .title_page {
   color: var(--my_lite_grey);
@@ -77,10 +95,76 @@ a.active {
 .h100 {
   height: 100%;
 }
+.w100 {
+  width: 100%;
+}
 .btn_container {
   display: flex;
   justify-content: flex-end;
   width: 90%;
   gap: 5%;
   margin: 15px 0;
+}
+.remove_container {
+  background: url("../images/icons/remove.png");
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  transition: all 0.4s ease;
+}
+.remove_container:hover {
+  background: url("../images/icons/remove_red.png");
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+}
+.tabContainer {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  border-bottom: 1px solid var(--my_lazur_v2);
+  padding-bottom: 1vh;
+  width: 100%;
+}
+.tab_active {
+  font-size: var(--f2);
+  color: var(--my_lazur_v2);
+  border-left: 1px solid var(--my_lazur_v2);
+  border-top: 1px solid var(--my_lazur_v2);
+  border-right: 1px solid var(--my_lazur_v2);
+  padding: 8px 12px;
+}
+.tab_deactive {
+  cursor: pointer;
+  font-size: var(--f2);
+  transition: all 0.4s ease;
+  padding: 8px 12px;
+}
+.tab_deactive:hover {
+  cursor: pointer;
+  color: var(--my_lite_grey);
+  border-left: 1px solid var(--my_lite_grey);
+  border-top: 1px solid var(--my_lite_grey);
+  border-right: 1px solid var(--my_lite_grey);
+}
+.btn_edit_container {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+.mb10 {
+  margin-bottom: 10px !important;
+}
+.mb25 {
+  margin-bottom: 25px !important;
+}
+.border_container_v1 {
+  border-radius: 6px;
+  border: 1px solid var(--my_lite_grey);
+  padding: 15px;
+}
+.card_info_row {
+  margin-bottom: 10px;
 }

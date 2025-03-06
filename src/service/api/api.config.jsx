@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../../config.json";
 import { useNavigate } from "react-router";
-import appState from "../../state/app.state";
+import appState from "../state/app.state";
 
 export const req = axios.create({
   baseURL: config.url_api,

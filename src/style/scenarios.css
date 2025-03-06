@@ -1,0 +1,62 @@
+.scenarios_container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 20px;
+}
+.scenarios_container_filter,
+.scenarios_filter_bar {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  align-items: flex-start;
+  height: 240px;
+}
+.scenarios_container_filter {
+  width: 100%;
+}
+.scenarios_filter_span {
+  font-size: var(--f1);
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+  flex-direction: column-reverse;
+}
+.scenarios_filter_img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.scenarios_filter_btn_img {
+  margin-left: 10px;
+  border: none;
+}
+.scenarios_filter_play_icon {
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+}
+.selected_container {
+  width: 100%;
+  max-width: 300px;
+  position: relative;
+}
+.scenarios_filter_item {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.event_selected_container {
+  /* position: absolute; */
+  /* bottom: -50px; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* gap: 15px; */
+}
+.event_selected {
+  position: absolute;
+  bottom: -50px;
+  width: 100%;
+}

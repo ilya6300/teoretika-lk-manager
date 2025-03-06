@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
-import appState from "../state/app.state";
+import appState from "../service/state/app.state";
 import { observer } from "mobx-react-lite";
 
 export const PrivateRoute = observer(() => {

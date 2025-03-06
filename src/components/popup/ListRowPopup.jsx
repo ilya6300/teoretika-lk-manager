@@ -1,9 +1,9 @@
 import React from "react";
 import appState from "../../service/state/app.state";
-import { ItemRowHtmlTemplate } from "./ItemRowEmail";
+import { ItemRowPopup } from "./ItemRowPopup";
 import { observer } from "mobx-react-lite";
 
-export const ListRowHtmlTemplate = observer(({ removeHTML, viewHTML }) => {
+export const ListRowPopup = observer(({ data, removeHTML, viewHTML }) => {
   return (
     <ul className="list_container">
       <div className="tr_clients_row">
@@ -17,8 +17,8 @@ export const ListRowHtmlTemplate = observer(({ removeHTML, viewHTML }) => {
           Управление
         </span>
       </div>
-      {appState.templatesHTMLEmail.map((h) => (
-        <ItemRowHtmlTemplate
+      {data.map((h) => (
+        <ItemRowPopup
           key={h.name}
           h={h}
           removeHTML={removeHTML}

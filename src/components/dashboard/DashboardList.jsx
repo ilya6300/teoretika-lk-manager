@@ -1,35 +1,14 @@
 import React from "react";
 import { DashboardItem } from "./DashboardItem";
+import appState from "../../service/state/app.state";
+import { observer } from "mobx-react-lite";
 
-export const DashboardList = (props) => {
-
-  const fakeClients = [
-    {
-      id: 1,
-      name: "Клиенты",
-      count: 3,
-      // data: [],
-      link: "clients",
-    },
-    {
-      id: 2,
-      name: "Подписчики",
-      count: 800,
-      // data: [],
-    },
-    {
-      id: 3,
-      name: "Пользователи",
-      count: 2552458,
-      // data: [],
-    },
-  ];
-
+export const DashboardList = observer((props) => {
   return (
     <div className="dashboard_container">
-      {fakeClients.map((d) => (
-        <DashboardItem key={d.id} d={d} classNameUl={props.classNameUl} />
+      {appState.collection.data.map((d) => (
+        <DashboardItem key={d.link} d={d} classNameUl={props.classNameUl} />
       ))}
     </div>
   );
-};
+});

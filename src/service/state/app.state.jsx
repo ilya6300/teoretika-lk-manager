@@ -5,6 +5,39 @@ class appState {
     makeAutoObservable(this);
   }
   isAuth = true;
+
+  templatesHTMLEmail = [];
+  templatesHTMLPopup = [];
+  templatesHTMLString = [];
+  online_scenarios = [];
+  offline_scenarios = [];
+  collection = {
+    data: [
+      // Пользователи
+      {
+        name: "Пользователи",
+        data: [],
+        link: "users",
+        count: 0,
+      },
+      // Клиенты
+      {
+        name: "Клиенты",
+        data: [],
+        link: "clients",
+        count: 0,
+      },
+      // Посетители
+      {
+        name: "Посетители",
+        data: [],
+        link: "visitor",
+        count: 0,
+      },
+    ],
+    isLoader: false,
+  };
+
   setParameters = (parametr, value) => {
     this[`${parametr}`] = value;
   };

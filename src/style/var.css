@@ -4,12 +4,15 @@
   --my_grey: #f4f4f4;
   --my_lazur: #04fee0;
   --my_lazur_v2: #3dd4e1;
+  --my_lazur_v2_50: #3dd4e11a;
   --my_orange: #fc7900;
   --my_orange_5: #fc790014;
   --my_lite_grey: #676666;
   --error: #df2727;
+  --accent-color: #226091;
+  --my_white: rgba(255, 255, 255, 0.918);
   /* font-size */
-  --f0: calc(0.3vh + 10px);
+  --f0: calc(0.3vh + 12px);
   --f1: calc(0.5vh + 11px);
   --f2: calc(0.7vh + 13px);
 }

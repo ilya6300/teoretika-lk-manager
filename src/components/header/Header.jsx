@@ -9,11 +9,14 @@ export const Header = () => {
   return (
     <div className="header_container">
       <div className="header_container_pages">
+        <NavLink className="nav_link" to={"/scenarios"}>
+          Сценарии
+        </NavLink>
         <NavLink className="nav_link" to={"/home"}>
           Клиенты
         </NavLink>
-        <NavLink className="nav_link" to={"/email"}>
-          Email сервис
+        <NavLink className="nav_link" to={"/html"}>
+          HTML шаблоны
         </NavLink>
       </div>
 

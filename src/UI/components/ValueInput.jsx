@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+import apiRequest from "../../service/api/api.request";
 
-export const ValueInput = (props) => {
+export const ValueInput = ({ valueName, name, nameRus }) => {
   const [editValue, setEditValue] = useState(false);
-  const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(valueName);
 
   let defaultValue;
 
@@ -22,14 +23,19 @@ export const ValueInput = (props) => {
   const openEdit = () => {
     console.log(value);
     defaultValue = value;
-    // setDefaultValue(value);
     setEditValue(true);
+  };
+
+  const apiFunc = () => {
+    console.log(name, value);
+    apiRequest.patchDateProfile({ [`${name}`]: value });
+    setEditValue(false);
   };
 
   if (!editValue) {
     return (
       <div className="container_value">
-        <span className="container_value_name">{props.name}:</span>
+        <span className="container_value_name">{nameRus}:</span>
         <span className="container_value-text" onClick={openEdit}>
           {value}
         </span>
@@ -39,18 +45,18 @@ export const ValueInput = (props) => {
   if (editValue) {
     return (
       <div className="container_value" ref={refValue}>
-        <span className="container_value_name">{props.name}:</span>
+        <span className="container_value_name">{nameRus}:</span>
         <div className="container_input">
-          <label className="input-wrapper">
-            <input
-              type="text"
-              className="container_value-inpt"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-            <span className="container_value-inpt_span hidden">{value}</span>
-          </label>
-          <button className="container_value-btn" onClick={props.apiFunc}>
+          {/* <label className="input-wrapper"> */}
+          <input
+            type="text"
+            className="container_value-inpt"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          <span className="container_value-inpt_span hidden">{value}</span>
+          {/* </label> */}
+          <button className="container_value-btn" onClick={apiFunc}>
             ok!
           </button>
         </div>

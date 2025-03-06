@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 
-export const ItemRowHtmlTemplate = observer((props) => {
+export const ItemRowPopup = observer((props) => {
   return (
     <li className="tr_clients_row">
       <span
@@ -11,11 +11,11 @@ export const ItemRowHtmlTemplate = observer((props) => {
         {props.h.name}
       </span>
       <div className="utilite_tr_email_row">
-        <div
+        {/* <div
           onClick={() => props.removeHTML(props.h)}
           className="remove_container"
           title="Удалить шаблон"
-        ></div>
+        ></div> */}
       </div>
     </li>
   );

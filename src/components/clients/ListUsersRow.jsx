@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { ItemClientsRow } from "./ItemClientsRow";
 import { Link } from "react-router";
+import { ItemUsersRow } from "./ItemUsersRow";
 import { observer } from "mobx-react-lite";
 import appState from "../../service/state/app.state";
 import apiRequest from "../../service/api/api.request";
 import stateClient from "../../service/state/state.client";
-import { ClientCard } from "../../pages/ClientCard";
+import { UsersCard } from "../../pages/UsersCard";
 
-export const ListClientsRow = observer(({ clientCard, setClientCard }) => {
-  const [clients, setClients] = useState([]);
+export const ListUsersRow = observer(({ clientCard, setClientCard }) => {
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getClients = async () => {
-      const res = await apiRequest.getAllClient();
-      return res;
+      await apiRequest.getAllClient();
     };
     getClients();
   }, []);
   useEffect(() => {
-    const data = appState.collection.data.find((d) => d.link === "clients");
-    return setClients(data.data);
+    const data = appState.collection.data.find((d) => d.link === "users");
+    console.log(data);
+    return setUsers(data.data);
   }, [appState.collection]);
 
   const openClientCard = (c) => {
@@ -29,7 +29,7 @@ export const ListClientsRow = observer(({ clientCard, setClientCard }) => {
   };
 
   if (!clientCard) {
-    if (clients.length !== 0) {
+    if (users.length !== 0) {
       return (
         <ul className="list_container">
           <div className="tr_clients_row tr_clients_row_list_header">
@@ -42,13 +42,13 @@ export const ListClientsRow = observer(({ clientCard, setClientCard }) => {
             </span>
             {/* <span className="id_tr_clients_row title_table">МАСТ ИД</span> */}
           </div>
-          {clients.map((c) => (
+          {users.map((c) => (
             <div
               key={c.cms_user_id}
               onClick={() => openClientCard(c)}
-              // to={`/clients/:${c.cms_user_id}`}
+              // to={`/users/:${c.cms_user_id}`}
             >
-              <ItemClientsRow c={c} />
+              <ItemUsersRow c={c} key={c.cms_user_id} />
             </div>
           ))}
         </ul>
@@ -57,6 +57,6 @@ export const ListClientsRow = observer(({ clientCard, setClientCard }) => {
       return <p>Список пуст</p>;
     }
   } else {
-    return <ClientCard setClientCard={setClientCard} />;
+    return <UsersCard setClientCard={setClientCard} />;
   }
 });

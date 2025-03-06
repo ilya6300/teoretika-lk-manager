@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import appState from "../service/state/app.state";
 import apiRequest from "../service/api/api.request";
-import appState from "../state/app.state";
 
 export const Auth = () => {
   const [name, setName] = useState("");

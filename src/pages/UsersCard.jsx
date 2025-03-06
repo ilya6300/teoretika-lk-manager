@@ -3,7 +3,7 @@ import { PageComponent } from "../components/PageComponent";
 import stateClient from "../service/state/state.client";
 import { BtnBackHeaderPage } from "../UI/components/BtnBackHeaderPage";
 
-export const ClientCard = ({ setClientCard }) => {
+export const UsersCard = ({ setClientCard }) => {
   const [flagHistory, setFlagHistory] = useState(true);
   const [flagLead, setFlagLead] = useState(false);
   const [flagTreads, setFlagTreads] = useState(false);
@@ -91,8 +91,8 @@ export const ClientCard = ({ setClientCard }) => {
             {stateClient.client.crm_contact_last_name}
             {stateClient.client.cms_user_last_name}
           </li>
-          <HandlerString data={stateClient.client.crm_contact_emails} />
-          <HandlerString data={stateClient.client.crm_contact_phones} />
+          <HandlerString data={stateClient.client.cms_user_email} />
+          <HandlerString data={stateClient.client.phone_number} />
         </ul>
         <div className="w50 border_container_v1">
           {/* <HandlerString data={stateClient.client.devices} /> */}
