@@ -3,10 +3,10 @@ import React, { useLayoutEffect, useState } from "react";
 import appState from "../../service/state/app.state";
 import apiRequest from "../../service/api/api.request";
 import { ListRowPopup } from "./ListRowPopup";
-import { CardPopup } from "./CardPopup";
+import { CardString } from "./CardString";
 import { AddBtn } from "../../UI/components/AddBtn";
 
-export const ListHtmlPopup = observer(({ data }) => {
+export const ListHtmlString = observer(({ data }) => {
   const [html, setHtml] = useState("");
   const [htmlFlagViewer, setHtmlFlagViewer] = useState(false);
 
@@ -17,11 +17,14 @@ export const ListHtmlPopup = observer(({ data }) => {
   };
 
   if (htmlFlagViewer) {
-    return <CardPopup html={html} setHtmlFlagViewer={setHtmlFlagViewer} />;
+    return <CardString html={html} setHtmlFlagViewer={setHtmlFlagViewer} />;
   } else {
     return (
       <div className="">
-        <AddBtn help="Добавить новый popup" onClick={() => viewHTML("new")} />
+        <AddBtn
+          help="Добавить новую строку над чат-ботом"
+          onClick={() => viewHTML("new")}
+        />
         {/* {appState.templatesHTMLPopup.length !== 0 ? ( */}
         <ListRowPopup viewHTML={viewHTML} data={data} />
         {/* ) : (

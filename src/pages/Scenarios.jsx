@@ -61,13 +61,11 @@ export const Scenarios = () => {
   }
   if (newScenariosOffline && !newScenariosOnline) {
     return (
-      <React.StrictMode>
-        <PageComponent title="Создание оффлайн сценария">
-          <NewScenariosOffline
-            setNewScenariosOffline={setNewScenariosOffline}
-          />
-        </PageComponent>
-      </React.StrictMode>
+      // <React.StrictMode>
+      <PageComponent title="Создание оффлайн сценария">
+        <NewScenariosOffline setNewScenariosOffline={setNewScenariosOffline} />
+      </PageComponent>
+      // {/* </React.StrictMode> */}
     );
   }
 };

@@ -1,11 +1,11 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { BtnBackHeaderPage } from "../../UI/components/BtnBackHeaderPage";
 import { Button_v1 } from "../../UI/components/Button_v1";
 import { LidBotClone } from "./LidBotClone";
 import iconPlay from "../../images/icons/play.png";
 import apiRequest from "../../service/api/api.request";
 
-export const CardPopup = ({ html, setHtmlFlagViewer }) => {
+export const CardString = ({ html, setHtmlFlagViewer }) => {
   const [htmlString, setHtmlString] = useState("");
   const [htmlName, setHtmlName] = useState(html.name);
   const [edit, setEdit] = useState(false);
@@ -14,22 +14,27 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
   const refPopup = useRef(null);
   const refScript = useRef(null);
   useLayoutEffect(() => {
-    const decode = JSON.parse(
-      decodeURIComponent(escape(window.atob(html.data)))
-    );
-    const handlerHTML = async () => {
-      const string = await objID(decode, "Строка чат бота");
-      setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
-    };
-    handlerHTML();
+    console.log(html);
+    if (html !== "new") {
+      // const decode = JSON.parse(
+      //   decodeURIComponent(escape(window.atob(html.data)))
+      // );
+      const handlerHTML = async () => {
+        const string = await objID(html.string_data);
+        console.log(string);
+        setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
+        setHtmlName(html.name);
+      };
+      handlerHTML();
+    } else {
+      setHtmlName("");
+      setEdit(true);
+    }
   }, []);
 
-  const objID = async (obj, name) => {
-    // Функция поиска нужного id
-    const nameID = obj.find((n) => n.name === name);
-    if (nameID) {
-      return decodeURIComponent(escape(window.atob(nameID.data)));
-    }
+  const objID = async (obj) => {
+    console.log(html.string_data);
+    return decodeURIComponent(escape(window.atob(obj)));
   };
 
   const pressEdit = () => {
@@ -49,19 +54,23 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
     const string = window.btoa(
       unescape(encodeURIComponent(`<div>${htmlString}</div>`))
     );
-    apiRequest.patchPopup(html.id, {
-      name: htmlName,
-      data: window.btoa(
-        unescape(
-          encodeURIComponent(`[
-      {
-        "name": "Строка чат бота",
-        "data": "${string}"
-      },
-    ]`)
-        )
-      ),
-    });
+    if (html !== "new") {
+      apiRequest.patchString(html.id, {
+        name: htmlName,
+        string_data: string,
+      });
+    } else {
+      if (htmlName === "") {
+        return alert("Не заполнено название строки");
+      }
+      if (htmlString === "") {
+        return alert("Не заполнено содержимое строки");
+      }
+      apiRequest.postString({
+        name: htmlName,
+        string_data: string,
+      });
+    }
     setEdit(false);
   };
 

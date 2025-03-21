@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 
-const SelectedScenarios = observer(({ data, onChange, firstName }) => {
+const SelectedScenarios = observer(({ data, onChange, firstName, value }) => {
   useEffect(() => {
-    console.log("Selected", data);
+    console.log("SelectedScenarios", data);
   }, []);
   return (
     <select className="inpt_v1" onChange={onChange}>

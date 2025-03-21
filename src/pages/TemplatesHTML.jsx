@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { ListHtmlPopup } from "../components/popup/ListHtmlPopup";
 import appState from "../service/state/app.state";
 import apiRequest from "../service/api/api.request";
+import { ListHtmlString } from "../components/popup/ListHtmlString";
 
 export const TemplatesHTML = observer(() => {
   const [tabTemplate, setTabTemplate] = useState(true);
@@ -68,7 +69,7 @@ export const TemplatesHTML = observer(() => {
         <></>
       )}
       {tabString ? (
-        <ListHtmlPopup data={appState.templatesHTMLString} />
+        <ListHtmlString data={appState.templatesHTMLString} />
       ) : (
         <></>
       )}

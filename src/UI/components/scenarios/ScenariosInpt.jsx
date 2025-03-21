@@ -4,7 +4,7 @@ const ScenariosInpt = (props) => {
   return (
     <input
       className="inpt_v1"
-      type="text"
+      type={props.type}
       placeholder={props.placeholder}
       onChange={props.onChange}
       value={props.value}

@@ -107,4 +107,52 @@
   height: 35px;
   border-radius: 6px;
   padding-left: 10px;
+  width: 185px;
+}
+.my_checkbox_v1,
+.my_checkbox_v1_active {
+  cursor: pointer;
+  display: block;
+  width: 32px;
+  height: 17px;
+  border: 1px solid var(--my_lazur_v2);
+  border-radius: 3px;
+  position: relative;
+  padding: 1px;
+}
+.my_checkbox_v1 {
+  display: flex;
+  justify-content: flex-start;
+}
+.my_checkbox_v1_active {
+  display: flex;
+  justify-content: flex-end;
+}
+.my_checkbox_v1::after {
+  content: "";
+  width: 13px;
+  height: 13px;
+  background: #9bafb1;
+  display: block;
+  border-radius: 3px;
+}
+.my_checkbox_v1_active::after {
+  content: "";
+  width: 13px;
+  height: 13px;
+  background: var(--my_lazur_v2);
+  display: block;
+  border-radius: 3px;
+}
+.cls_hover_v1 {
+  position: absolute;
+  z-index: 99;
+  top: -45px;
+  left: -50px;
+  background: var(--modal_grey);
+  padding: 12px 10px;
+  text-wrap-mode: nowrap;
+  /* width: 320px; */
+  border-radius: 8px;
+  color: white;
 }

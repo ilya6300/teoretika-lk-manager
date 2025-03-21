@@ -16,20 +16,25 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
   const refPopup = useRef(null);
   const refScript = useRef(null);
   useLayoutEffect(() => {
-    try {
-      const handlerHTML = async () => {
-        // const string = await objID(html.string_data);
-        const popup = await objID(html.data);
-        const script = await objID(html.script_data);
-        // setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
-        setHtmlPopup(popup);
-        setHtmlScript(script);
-        // console.log(string, popup, script);
-        refPopup.current.innerHTML = popup;
-      };
-      handlerHTML();
-    } catch (e) {
-      console.error(e);
+    if (html !== "new") {
+      try {
+        const handlerHTML = async () => {
+          // const string = await objID(html.string_data);
+          const popup = await objID(html.data);
+          const script = await objID(html.script_data);
+          // setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
+          setHtmlPopup(popup);
+          setHtmlScript(script);
+          // console.log(string, popup, script);
+          refPopup.current.innerHTML = popup;
+        };
+        handlerHTML();
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      setHtmlName("");
+      setEdit(true);
     }
   }, []);
 
@@ -59,32 +64,56 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
 
   const playScript = () => {
     const checkTag = /<script>/.test(htmlScript);
+    console.log(refScript);
     if (checkTag) {
+      console.log(1, htmlScript);
       const scriptEl = document
         .createRange()
         .createContextualFragment(htmlScript);
-      refPreview.current.append(scriptEl);
+      refScript.current.append(scriptEl);
     } else {
+      console.log(2);
       const scriptEl = document
         .createRange()
         .createContextualFragment(`<script>${htmlScript}</script>`);
-      refPreview.current.append(scriptEl);
+      refScript.current.append(scriptEl);
     }
   };
 
   const saveTemplate = async () => {
-    apiRequest.patchPopup(html.id, {
-      name: htmlName,
-      data: window.btoa(unescape(encodeURIComponent(htmlPopup))),
-      // string_data: window.btoa(
-      //   unescape(encodeURIComponent(`<div>${htmlString}</div>`))
-      // ),
-      script_data: /<script>/.test(htmlScript)
-        ? window.btoa(unescape(encodeURIComponent(htmlScript)))
-        : window.btoa(
-            unescape(encodeURIComponent(`<script>${htmlScript}</script>`))
-          ),
-    });
+    if (html !== "new") {
+      apiRequest.patchPopup(html.id, {
+        name: htmlName,
+        data: window.btoa(unescape(encodeURIComponent(htmlPopup))),
+        // string_data: window.btoa(
+        //   unescape(encodeURIComponent(`<div>${htmlString}</div>`))
+        // ),
+        script_data: /<script>/.test(htmlScript)
+          ? window.btoa(unescape(encodeURIComponent(htmlScript)))
+          : window.btoa(
+              unescape(encodeURIComponent(`<script>${htmlScript}</script>`))
+            ),
+      });
+    } else {
+      if (htmlName === "") {
+        return alert("Не заполнено название шаблона popup");
+      }
+      if (htmlPopup === "") {
+        return alert("Не заполнен шаблона popup");
+      }
+      apiRequest.postPopup({
+        name: htmlName,
+        data: window.btoa(unescape(encodeURIComponent(htmlPopup))),
+        // string_data: window.btoa(
+        //   unescape(encodeURIComponent(`<div>${htmlString}</div>`))
+        // ),
+        script_data: /<script>/.test(htmlScript)
+          ? window.btoa(unescape(encodeURIComponent(htmlScript)))
+          : window.btoa(
+              unescape(encodeURIComponent(`<script>${htmlScript}</script>`))
+            ),
+      });
+    }
     setEdit(false);
   };
 
@@ -98,6 +127,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
               className="inpt_popup_edit_name"
               value={htmlName}
               onChange={(e) => setHtmlName(e.target.value)}
+              placeholder="Название шаблона"
             />
           </div>
         ) : (
@@ -141,7 +171,23 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
                 onChange={changeHTMLPopup}
                 value={htmlPopup}
                 type="text"
-                placeholder="Строка над лид ботом"
+                placeholder={`Тело html кода должно быть в виде:
+                <div
+  style="
+    background-image: url('https://img2.akspic.ru/previews/5/0/8/8/7/178805/178805-muzhchina-lazurnyj-solnechnye_ochki-purpur-rukav-500x.jpg');
+    background-size: cover;
+    width: 250px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;"   
+>
+  <p>Ваше имя?</p>
+  <input id='inpt_name' type='text' placeholder='Представьтесь' />
+  <p>Телефон:</p>
+  <input id='inpt_phone' type='text' placeholder='Введите телефон' />
+    <button id='btn1'>Проверить скрипт</button>
+</div>`}
               />
             ) : (
               <div
@@ -165,7 +211,26 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
                   onChange={changeScript}
                   value={htmlScript.replace(/<script>|<\/script>/gm, "")}
                   type="text"
-                  placeholder="Строка над лид ботом"
+                  placeholder="const inptName = document.querySelector('#inpt_name')
+const inptPhone = document.querySelector('#inpt_phone')
+const btn1 = document.querySelector('#btn1')
+btn1.onclick = () => {
+    if (inptName.value === '') {
+        return alert('Поле имя не заполнено, представьтесь, пожалуйста!')
+    }
+    if (inptPhone.value === '') {
+        return alert(`${inptName.value}, укажите ваш телефон, чтобы мы могли с вами связать!`)
+    }
+    alert('Спасибо, мы с вами свяжемся!')
+}
+
+!!! Внимание!!! Если вы уже нажимали на кнопку регистрации скрипта (треугольник), и хотите далее тестировать скрипт в ЛК, то закомментируйте объявление переменных. Пример:
+
+// const inptName = document.querySelector('#inpt_name')
+// const inptPhone = document.querySelector('#inpt_phone')
+// const btn1 = document.querySelector('#btn1')
+
+Но не забудьте раскомментировать обратно!"
                 />
               ) : (
                 <div

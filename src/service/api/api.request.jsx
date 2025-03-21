@@ -144,9 +144,39 @@ class apiRequest {
     }
   };
 
+  postPopup = async (obj) => {
+    try {
+      const res = await req.post(`routing`, obj);
+      console.log(res);
+      return res.data.success;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   patchPopup = async (id, obj) => {
     try {
       const res = await req.patch(`routing/${id}`, obj);
+      console.log(res);
+      return res.data.success;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  postString = async (obj) => {
+    try {
+      const res = await req.post(`strings`, obj);
+      console.log(res);
+      return res.data.success;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  patchString = async (id, obj) => {
+    try {
+      const res = await req.patch(`strings/${id}`, obj);
       console.log(res);
       return res.data.success;
     } catch (e) {
@@ -176,6 +206,8 @@ class apiRequest {
     }
   };
 
+
+
   getFilter = async () => {
     try {
       const res = await req.post("search/filter_user", {
@@ -183,10 +215,12 @@ class apiRequest {
         filter: stateScenarios.filter_data,
         order: {},
       });
+      stateScenarios.setParametr("resultevent", res.data.data);
       console.log("getFilter ==> ", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error("getFilter", e);
+      stateScenarios.setParametr("resultevent", []);
     }
   };
   getOnlineScenarios = async () => {
@@ -201,7 +235,7 @@ class apiRequest {
   };
   postOnlineScenarios = async (obj) => {
     try {
-      const res = await req.post(`online_script`, obj);
+      const res = await req.post(`online_scripts`, obj);
       console.log("postOnlineScenarios", res);
       return res.data;
     } catch (e) {

@@ -1,5 +1,6 @@
 .scenarios_container {
   width: 100%;
+  height: 80vh;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
@@ -16,12 +17,19 @@
 .scenarios_container_filter {
   width: 100%;
 }
+.scenarios_container_filter_select_event {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-start;
+}
 .scenarios_filter_span {
   font-size: var(--f1);
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: 15px;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 .scenarios_filter_img {
   width: 30px;
@@ -59,4 +67,62 @@
   position: absolute;
   bottom: -50px;
   width: 100%;
+}
+.offline_filter_row_current {
+  margin-bottom: 6px;
+}
+.offline_filter_row_filter_container {
+  display: flex;
+  justify-content: space-between;
+}
+.scenarios_filter_container {
+  padding: 15px 12px;
+  border: 1px solid var(--my_lite_grey);
+  border-radius: 6px;
+  min-width: 250px;
+  width: 100%;
+  max-width: 380px;
+}
+.offline_filter_nav {
+  cursor: pointer;
+  color: var(--my_black);
+  margin-bottom: 15px;
+}
+.inpt_v1_scenarios {
+  border: 1px solid var(--my_lazur_v2);
+  background: none;
+  height: 35px;
+  border-radius: 6px;
+  padding-left: 10px;
+  max-width: 125px;
+}
+.select_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icon_reload {
+  width: 24px;
+  cursor: pointer;
+}
+.scenarios_filter_span_header {
+  display: flex;
+}
+.filter_inpt_container {
+  display: flex;
+  gap: 2px;
+}
+.or_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid var(--my_lazur_v2);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.or_in {
+  font-size: 13px;
+  padding: 3px;
+  border-bottom: 1px solid var(--my_lazur_v2);
 }
