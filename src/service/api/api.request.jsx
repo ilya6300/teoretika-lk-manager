@@ -60,13 +60,13 @@ class apiRequest {
   getProfile = async () => {
     const res = await req("my_profile");
     if (!res) return;
-    console.log(res.data.data);
+    // console.log(res.data.data);
     return res.data.data;
   };
   patchDateProfile = async (obj) => {
-    console.log(obj);
+    // console.log(obj);
     const res = await req.patch("my_profile", obj);
-    console.log(res);
+    // console.log(res);
   };
 
   changePass = async (pass) => {
@@ -110,7 +110,7 @@ class apiRequest {
   postHTMLTemplate = async (obj) => {
     try {
       const res = await req.post("templates", obj);
-      console.log(res);
+      // console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -119,7 +119,7 @@ class apiRequest {
 
   removeHTMLTemplate = async (obj) => {
     try {
-      console.log(obj);
+      // console.log(obj);
       const res = await axios.delete(`${config.url_api}templates`, {
         headers: {
           "Content-Type": "application/json",
@@ -132,7 +132,7 @@ class apiRequest {
           id_template: [obj.id],
         },
       });
-      console.log(res);
+      // console.log(res);
 
       // return res.data.success;
     } catch (e) {
@@ -206,8 +206,6 @@ class apiRequest {
     }
   };
 
-
-
   getFilter = async () => {
     try {
       const res = await req.post("search/filter_user", {
@@ -216,7 +214,7 @@ class apiRequest {
         order: {},
       });
       stateScenarios.setParametr("resultevent", res.data.data);
-      console.log("getFilter ==> ", res.data.data);
+      // console.log("getFilter ==> ", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error("getFilter", e);
@@ -227,7 +225,8 @@ class apiRequest {
     try {
       const res = await req("online_scripts");
       if (!res) return;
-      appState.setParameters("online_scenarios", res.data.data.response);
+      console.log("res.data.data.response", res.data.data.response);
+      appState.setScenarios(res.data.data.response);
       return res.data.data.response;
     } catch (e) {
       console.error(e);
@@ -242,9 +241,21 @@ class apiRequest {
       console.error(e);
     }
   };
-  patchOnlineScenarios = async (id, obj) => {
+  // patchOnlineScenarios = async (id, obj) => {
+  //   try {
+  //     const res = await req.patch(`online_scripts/${id}`, obj);
+  //     console.log("postOnlineScenarios", res);
+  //     return res.data;
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+
+  removeOnlineScenarios = async (id) => {
     try {
-      const res = await req.patch(`online_script/${id}`, obj);
+      const res = await req.delete(`online_scripts`, {
+        data: { id_scripts: [id] },
+      });
       console.log("postOnlineScenarios", res);
       return res.data;
     } catch (e) {

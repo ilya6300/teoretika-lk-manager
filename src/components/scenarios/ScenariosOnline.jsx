@@ -7,7 +7,6 @@ import appState from "../../service/state/app.state";
 import CardOnlineScenarios from "../../pages/CardOnlineScenarios";
 
 const ScenariosOnline = observer(({ setNewScenariosOnline }) => {
-  
   const [card, setCard] = useState(null);
   const [cardFlag, setCardFlag] = useState(false);
   const getScenarios = async () => {

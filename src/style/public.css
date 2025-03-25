@@ -18,7 +18,7 @@ a.active {
   justify-content: flex-start;
   height: 100%;
   flex-direction: column;
-  max-width: 1500px;
+  /* max-width: 1500px; */
   width: 100%;
   padding: 2vh 2vw;
   gap: 20px;

@@ -1,13 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import ScenariosInpt from "../../UI/components/scenarios/ScenariosInpt";
 import stateScenarios from "../../service/state/state.scenarios";
 import SelectedConditionFilter from "./SelectedConditionFilter";
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
 
-const TypeValue = ({ f, id, c }) => {
+const TypeValue = observer(({ f, id, c }) => {
   const [value, setValue] = useState("");
   const [orValue, setOrValue] = useState("И");
   const [valueBooleanReg, setValueBooleanReg] = useState(false);
   const [condition, setCondition] = useState("");
+  // const [conditionName, setConditionName] = useState("");
+
+  const getTypeValue = (name) => {
+    if (name === "==") {
+      // setCondition("==");
+      setCondition("равно");
+    }
+    if (name === ">=") {
+      // setCondition(">=");
+      setCondition("больше или равно");
+    }
+    if (name === "<=") {
+      // setCondition("<=");
+      setCondition("меньше или равно");
+    }
+    if (name === "like") {
+      // setCondition("like");
+      setCondition("совпадение");
+    }
+    if (name === "in") {
+      // setCondition("in");
+      setCondition("in");
+    }
+  };
+
+  useLayoutEffect(() => {
+    setValue(f.value);
+    // setCondition(f.condition);
+    getTypeValue(f.condition);
+    console.log("TypeValue", toJS(f), f.condition);
+    const changeValue = {
+      target: {
+        value: f.condition,
+      },
+    };
+    // setConditionName()
+    onChangeCondition(changeValue);
+  }, [f.value, f.condition]);
   const updateOr = () => {
     if (orValue === "И") {
       setOrValue("ИЛИ");
@@ -22,7 +62,7 @@ const TypeValue = ({ f, id, c }) => {
   };
   useEffect(() => {
     stateScenarios.updateValueFilter(id, f.name, value, condition, f);
-  }, [condition]);
+  }, [f, condition]);
   const onChangeCondition = (e) => {
     console.log(e.target.value);
     if (e.target.value === "равно") {
@@ -71,15 +111,16 @@ const TypeValue = ({ f, id, c }) => {
     return (
       <div className="filter_inpt_container">
         <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} />{" "}
-        {orValue === "И" ? (
-          <SelectedConditionFilter
-            // data={c.condition}
-            onChangeCondition={onChangeCondition}
-            c={c}
-          />
-        ) : (
-          <span className="or_in">Точное совпадение</span>
-        )}
+        {/* {orValue === "И" ? ( */}
+        <SelectedConditionFilter
+          // data={c.condition}
+          condition={condition}
+          onChangeCondition={onChangeCondition}
+          c={c}
+        />
+        {/* // ) : (
+          // <span className="or_in">Точное совпадение</span>
+        // )} */}
         <span className="or_btn" onClick={updateOr}>
           {orValue}
         </span>
@@ -96,6 +137,7 @@ const TypeValue = ({ f, id, c }) => {
         />{" "}
         {orValue === "И" ? (
           <SelectedConditionFilter
+            condition={condition}
             // data={c.condition}
             onChangeCondition={onChangeCondition}
             c={c}
@@ -119,6 +161,7 @@ const TypeValue = ({ f, id, c }) => {
         />
         {orValue === "И" ? (
           <SelectedConditionFilter
+            condition={condition}
             // data={c.condition}
             onChangeCondition={onChangeCondition}
             c={c}
@@ -142,6 +185,7 @@ const TypeValue = ({ f, id, c }) => {
         ></label>
         {orValue === "И" ? (
           <SelectedConditionFilter
+            condition={condition}
             // data={c.condition}
             onChangeCondition={onChangeCondition}
             c={c}
@@ -155,6 +199,6 @@ const TypeValue = ({ f, id, c }) => {
       </div>
     );
   }
-};
+});
 
 export default TypeValue;

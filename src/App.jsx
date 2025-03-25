@@ -15,6 +15,7 @@ import { NewTemplateHtml } from "./pages/NewTemplateHtml";
 import { Scenarios } from "./pages/Scenarios";
 import { Users } from "./pages/Users";
 import { UsersCard } from "./pages/UsersCard";
+import ScenariosCard from "./pages/ScenariosCard";
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
@@ -54,6 +55,7 @@ const App = () => {
           {/* <Route path="users/:cms_user_id" element={<UsersCard />} /> */}
           <Route path="html" element={<TemplatesHTML />} />
           <Route path="scenarios" element={<Scenarios />} />
+          <Route path="scenarios/:id" element={<ScenariosCard />} />
           <Route path="newhtml" element={<NewTemplateHtml />} />
         </Route>
       </Route>

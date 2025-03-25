@@ -25,11 +25,13 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const [typeEvent, setTypeEvent] = useState(null);
   const eventData = ["popup", "чат-строка"];
   const [nameVisible, setNameVisible] = useState(false);
+  const [description, setDescription] = useState("");
   const [objReques, setObjReques] = useState({
     type: "",
     name: "",
     event: "",
     id_event: "",
+    description: "",
   });
 
   useLayoutEffect(() => {
@@ -41,10 +43,10 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
     try {
       const resSelect = await apiRequest.getFilterJoin(name);
       if (resSelect.current === undefined || resSelect.current === "new") {
-        console.log("resSelect", resSelect);
+        // console.log("resSelect", resSelect);
         // return;
       } else if (resSelect.current !== undefined) {
-        console.log(resSelect["join"]);
+        // console.log(resSelect["join"]);
         let joinData = [];
         for (let key in resSelect["join"]) {
           joinData = [...joinData, key];
@@ -56,7 +58,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             resSelect["join"],
             resSelect["filter"]
           );
-          stateScenarios.addJoinData(resSelect.current);
+          stateScenarios.addJoinData(resSelect.current, name);
         } else {
           stateScenarios.pushOfflineScenariosInterface(
             resSelect.current,
@@ -64,7 +66,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             resSelect["filter"]
           );
 
-          stateScenarios.addJoinData(resSelect.current);
+          stateScenarios.addJoinData(resSelect.current, name);
         }
       }
 
@@ -77,22 +79,22 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   };
 
   const showSelec = async (name) => {
-    console.log(name);
+    // console.log(name);
     let select;
     try {
       if (stateScenarios.offlineScenariosInterface.length === 0) {
         select = "";
       } else {
-        console.log(nameRequest);
+        // console.log(nameRequest);
         select = nameRequest;
       }
-      console.log(
-        nameRequest,
-        select,
-        stateScenarios.offlineScenariosInterface[
-          stateScenarios.offlineScenariosInterface.length - 1
-        ]
-      );
+      // console.log(
+      //   nameRequest,
+      //   select,
+      //   stateScenarios.offlineScenariosInterface[
+      //     stateScenarios.offlineScenariosInterface.length - 1
+      //   ]
+      // );
       await getSelect(nameRequest);
     } catch (e) {
       console.error(e);
@@ -119,45 +121,64 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   };
 
   const playScenarios = async () => {
-    console.log(
-      toJS(stateScenarios.offlineScenariosInterface),
-      toJS(stateScenarios.join_data),
-      toJS(stateScenarios.resultevent)
-    );
-    function extractMastIds(obj, result = new Set()) {
-      if (obj && typeof obj === "object") {
-        if (obj.mast_id) {
-          result.add(` &${obj.mast_id}`); // Добавляем mast_id в Set
+    try {
+      console.log(
+        toJS(stateScenarios.offlineScenariosInterface),
+        toJS(stateScenarios.join_data),
+        toJS(stateScenarios.resultevent)
+      );
+      function extractMastIds(obj, result = new Set()) {
+        if (obj && typeof obj === "object") {
+          if (obj.mast_id) {
+            result.add(` &${obj.mast_id}`); // Добавляем mast_id в Set
+          }
+          // Рекурсивно обходим все ключи объекта
+          Object.values(obj).forEach((value) => extractMastIds(value, result));
         }
-        // Рекурсивно обходим все ключи объекта
-        Object.values(obj).forEach((value) => extractMastIds(value, result));
+        return result;
       }
-      return result;
-    }
-
-    // Собираем все уникальные mast_id
-    const uniqueMastIds = [
-      ...stateScenarios.resultevent.reduce((acc, item) => {
-        extractMastIds(item, acc); // Обрабатываем каждый объект в массиве
-        return acc;
-      }, new Set()),
-    ];
-    console.log(String(uniqueMastIds));
-    if (JSON.stringify(stateScenarios.filter_data) !== "{}") {
-      apiRequest.postOnlineScenarios({
-        type: objReques.type,
-        name: objReques.name,
-        event: objReques.event,
-        body: "",
-        id_event: Number(objReques.id_event),
-        type_user: String(uniqueMastIds),
-      });
+      // console.log(1);
+      // Собираем все уникальные mast_id
+      const uniqueMastIds = [
+        ...stateScenarios.resultevent.reduce((acc, item) => {
+          extractMastIds(item, acc); // Обрабатываем каждый объект в массиве
+          return acc;
+        }, new Set()),
+      ];
+      // console.log(2);
+      if (objReques.name === "") {
+        return alert("Имя не задано");
+      }
+      if (objReques.description === "") {
+        return alert("Описание не задано");
+      }
+      if (JSON.stringify(stateScenarios.filter_data) !== "{}") {
+        apiRequest.postOnlineScenarios({
+          type: objReques.type,
+          name: objReques.name,
+          event: objReques.event,
+          body: JSON.stringify({
+            build: stateScenarios.build_data,
+            join: stateScenarios.join_data,
+            filter: stateScenarios.filter_data,
+            order: "{}",
+          }),
+          description: objReques.description,
+          id_event: Number(objReques.id_event),
+          type_user: String(uniqueMastIds)
+            .replace(/^ /g, "")
+            .replace(/$/g, ","),
+        });
+      } else {
+        alert("Филтры не настроены");
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
   const removeElement = (e) => {
     stateScenarios.cutData(e.id);
-    console.log(e.id);
     stateScenarios.scenariosElementremove(e.id + 1);
   };
 
@@ -167,7 +188,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
     stateScenarios.resetData("offlineScenariosInterface");
     stateScenarios.setParametr("resultevent", "Нет данных");
     setSelectVisible(false);
-    await apiRequest.getFilter();
+    // await apiRequest.getFilter();
   };
 
   const onChangeEvent = async (e) => {
@@ -181,7 +202,6 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         (objReques.type = "routing")
       );
       if (res) {
-        console.log(res);
         setTypeEvent(res);
       }
     }
@@ -192,20 +212,17 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         ...((objReques.event = value), (objReques.type = "strings"))
       );
       if (res) {
-        console.log(res);
         setTypeEvent(res);
       }
     }
   };
   const onChangeEventID = async (e) => {
-    console.log(e, objReques);
     const resID =
       typeEventString === "popup"
         ? appState.templatesHTMLPopup.find((p) => p.name === e.target.value)
         : appState.templatesHTMLString.find((p) => p.name === e.target.value);
     if (resID) {
       setObjReques(objReques, ...(objReques.id_event = String(resID.id)));
-      console.log(resID);
     }
     setNameVisible(true);
   };
@@ -213,7 +230,10 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const onChangeName = (e) => {
     setName(e.target.value);
     setObjReques(objReques, ...(objReques.name = e.target.value));
-    console.log(objReques);
+  };
+  const onChangeDescription = (e) => {
+    setDescription(e.target.value);
+    setObjReques(objReques, ...(objReques.description = e.target.value));
   };
 
   const filterBarRef = useRef(null);
@@ -286,11 +306,25 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
               )}
               {nameVisible ? (
                 <div className="selected_container">
-                  <p>Напишите название скрипта</p>
+                  {/* <p>Опишите сценарий</p> */}
+                  <textarea
+                    placeholder="Описание сценария"
+                    value={description}
+                    onChange={onChangeDescription}
+                    className="textarea_v1"
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              {nameVisible ? (
+                <div className="selected_container">
+                  {/* <p>Напишите название сценария</p> */}
                   <ScenariosInpt
-                    placeholder=""
+                    placeholder="Название сценария"
                     value={name}
                     onChange={onChangeName}
+                    style={{ width: "250px" }}
                   />
                 </div>
               ) : (
@@ -318,6 +352,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         </div>
       </div>
       <ul>
+        <li> "build": {JSON.stringify(stateScenarios.build_data)},</li>
         <li> "join": {JSON.stringify(stateScenarios.join_data)},</li>
         <li> "filter": {JSON.stringify(stateScenarios.filter_data)}</li>
         <li> "order": {JSON.stringify({})}</li>

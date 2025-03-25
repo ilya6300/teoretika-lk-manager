@@ -1,71 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PageComponent } from "../components/PageComponent";
 import ScenariosOffline from "../components/scenarios/ScenariosOffline";
 import ScenariosOnline from "../components/scenarios/ScenariosOnline";
 import NewScenariosOnline from "../components/scenarios/NewScenariosOnline";
 import NewScenariosOffline from "../components/scenarios/NewScenariosOffline";
+import { observer } from "mobx-react-lite";
+import stateScenarios from "../service/state/state.scenarios";
 
-export const Scenarios = () => {
-  const [tabOffline, setTabOffline] = useState(false);
-  const [tabOnline, setTabOnline] = useState(true);
+export const Scenarios = observer(() => {
+  const [tabOffline, setTabOffline] = useState(true);
+  const [tabOnline, setTabOnline] = useState(false);
   const [newScenariosOffline, setNewScenariosOffline] = useState(false);
   const [newScenariosOnline, setNewScenariosOnline] = useState(false);
-  const [tabOfflineCls, setTabOfflineCls] = useState("tab_deactive");
-  const [tabOnlineCls, setTabOnlineCls] = useState("tab_active");
+  const [tabOfflineCls, setTabOfflineCls] = useState("tab_active");
+  const [tabOnlineCls, setTabOnlineCls] = useState("tab_deactive");
 
   const selectedTabOffline = () => {
     setTabOffline(true);
-    setTabOnline(false);
+    // setTabOnline(false);
     setTabOfflineCls("tab_active");
-    setTabOnlineCls("tab_deactive");
-  };
-  const selectedOnline = () => {
-    setTabOffline(false);
-    setTabOnline(true);
-    setTabOfflineCls("tab_deactive");
-    setTabOnlineCls("tab_active");
+    // setTabOnlineCls("tab_deactive");
   };
 
-  if (!newScenariosOffline && !newScenariosOnline) {
+  useEffect(() => {
+    stateScenarios.resetData("join_data");
+    stateScenarios.setParametr("filter_data", {});
+    stateScenarios.resetData("offlineScenariosInterface");
+    stateScenarios.setParametr("resultevent", "Нет данных");
+  }, [!newScenariosOffline]);
+
+  if (!newScenariosOffline) {
     return (
       <PageComponent title="Сценарии">
         <div className="tabContainer">
           <span onClick={selectedTabOffline} className={tabOfflineCls}>
-            Оффлайн
-          </span>
-          <span onClick={selectedOnline} className={tabOnlineCls}>
-            Онлайн
+            Сценарии на сайте
           </span>
         </div>
         {tabOffline ? (
-          <ScenariosOffline setNewScenariosOffline={setNewScenariosOffline} />
-        ) : (
-          <></>
-        )}
-        {tabOnline ? (
-          <ScenariosOnline setNewScenariosOnline={setNewScenariosOnline} />
+          <ScenariosOffline
+            setNewScenariosOnline={setNewScenariosOnline}
+            setNewScenariosOffline={setNewScenariosOffline}
+          />
         ) : (
           <></>
         )}
       </PageComponent>
     );
   }
-  if (newScenariosOnline && !newScenariosOffline) {
+  if (newScenariosOffline) {
     return (
-      <React.StrictMode>
-        <PageComponent title="Создание онлайн сценария">
-          <NewScenariosOnline setNewScenariosOnline={setNewScenariosOnline} />
-        </PageComponent>
-      </React.StrictMode>
-    );
-  }
-  if (newScenariosOffline && !newScenariosOnline) {
-    return (
-      // <React.StrictMode>
-      <PageComponent title="Создание оффлайн сценария">
-        <NewScenariosOffline setNewScenariosOffline={setNewScenariosOffline} />
+      <PageComponent title="Создание сценария">
+        <NewScenariosOffline
+          setNewScenariosOffline={setNewScenariosOffline}
+          // goCard={goCard}
+        />
       </PageComponent>
-      // {/* </React.StrictMode> */}
     );
   }
-};
+});

@@ -8,6 +8,7 @@ const ScenariosInpt = (props) => {
       placeholder={props.placeholder}
       onChange={props.onChange}
       value={props.value}
+      style={props.style}
     />
   );
 };

@@ -46,8 +46,8 @@
   height: 36px;
 }
 .selected_container {
-  width: 100%;
-  max-width: 300px;
+  /* width: 100%; */
+  /* max-width: 300px; */
   position: relative;
 }
 .scenarios_filter_item {
@@ -125,4 +125,58 @@
   font-size: 13px;
   padding: 3px;
   border-bottom: 1px solid var(--my_lazur_v2);
+}
+.container_btn_scenarios {
+  display: flex;
+  gap: 1vw;
+  justify-content: space-between;
+  align-items: center;
+}
+.item_btn_scenarios {
+  display: flex;
+  font-size: var(--f1);
+  align-items: flex-end;
+  gap: 15px;
+  color: var(--my_lite_grey);
+}
+.name_tr_scenarios_row {
+  width: 20%;
+  padding: 8px;
+  height: 100%;
+  display: inline-block;
+  border-right: 1px solid #00000030;
+}
+.description_tr_scenarios_row {
+  width: 60%;
+  padding: 8px;
+  height: 100%;
+  display: inline-block;
+  border-right: 1px solid #00000030;
+}
+.utilite_tr_scenarios_row {
+  width: 10%;
+  padding: 0 8px;
+  display: inline-block;
+  border-right: 1px solid #00000030;
+  min-width: 50px;
+  display: flex
+;
+  justify-content: flex-end;
+}
+.event_tr_scenarios_row {
+  width: 10%;
+  padding: 8px;
+  height: 100%;
+  display: inline-block;
+  border-right: 1px solid #00000030;
+}
+.item_filter_type_scenarios {
+  display: flex;
+  gap: 15px;
+}
+.w90 {
+  width: 90%;
+}
+.w250 {
+  width: 250px !important;
 }

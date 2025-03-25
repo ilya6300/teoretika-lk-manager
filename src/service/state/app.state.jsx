@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import stateScenarios from "./state.scenarios";
 
 class appState {
   constructor() {
@@ -36,6 +37,14 @@ class appState {
       },
     ],
     isLoader: false,
+  };
+
+  setScenarios = async (data) => {
+    try {
+      this.online_scenarios = data;
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   setParameters = (parametr, value) => {

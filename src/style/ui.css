@@ -156,3 +156,29 @@
   border-radius: 8px;
   color: white;
 }
+.delete_icon {
+  cursor: pointer;
+  border: none;
+  background: url("./../images/icons/remove.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+  transition: all 0.6s ease;
+}
+.delete_icon:hover {
+  background: url("./../images/icons/remove_red.png");
+  border: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+}
+.textarea_v1 {
+  border: 1px solid var(--my_lazur_v2);
+  background: none;
+  height: 100px;
+  border-radius: 6px;
+  padding-left: 10px;
+  width: 400px;
+}

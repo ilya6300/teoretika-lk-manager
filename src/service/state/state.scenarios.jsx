@@ -25,7 +25,7 @@ class currentObj {
         value: "<=",
       },
       {
-        name: "совпадение",
+        name: "соответствует",
         value: "like",
       },
       {
@@ -45,6 +45,16 @@ class stateScenarios {
   constructor() {
     makeAutoObservable(this);
   }
+  type_scenarios = {
+    popup: true,
+    string: true,
+    email: true,
+  };
+
+  setParametrTypeParametr = (parametr, boolean) => {
+    this.type_scenarios[`${parametr}`] = boolean;
+  };
+  build_data = [];
   join_data = [];
   filter_data = {};
   // offlineScenarios = [];
@@ -53,6 +63,7 @@ class stateScenarios {
 
   resetData = async (parametr) => {
     this[`${parametr}`] = [];
+    this.build_data = [];
     await apiRequest.getFilter();
   };
 
@@ -64,6 +75,7 @@ class stateScenarios {
     try {
       this.offlineScenariosInterface.length = len + 1;
       this.join_data.length = len + 1;
+      this.build_data.length = len + 1;
       Object.keys(this.filter_data).forEach((key) => {
         // Если ключ отсутствует в массиве `b`, удаляем его из объекта `a`
         if (!this.join_data.includes(key)) {
@@ -82,8 +94,9 @@ class stateScenarios {
     await apiRequest.getFilter();
   };
 
-  addJoinData = (current) => {
+  addJoinData = (current, nameBuild) => {
     this.join_data = [...this.join_data, current];
+    this.build_data = [...this.build_data, nameBuild];
   };
   removeJoinData = (current) => {
     this.join_data = this.join_data.filter((j) => j !== current);
@@ -91,7 +104,8 @@ class stateScenarios {
 
   updateValueFilter = async (id, name, value, condition, f) => {
     try {
-      console.log(condition);
+      if (!value) return;
+      console.log("updateValueFilter", id, name, value, condition);
       const rowFilterID = this.offlineScenariosInterface[id].filter.find(
         (row) => row.name === name
       );
@@ -123,11 +137,11 @@ class stateScenarios {
                 ...this.filter_data[
                   `${this.offlineScenariosInterface[id].current}`
                 ],
-                [`${rowFilterID.name}`]: [rowFilterID.value.split(","), "in"],
+                [`${rowFilterID.name}`]: [rowFilterID.value.split(","), "like"],
               };
           }
         }
-        console.log("rowFilterID", rowFilterID, rowFilterID.filter);
+        // console.log("rowFilterID", rowFilterID, rowFilterID.filter);
         if (
           rowFilterID.value === "" &&
           JSON.stringify(this.filter_data) !== "{}" &&
@@ -189,19 +203,6 @@ class stateScenarios {
         name
       ),
     ];
-  };
-
-  updateOfflineScenariosInterface = (obj, parametr, value) => {
-    try {
-      // console.log("updateOfflineScenariosInterface", obj);
-      // const objID = this.offlineScenarios.find((s) => s.id === obj.id);
-      // if (objID) {
-      //   console.log("objID ===>", objID);
-      //   objID[`${parametr}`] = value;
-      // }
-    } catch (e) {
-      console.error(e);
-    }
   };
 }
 export default new stateScenarios();
