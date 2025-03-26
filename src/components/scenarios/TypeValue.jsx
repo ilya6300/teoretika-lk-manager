@@ -15,38 +15,47 @@ const TypeValue = observer(({ f, id, c }) => {
   const getTypeValue = (name) => {
     if (name === "==") {
       // setCondition("==");
-      setCondition("равно");
+      const conditionValue = { target: { value: "равно" } };
+      return conditionValue;
+      // setCondition("равно");
     }
     if (name === ">=") {
       // setCondition(">=");
-      setCondition("больше или равно");
+      const conditionValue = { target: { value: "больше или равно" } };
+      return conditionValue;
+      // setCondition("больше или равно");
     }
     if (name === "<=") {
       // setCondition("<=");
-      setCondition("меньше или равно");
+      const conditionValue = { target: { value: "меньше или равно" } };
+      return conditionValue;
+      // setCondition("меньше или равно");
     }
     if (name === "like") {
       // setCondition("like");
-      setCondition("совпадение");
+      const conditionValue = { target: { value: "соответствует" } };
+      return conditionValue;
+      // setCondition("соответствует");
     }
     if (name === "in") {
       // setCondition("in");
-      setCondition("in");
+      const conditionValue = { target: { value: "in" } };
+      return conditionValue;
+      // setCondition("in");
     }
   };
 
   useLayoutEffect(() => {
     setValue(f.value);
-    // setCondition(f.condition);
-    getTypeValue(f.condition);
+    // getTypeValue(f.condition);
     console.log("TypeValue", toJS(f), f.condition);
-    const changeValue = {
-      target: {
-        value: f.condition,
-      },
-    };
+    // const changeValue = {
+    //   target: {
+    //     value: f.condition,
+    //   },
+    // };
     // setConditionName()
-    onChangeCondition(changeValue);
+    onChangeCondition(getTypeValue(f.condition));
   }, [f.value, f.condition]);
   const updateOr = () => {
     if (orValue === "И") {
@@ -64,7 +73,8 @@ const TypeValue = observer(({ f, id, c }) => {
     stateScenarios.updateValueFilter(id, f.name, value, condition, f);
   }, [f, condition]);
   const onChangeCondition = (e) => {
-    console.log(e.target.value);
+    if (!e) return;
+    // console.log(e.target.value);
     if (e.target.value === "равно") {
       setCondition("==");
     }
@@ -74,7 +84,7 @@ const TypeValue = observer(({ f, id, c }) => {
     if (e.target.value === "меньше или равно") {
       setCondition("<=");
     }
-    if (e.target.value === "совпадение") {
+    if (e.target.value === "соответствует") {
       setCondition("like");
     }
     if (e.target.value === "in") {
@@ -135,16 +145,15 @@ const TypeValue = observer(({ f, id, c }) => {
           placeholder={f.name}
           type="number"
         />{" "}
-        {orValue === "И" ? (
-          <SelectedConditionFilter
-            condition={condition}
-            // data={c.condition}
-            onChangeCondition={onChangeCondition}
-            c={c}
-          />
-        ) : (
-          <span>Точное совпадение</span>
-        )}
+        {/* {orValue === "И" ? ( */}
+        <SelectedConditionFilter
+          condition={condition}
+          // data={c.condition}
+          onChangeCondition={onChangeCondition}
+          c={c}
+        />
+        {/* // ) : ( // <span>Точное совпадение</span>
+        // )} */}
         <span className="or_btn" onClick={updateOr}>
           {orValue}
         </span>
@@ -159,16 +168,15 @@ const TypeValue = observer(({ f, id, c }) => {
           placeholder={f.name}
           type="datetime-local"
         />
-        {orValue === "И" ? (
-          <SelectedConditionFilter
-            condition={condition}
-            // data={c.condition}
-            onChangeCondition={onChangeCondition}
-            c={c}
-          />
-        ) : (
-          <span>Точное совпадение</span>
-        )}
+        {/* {orValue === "И" ? ( */}
+        <SelectedConditionFilter
+          condition={condition}
+          // data={c.condition}
+          onChangeCondition={onChangeCondition}
+          c={c}
+        />
+        {/* // ) : ( // <span>Точное совпадение</span>
+        // )} */}
         <span className="or_btn" onClick={updateOr}>
           {orValue}
         </span>
@@ -183,16 +191,15 @@ const TypeValue = observer(({ f, id, c }) => {
             valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"
           }
         ></label>
-        {orValue === "И" ? (
-          <SelectedConditionFilter
-            condition={condition}
-            // data={c.condition}
-            onChangeCondition={onChangeCondition}
-            c={c}
-          />
-        ) : (
-          <span>Точное совпадение</span>
-        )}
+        {/* {orValue === "И" ? ( */}
+        <SelectedConditionFilter
+          condition={condition}
+          // data={c.condition}
+          onChangeCondition={onChangeCondition}
+          c={c}
+        />
+        {/* // ) : ( // <span>Точное совпадение</span>
+        // )} */}
         <span className="or_btn" onClick={updateOr}>
           {orValue}
         </span>

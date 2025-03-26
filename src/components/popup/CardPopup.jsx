@@ -185,8 +185,9 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
   <p>Ваше имя?</p>
   <input id='inpt_name' type='text' placeholder='Представьтесь' />
   <p>Телефон:</p>
+  <!-- Внимание! Основная кнопка должа иметь id = 'teorika-btn-p-1' -->
   <input id='inpt_phone' type='text' placeholder='Введите телефон' />
-    <button id='btn1'>Проверить скрипт</button>
+    <button id='teorika-btn-p-1'>Проверить скрипт</button>
 </div>`}
               />
             ) : (
@@ -211,9 +212,13 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
                   onChange={changeScript}
                   value={htmlScript.replace(/<script>|<\/script>/gm, "")}
                   type="text"
-                  placeholder="const inptName = document.querySelector('#inpt_name')
+                  placeholder="
+                  // Обязательный элемент!!
+const teorikaBtn1 = document.querySelector('#teorika-btn-p-1')
+//
+                  const inptName = document.querySelector('#inpt_name')
 const inptPhone = document.querySelector('#inpt_phone')
-const btn1 = document.querySelector('#btn1')
+
 btn1.onclick = () => {
     if (inptName.value === '') {
         return alert('Поле имя не заполнено, представьтесь, пожалуйста!')

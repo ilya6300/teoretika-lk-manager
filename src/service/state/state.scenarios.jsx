@@ -130,14 +130,28 @@ class stateScenarios {
         } else {
           // Если ИЛИ
           if (rowFilterID.value !== "") {
-            const or = rowFilterID.value.replace(/,\s/gm, ",");
-            console.log("orrrrrrr", or);
+            const newValue = rowFilterID.value.split(",");
+            const likeNewValue = newValue.map(
+              (v) => `%${v.replace(/ /g, "")}%`
+            );
+            // const modifiedArray = array.map(item => `%${item}%`);
+            console.log(likeNewValue, "newValue");
+            // const or = rowFilterID.value.replace(/,\s/gm, ",");
+            // console.log("orrrrrrr", or);
             this.filter_data[`${this.offlineScenariosInterface[id].current}`] =
               {
                 ...this.filter_data[
                   `${this.offlineScenariosInterface[id].current}`
                 ],
-                [`${rowFilterID.name}`]: [rowFilterID.value.split(","), "like"],
+                [`${rowFilterID.name}`]:
+                  condition !== "like" ? newValue : likeNewValue,
+                condition,
+                // [
+                //     condition !== "like"
+                //     ? rowFilterID.value
+                //     : `%${rowFilterID.value}%`,
+                //   condition,
+                // ]
               };
           }
         }

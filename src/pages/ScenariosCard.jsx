@@ -19,7 +19,7 @@ import { PageComponent } from "../components/PageComponent";
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
   const location = useLocation();
-  const { body, descriptionScenarios, nameScenarios, event, type } =
+  const { body, descriptionScenarios, nameScenarios, event, type, id_event } =
     location.state || {};
 
   const [nameRequest, setNameRequest] = useState("");
@@ -32,6 +32,8 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const eventData = ["popup", "чат-строка"];
   const [nameVisible, setNameVisible] = useState(false);
   const [description, setDescription] = useState("");
+  const [firstNameScenarios, setFirstNameScenarios] = useState("Выберите");
+  const [firstNameEvent, setFirstNameEvent] = useState("Событие");
   const [objReques, setObjReques] = useState({
     type: "",
     name: "",
@@ -39,6 +41,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     id_event: "",
     description: "",
   });
+  const refValueEvent = useRef(null);
 
   const autoRequest = async () => {
     try {
@@ -106,9 +109,18 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setNameVisible(true);
     setName(nameScenarios);
     setDescription(descriptionScenarios);
+    setFirstNameEvent(event);
+    // objReques = {...objReques, name: nameScenarios, }
+    objReques.name = nameScenarios;
+    objReques.description = descriptionScenarios;
+    objReques.id_event = id_event;
 
     // stateScenarios.resetData("join_data");
     // showSelec();
+    // setTimeout(() => {
+    // refValueEvent.current.value = "13";
+    // console.log(refValueEvent);
+    // }, 500);
   }, []);
 
   const getSelect = async (name) => {
@@ -146,20 +158,6 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       await apiRequest.getFilter();
     }
   };
-
-  //   const showSelec = async (name) => {
-  //     let select;
-  //     try {
-  //       if (stateScenarios.offlineScenariosInterface.length === 0) {
-  //         select = "";
-  //       } else {
-  //         select = nameRequest;
-  //       }
-  //       await getSelect(nameRequest);
-  //     } catch (e) {
-  //       console.error(e);
-  //     }
-  //   };
 
   const onChangeSelect = async (e, c) => {
     try {
@@ -205,12 +203,14 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       if (objReques.description === "") {
         return alert("Описание не задано");
       }
+      console.log(objReques);
       if (JSON.stringify(stateScenarios.filter_data) !== "{}") {
-        apiRequest.postOnlineScenarios({
+        apiRequest.patchOnlineScenarios(id, {
           type: objReques.type,
           name: objReques.name,
           event: objReques.event,
           body: JSON.stringify({
+            build: stateScenarios.build_data,
             join: stateScenarios.join_data,
             filter: stateScenarios.filter_data,
             order: "{}",
@@ -307,7 +307,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             <div className="scenarios_filter_bar" ref={filterBarRef}></div>
             {!selectVisible ? (
               <SelectedScenarios
-                firstName="Выберите"
+                firstName={firstNameScenarios}
                 data={first_data}
                 onChange={onChangeSelectNew}
               />
@@ -350,7 +350,8 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             {selectEvent ? (
               <div className="scenarios_container_filter_select_event">
                 <SelectedScenarios
-                  firstName="Событие"
+                  refValue={refValueEvent}
+                  firstName={firstNameEvent}
                   data={eventData}
                   onChange={onChangeEvent}
                 />

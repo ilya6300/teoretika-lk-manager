@@ -241,15 +241,15 @@ class apiRequest {
       console.error(e);
     }
   };
-  // patchOnlineScenarios = async (id, obj) => {
-  //   try {
-  //     const res = await req.patch(`online_scripts/${id}`, obj);
-  //     console.log("postOnlineScenarios", res);
-  //     return res.data;
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
+  patchOnlineScenarios = async (id, obj) => {
+    try {
+      const res = await req.patch(`online_scripts/${id}`, obj);
+      console.log("postOnlineScenarios", res);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   removeOnlineScenarios = async (id) => {
     try {
