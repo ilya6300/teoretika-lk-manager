@@ -48,7 +48,7 @@ class stateScenarios {
   type_scenarios = {
     popup: true,
     string: true,
-    email: true,
+    planer: true,
   };
 
   setParametrTypeParametr = (parametr, boolean) => {

@@ -2,8 +2,9 @@ import React, { useLayoutEffect, useState } from "react";
 import { PageComponent } from "../components/PageComponent";
 import stateClient from "../service/state/state.client";
 import { BtnBackHeaderPage } from "../UI/components/BtnBackHeaderPage";
+import { observer } from "mobx-react-lite";
 
-export const UsersCard = ({ setClientCard }) => {
+export const UsersCard = observer(({ setClientCard }) => {
   const [flagHistory, setFlagHistory] = useState(true);
   const [flagLead, setFlagLead] = useState(false);
   const [flagTreads, setFlagTreads] = useState(false);
@@ -76,6 +77,7 @@ export const UsersCard = ({ setClientCard }) => {
   useLayoutEffect(() => {
     console.log(stateClient.client);
   }, []);
+
   return (
     <PageComponent title="Карточка клиента">
       <BtnBackHeaderPage
@@ -84,19 +86,15 @@ export const UsersCard = ({ setClientCard }) => {
       <div className="card_info_container">
         <ul className="card_info_container_column">
           <li className="card_info_row_name mb25">
-            {stateClient.client.crm_contact_name}{" "}
-            {stateClient.client.cms_user_first_name}{" "}
-            {stateClient.client.cms_user_last_name}{" "}
-            {stateClient.client.crm_contact_second_name}{" "}
-            {stateClient.client.crm_contact_last_name}
-            {stateClient.client.cms_user_last_name}
+            {stateClient.client.first_name} {stateClient.client.last_name}{" "}
+            {stateClient.client.second_name}{" "}
           </li>
-          <HandlerString data={stateClient.client.cms_user_email} />
-          <HandlerString data={stateClient.client.phone_number} />
+          <HandlerString data={stateClient.client.emails} />
+          <HandlerString data={stateClient.client.phones} />
         </ul>
         <div className="w50 border_container_v1">
           {/* <HandlerString data={stateClient.client.devices} /> */}
-          <p>В разработке... Нет данных с Data Collectora...</p>
+          <p>id устройства: {stateClient.client.mast_id}</p>
         </div>
       </div>
       <ul className="border_container_v1 w100 ">
@@ -146,4 +144,4 @@ export const UsersCard = ({ setClientCard }) => {
       </div>
     </PageComponent>
   );
-};
+});

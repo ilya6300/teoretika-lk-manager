@@ -44,9 +44,6 @@ export const TemplatesHTML = observer(() => {
   }, [tabMailing]);
   useEffect(() => {
     apiRequest.getHTMLTemplatString();
-    console.log(window.btoa(
-        unescape(encodeURIComponent(`<div>Эй, ты, друг!</div>`))
-      ))
   }, [tabString]);
 
   return (

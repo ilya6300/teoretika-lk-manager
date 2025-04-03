@@ -84,19 +84,16 @@ export const ClientCard = ({ setClientCard }) => {
       <div className="card_info_container">
         <ul className="card_info_container_column">
           <li className="card_info_row_name mb25">
-            {stateClient.client.crm_contact_name}{" "}
-            {stateClient.client.cms_user_first_name}{" "}
-            {stateClient.client.cms_user_last_name}{" "}
-            {stateClient.client.crm_contact_second_name}{" "}
-            {stateClient.client.crm_contact_last_name}
-            {stateClient.client.cms_user_last_name}
+            {stateClient.client.first_name}{" "}
+            {stateClient.client.last_name}{" "}
+            {stateClient.client.second_name}{" "}
           </li>
-          <HandlerString data={stateClient.client.crm_contact_emails} />
-          <HandlerString data={stateClient.client.crm_contact_phones} />
+          <HandlerString data={stateClient.client.emails} />
+          <HandlerString data={stateClient.client.phones} />
         </ul>
         <div className="w50 border_container_v1">
           {/* <HandlerString data={stateClient.client.devices} /> */}
-          <p>В разработке... Нет данных с Data Collectora...</p>
+          <p>id устройства: {stateClient.client.mast_id}</p>
         </div>
       </div>
       <ul className="border_container_v1 w100 ">

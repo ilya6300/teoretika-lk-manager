@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../config.json";
-import { req } from "./api.config";
+import { req, reqPlaner } from "./api.config";
 import appState from "../state/app.state";
 import { toJS } from "mobx";
 import stateScenarios from "../state/state.scenarios";
@@ -225,9 +225,22 @@ class apiRequest {
     try {
       const res = await req("online_scripts");
       if (!res) return;
-      console.log("res.data.data.response", res.data.data.response);
+      console.log("getOnlineScenarios", res.data.data.response);
       appState.setScenarios(res.data.data.response);
       return res.data.data.response;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  getTemplaterList = async () => {
+    try {
+      const res = await reqPlaner(
+        "notifications_task_scheduler/get_scheduler_tasks"
+      );
+      if (!res) return;
+      console.log("getTemplaterList", res.data.response);
+      appState.getPlanerList(res.data.response);
+      return res.data.response;
     } catch (e) {
       console.error(e);
     }
@@ -258,6 +271,40 @@ class apiRequest {
       });
       console.log("postOnlineScenarios", res);
       return res.data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  emailPostOne = async (data) => {
+    try {
+      const res = await reqPlaner.post(
+        "notifications_user_email/add_message",
+        data
+      );
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  emailPostPlaner = async (data) => {
+    try {
+      const res = await reqPlaner.post(
+        "notifications_task_scheduler/post_scheduler_email",
+        data
+      );
+      console.log(res);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  getReport = async () => {
+    try {
+      const res = await req("report");
+      // console.log(res.data.data.response);
+      appState.setParameters("counter_scenarios", res.data.data.response);
     } catch (e) {
       console.error(e);
     }

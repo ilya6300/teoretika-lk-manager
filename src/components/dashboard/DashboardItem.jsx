@@ -5,13 +5,15 @@ import { Link, useLocation } from "react-router";
 export const DashboardItem = observer((props) => {
   const location = useLocation();
   useEffect(() => {
-    console.log(location);
+    console.log(location, props.d);
   }, []);
 
   return (
     <Link
       to={
-        props.d.link && location.pathname !== `/${props.d.link}`
+        props.d.link &&
+        location.pathname !== `/${props.d.link}` &&
+        props.d.link !== "visitor"
           ? `/${props.d.link}`
           : null
       }

@@ -72,6 +72,10 @@ export const CardString = ({ html, setHtmlFlagViewer }) => {
       });
     }
     setEdit(false);
+    await apiRequest.getHTMLTemplatString();
+    setTimeout(() => {
+      setHtmlFlagViewer(false);
+    }, 800);
   };
 
   return (

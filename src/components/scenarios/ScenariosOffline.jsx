@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { AddBtn } from "../../UI/components/AddBtn";
 import appState from "../../service/state/app.state";
 import ListScenarios from "./ListScenarios";
@@ -10,8 +10,42 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
   const getScenarios = async () => {
     await apiRequest.getOnlineScenarios();
   };
+  const getPlaner = async () => {
+    await apiRequest.getTemplaterList();
+  };
+
+  // const checkLoad = () => {
+  //   try {
+  //     const loadId = setInterval(() => {
+  //       getStartPage();
+  //       if (async_state._loaded === true) {
+  //         setLoaded(true);
+  //         clearInterval(loadId);
+  //       }
+  //     }, 250);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const taimer = checkLoad();
+  //   return () => taimer;
+  // }, []);
+  let counterTimer = null;
+  const getCounterFunc = async () => {
+    await apiRequest.getReport();
+    counterTimer = setInterval(() => {
+      apiRequest.getReport();
+    }, 2000);
+    return counterTimer;
+  };
+
+  useEffect(() => {
+    getCounterFunc();
+  }, []);
   useLayoutEffect(() => {
     getScenarios();
+    getPlaner();
   }, []);
   const removeScenarios = async (e) => {
     console.log(e);
@@ -34,9 +68,9 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
         filter: stateScenarios.type_scenarios.string,
       },
       {
-        name: "Е-майл",
-        id: "email",
-        filter: stateScenarios.type_scenarios.email,
+        name: "Рассылка",
+        id: "planer",
+        filter: stateScenarios.type_scenarios.planer,
       },
     ];
 

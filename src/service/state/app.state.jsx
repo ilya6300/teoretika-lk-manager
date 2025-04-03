@@ -11,7 +11,9 @@ class appState {
   templatesHTMLPopup = [];
   templatesHTMLString = [];
   online_scenarios = [];
+  planer_scenarios = [];
   offline_scenarios = [];
+  counter_scenarios = [];
   collection = {
     data: [
       // Пользователи
@@ -42,6 +44,13 @@ class appState {
   setScenarios = async (data) => {
     try {
       this.online_scenarios = data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  getPlanerList = async (data) => {
+    try {
+      this.planer_scenarios = data;
     } catch (e) {
       console.error(e);
     }

@@ -12,15 +12,22 @@ import CurrentElementOffline from "../components/scenarios/CurrentElementOffline
 import SelectedScenariosName from "../UI/components/scenarios/SelectedScenariosName";
 import ScenariosInpt from "../UI/components/scenarios/ScenariosInpt";
 import { AddBtn } from "../UI/components/AddBtn";
-import playIcon from "../images/icons/play.png";
+import playIcon from "../images/icons/save.png";
 import iconRefresh from "../images/icons/reload.png";
 import { PageComponent } from "../components/PageComponent";
 
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
   const location = useLocation();
-  const { body, descriptionScenarios, nameScenarios, event, type, id_event } =
-    location.state || {};
+  const {
+    body,
+    descriptionScenarios,
+    nameScenarios,
+    event,
+    type,
+    id_event,
+    is_active,
+  } = location.state || {};
 
   const [nameRequest, setNameRequest] = useState("");
   const [selectVisible, setSelectVisible] = useState(false);
@@ -29,7 +36,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const [name, setName] = useState("");
   const [typeEventString, setTypeEventString] = useState("");
   const [typeEvent, setTypeEvent] = useState(null);
-  const eventData = ["popup", "чат-строка"];
+  const eventData = ["popup", "чат-строка", "рассылка"];
   const [nameVisible, setNameVisible] = useState(false);
   const [description, setDescription] = useState("");
   const [firstNameScenarios, setFirstNameScenarios] = useState("Выберите");
@@ -214,6 +221,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             join: stateScenarios.join_data,
             filter: stateScenarios.filter_data,
             order: "{}",
+            is_active: is_active,
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),

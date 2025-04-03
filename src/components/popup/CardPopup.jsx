@@ -114,6 +114,10 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
             ),
       });
     }
+    apiRequest.getHTMLTemplatePopup();
+    setTimeout(() => {
+      setHtmlFlagViewer(false);
+    }, 800);
     setEdit(false);
   };
 
@@ -185,7 +189,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
   <p>Ваше имя?</p>
   <input id='inpt_name' type='text' placeholder='Представьтесь' />
   <p>Телефон:</p>
-  <!-- Внимание! Основная кнопка должа иметь id = 'teorika-btn-p-1' -->
+  <!-- Внимание! Основная кнопка должна иметь id = 'teorika-btn-p-1' -->
   <input id='inpt_phone' type='text' placeholder='Введите телефон' />
     <button id='teorika-btn-p-1'>Проверить скрипт</button>
 </div>`}
@@ -216,24 +220,18 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
                   // Обязательный элемент!!
 const teorikaBtn1 = document.querySelector('#teorika-btn-p-1')
 //
-                  const inptName = document.querySelector('#inpt_name')
+const inptName = document.querySelector('#inpt_name')
 const inptPhone = document.querySelector('#inpt_phone')
 
-btn1.onclick = () => {
-    if (inptName.value === '') {
-        return alert('Поле имя не заполнено, представьтесь, пожалуйста!')
-    }
-    if (inptPhone.value === '') {
-        return alert(`${inptName.value}, укажите ваш телефон, чтобы мы могли с вами связать!`)
-    }
-    alert('Спасибо, мы с вами свяжемся!')
+teorikaBtn1.onclick = () => {
+    alert(`Спасибо, ${inptName.value}! Мы с вами свяжемся, по телефону ${inptPhone.value}!`)
 }
 
 !!! Внимание!!! Если вы уже нажимали на кнопку регистрации скрипта (треугольник), и хотите далее тестировать скрипт в ЛК, то закомментируйте объявление переменных. Пример:
 
 // const inptName = document.querySelector('#inpt_name')
 // const inptPhone = document.querySelector('#inpt_phone')
-// const btn1 = document.querySelector('#btn1')
+// const teorikaBtn1 = document.querySelector('#teorika-btn-p-1')
 
 Но не забудьте раскомментировать обратно!"
                 />

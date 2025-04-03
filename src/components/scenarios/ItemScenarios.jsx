@@ -1,9 +1,32 @@
-import React, { useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router";
+import apiRequest from "../../service/api/api.request";
+import iconPlay from "../../images/icons/play.png";
+import { observer } from "mobx-react-lite";
+import appState from "../../service/state/app.state";
 
-const ItemScenarios = (props) => {
+const ItemScenarios = observer((props) => {
+  const [isActive, setIsActive] = useState(JSON.parse(props.s.body).is_active);
+  const [count, setCount] = useState(0);
+  const changeActive = async () => {
+    const body_ = JSON.parse(props.s.body);
+    body_.is_active = !isActive;
+    setIsActive(!isActive);
+    apiRequest.patchOnlineScenarios(props.s.id, {
+      body: JSON.stringify(body_),
+    });
+  };
+  useEffect(() => {
+    const countID = appState.counter_scenarios.find(
+      (c) => c.id_online_scripts === props.s.id
+    );
+    if (countID) {
+      // console.log(countID);
+      setCount(countID.count_event);
+    }
+  }, [appState.counter_scenarios]);
   useLayoutEffect(() => {
-    console.log(props.s);
+    console.log("ItemScenarios", props.s);
   }, []);
   return (
     <li className="tr_clients_row ">
@@ -17,6 +40,7 @@ const ItemScenarios = (props) => {
           nameScenarios: props.s.name,
           event: props.s.event,
           type: props.s.type,
+          is_active: isActive,
         }}
       >
         <span
@@ -34,6 +58,19 @@ const ItemScenarios = (props) => {
         <span className="event_tr_scenarios_row">{props.s.event}</span>
       </Link>
       <div className="utilite_tr_scenarios_row">
+        <label onClick={changeActive}>
+          {" "}
+          {isActive ? (
+            <div className="stop_scenarios_btn"></div>
+          ) : (
+            <img
+              className="play_scenarios_btn"
+              src={iconPlay}
+              alt="Остановлен"
+            />
+          )}
+        </label>
+        {count}
         <button
           className="delete_icon"
           onClick={() => props.removeScenarios(props.s)}
@@ -41,6 +78,6 @@ const ItemScenarios = (props) => {
       </div>
     </li>
   );
-};
+});
 
 export default ItemScenarios;

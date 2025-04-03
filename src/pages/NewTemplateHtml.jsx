@@ -92,7 +92,7 @@ export const NewTemplateHtml = () => {
       data: window.btoa(unescape(encodeURIComponent(html))),
     });
     if (res) {
-      return navigation("/email");
+      return navigation("/html");
     } else {
       alert("Не удалось сохранить");
     }

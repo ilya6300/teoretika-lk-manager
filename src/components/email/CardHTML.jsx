@@ -45,6 +45,10 @@ export const CardHTML = ({ html, setHtmlFlagViewer }) => {
       data: window.btoa(unescape(encodeURIComponent(htmlFile))),
     });
     setEdit(false);
+    await apiRequest.getHTMLTemplateEmail();
+    setTimeout(() => {
+      setHtmlFlagViewer(false);
+    }, 800);
   };
 
   const refPreview = useRef(null);
