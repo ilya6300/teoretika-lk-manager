@@ -40,15 +40,11 @@ export const Auth = () => {
       const t = res.data.data.access_token.replace(/..$/, "");
       const k = String(res.data.data.access_token.match(/..$/));
       const r = appState.r();
-      console.log(res.data.data.access_token);
-      console.log(t);
-      console.log(k);
-      console.log(r);
       localStorage.setItem("at", appState.e(t));
       localStorage.setItem("k", appState.e(k + r));
       appState.setParameters("isAuth", true);
       // setTimeout(() => {
-      return navigation("/clients");
+      return navigation("/home");
       // }, 100);
     } else {
       setErrInptPass(res.data.message);
