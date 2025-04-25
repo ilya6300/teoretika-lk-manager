@@ -1,0 +1,46 @@
+.container-loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+.loader_v2 {
+  text-align: center;
+  position: relative;
+  /* display: inline-block;
+    text-align: center; */
+
+  width: 42vw;
+  text-wrap: nowrap;
+}
+.loader_v2::before {
+  display: inline-block;
+  position: absolute;
+  top: -100px;
+  left: 0;
+  content: "Загружаю сценарий...";
+  font-weight: 900;
+  font-size: var(--f6);
+  letter-spacing: 1vw;
+  color: #6c798b2c;
+  background-clip: text;
+  background-color: var(--my_lazur_v2);
+  animation: loader_v2 2s infinite ease-in;
+}
+
+@keyframes loader_v2 {
+  0% {
+    width: 0%;
+  }
+  75% {
+    width: 100%;
+  }
+  85% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}

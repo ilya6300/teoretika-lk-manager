@@ -8,7 +8,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 45px 0;
+  padding: 25px 0 25px;
   border-radius: 0 6px 6px 0;
 }
 .nav_link {
@@ -22,4 +22,13 @@
   display: flex;
   flex-direction: column;
   gap: 2vh;
+}
+.logo_and_link {
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+.logo {
+  min-width: 50px;
+  max-width: 120px;
 }

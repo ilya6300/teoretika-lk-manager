@@ -5,7 +5,7 @@ import stateScenarios from "../../service/state/state.scenarios";
 import appState from "../../service/state/app.state";
 
 const ListScenarios = observer(({ data, removeScenarios }) => {
-  // if (data.length !== 0) {
+  // if (data) {
   return (
     <ul className="list_container">
       <li className="tr_clients_row">
@@ -21,7 +21,7 @@ const ListScenarios = observer(({ data, removeScenarios }) => {
           Инструменты
         </div>
       </li>
-      {data.length !== 0 ? (
+      {data ? (
         data.map((s) =>
           (s.event === "popup" && stateScenarios.type_scenarios.popup) ||
           (s.event === "чат-строка" && stateScenarios.type_scenarios.string) ? (
@@ -34,7 +34,7 @@ const ListScenarios = observer(({ data, removeScenarios }) => {
         <></>
       )}
 
-      {appState.planer_scenarios.length !== 0 ? (
+      {appState.planer_scenarios !== undefined ? (
         appState.planer_scenarios.map((p) =>
           stateScenarios.type_scenarios.planer ? (
             <li className="tr_clients_row ">

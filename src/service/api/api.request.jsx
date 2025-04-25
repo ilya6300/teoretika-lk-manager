@@ -8,7 +8,7 @@ import stateScenarios from "../state/state.scenarios";
 class apiRequest {
   login = async (_email, _password) => {
     try {
-      const res = await axios.post(`${config.url_api}auth`, {
+      const res = await axios.post(`${config.url_api}auth/`, {
         email: _email,
         password: _password,
       });
@@ -25,9 +25,9 @@ class apiRequest {
   getAllClient = async () => {
     if (appState.collection.isLoader) return;
     const [users_collect, client_collect, visitor_collect] = await Promise.all([
-      req("customers/users_collect"),
-      req("customers/client_collect"),
-      req("customers/visitor_collect"),
+      req("customers/users_collect/"),
+      req("customers/client_collect/"),
+      req("customers/visitor_collect/"),
     ]);
     appState.setParameters(`collection`, {
       data: [
@@ -58,26 +58,26 @@ class apiRequest {
   };
 
   getProfile = async () => {
-    const res = await req("my_profile");
+    const res = await req("my_profile/");
     if (!res) return;
     // console.log(res.data.data);
     return res.data.data;
   };
   patchDateProfile = async (obj) => {
     // console.log(obj);
-    const res = await req.patch("my_profile", obj);
+    const res = await req.patch("my_profile/", obj);
     // console.log(res);
   };
 
   changePass = async (pass) => {
-    await req.patch("my_profile/change_password", {
+    await req.patch("my_profile/change_password/", {
       password: pass,
     });
   };
 
   getHTMLTemplateEmail = async () => {
     try {
-      const res = await req("templates");
+      const res = await req("templates/");
       if (!res) return;
       appState.setParameters("templatesHTMLEmail", res.data.data.response);
       return res.data.data.response;
@@ -88,7 +88,7 @@ class apiRequest {
 
   getHTMLTemplatePopup = async () => {
     try {
-      const res = await req("routing");
+      const res = await req("routing/");
       if (!res) return;
       appState.setParameters("templatesHTMLPopup", res.data.data.response);
       return res.data.data.response;
@@ -98,7 +98,7 @@ class apiRequest {
   };
   getHTMLTemplatString = async () => {
     try {
-      const res = await req("strings");
+      const res = await req("strings/");
       if (!res) return;
       appState.setParameters("templatesHTMLString", res.data.data.response);
       return res.data.data.response;
@@ -109,7 +109,7 @@ class apiRequest {
 
   postHTMLTemplate = async (obj) => {
     try {
-      const res = await req.post("templates", obj);
+      const res = await req.post("templates/", obj);
       // console.log(res);
       return res.data.success;
     } catch (e) {
@@ -120,7 +120,7 @@ class apiRequest {
   removeHTMLTemplate = async (obj) => {
     try {
       // console.log(obj);
-      const res = await axios.delete(`${config.url_api}templates`, {
+      const res = await axios.delete(`${config.url_api}templates/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${
@@ -146,7 +146,7 @@ class apiRequest {
 
   postPopup = async (obj) => {
     try {
-      const res = await req.post(`routing`, obj);
+      const res = await req.post(`routing/`, obj);
       console.log(res);
       return res.data.success;
     } catch (e) {
@@ -166,7 +166,7 @@ class apiRequest {
 
   postString = async (obj) => {
     try {
-      const res = await req.post(`strings`, obj);
+      const res = await req.post(`strings/`, obj);
       console.log(res);
       return res.data.success;
     } catch (e) {
@@ -196,7 +196,7 @@ class apiRequest {
 
   getFilterJoin = async (name) => {
     try {
-      const res = await req.post("search/fields", {
+      const res = await req.post("search/fields/", {
         fields: name,
       });
       console.log("getFilter", res.data.data);
@@ -235,8 +235,9 @@ class apiRequest {
   getTemplaterList = async () => {
     try {
       const res = await reqPlaner(
-        "notifications_task_scheduler/get_scheduler_tasks"
+        "notifications/notifications_task_scheduler/get_scheduler_tasks/"
       );
+      console.log("getTemplaterList", res);
       if (!res) return;
       console.log("getTemplaterList", res.data.response);
       appState.getPlanerList(res.data.response);
@@ -247,7 +248,7 @@ class apiRequest {
   };
   postOnlineScenarios = async (obj) => {
     try {
-      const res = await req.post(`online_scripts`, obj);
+      const res = await req.post(`online_scripts/`, obj);
       console.log("postOnlineScenarios", res);
       return res.data;
     } catch (e) {
@@ -266,7 +267,7 @@ class apiRequest {
 
   removeOnlineScenarios = async (id) => {
     try {
-      const res = await req.delete(`online_scripts`, {
+      const res = await req.delete(`online_scripts/`, {
         data: { id_scripts: [id] },
       });
       console.log("postOnlineScenarios", res);
@@ -279,10 +280,11 @@ class apiRequest {
   emailPostOne = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_user_email/add_message",
+        "notifications/notifications_user_email/add_message/",
         data
       );
       console.log(res);
+      return res.data.success;
     } catch (e) {
       console.error(e);
     }
@@ -291,10 +293,11 @@ class apiRequest {
   emailPostPlaner = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_task_scheduler/post_scheduler_email",
+        "notifications/notifications_task_scheduler/post_scheduler_email/",
         data
       );
       console.log(res);
+      return res.data.success;
     } catch (e) {
       console.error(e);
     }
@@ -303,10 +306,11 @@ class apiRequest {
   getReport = async () => {
     try {
       const res = await req("report");
-      // console.log(res.data.data.response);
-      appState.setParameters("counter_scenarios", res.data.data.response);
+      if (res) {
+        appState.setParameters("counter_scenarios", res.data.data.response);
+      }
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
   };
 }

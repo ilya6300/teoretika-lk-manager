@@ -145,11 +145,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
 
   const playScenarios = async () => {
     try {
-      console.log(
-        toJS(stateScenarios.offlineScenariosInterface),
-        toJS(stateScenarios.join_data),
-        toJS(stateScenarios.resultevent)
-      );
+      // console.log(
+      //   toJS(stateScenarios.offlineScenariosInterface),
+      //   toJS(stateScenarios.join_data),
+      //   toJS(stateScenarios.resultevent)
+      // );
       function extractMastIds(obj, result = new Set(), name) {
         if (obj && typeof obj === "object") {
           // if (obj.mast_id) {
@@ -191,7 +191,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
           }, new Set()),
         ];
         console.log(uniqueMastIds);
-        apiRequest.postOnlineScenarios({
+        const resReq = await apiRequest.postOnlineScenarios({
           type: objReques.type,
           name: objReques.name,
           event: objReques.event,
@@ -208,6 +208,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             .replace(/^ /g, "")
             .replace(/$/g, ","),
         });
+        if (resReq) {
+          setTimeout(() => {
+            setNewScenariosOffline(false);
+          }, 400);
+        }
       } else if (objReques.type === "templates" && planer) {
         const uniqueMastIds = [
           ...stateScenarios.resultevent.reduce((acc, item) => {
@@ -215,18 +220,19 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             return acc;
           }, new Set()),
         ];
+        console.log(uniqueMastIds);
         setEmailReques({ ...emailReques, list_to: uniqueMastIds });
-        console.log({
-          trigger: emailReques.trigger,
-          // "message_id": "string",
-          message: objReques.name,
-          list_to: uniqueMastIds,
-          template: objReques.id_event,
-          sent_every_: emailReques.sent_every_,
-          interval: emailReques.interval,
-          start_date: emailReques.start_date,
-          end_date: emailReques.end_date,
-        });
+        // console.log({
+        //   trigger: emailReques.trigger,
+        //   // "message_id": "string",
+        //   message: objReques.name,
+        //   list_to: uniqueMastIds,
+        //   template: objReques.id_event,
+        //   sent_every_: emailReques.sent_every_,
+        //   interval: emailReques.interval,
+        //   start_date: emailReques.start_date,
+        //   end_date: emailReques.end_date,
+        // });
         if (emailReques.trigger === "") {
           return alert("Не выбран тип периода");
         }
@@ -252,7 +258,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
           return alert("Не выбран шаблон");
         }
         console.log(objReques, emailReques);
-        await apiRequest.emailPostPlaner({
+        const resReq = await apiRequest.emailPostPlaner({
           trigger: emailReques.trigger,
           // "message_id": "string",
           message: objReques.name,
@@ -263,6 +269,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
           start_date: emailReques.start_date,
           end_date: emailReques.end_date,
         });
+        if (resReq) {
+          setTimeout(() => {
+            setNewScenariosOffline(false);
+          }, 400);
+        }
       } else if (objReques.type === "templates" && !planer) {
         const uniqueMastIds = [
           ...stateScenarios.resultevent.reduce((acc, item) => {
@@ -270,6 +281,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             return acc;
           }, new Set()),
         ];
+        console.log(uniqueMastIds);
         if (objReques.name === "") {
           return alert("Не указан заголовок");
         }
@@ -279,22 +291,27 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         if (objReques.id_event === "") {
           return alert("Не выбран шаблон");
         }
-        await apiRequest.emailPostOne({
-          message: objReques.name,
-          // list_to: uniqueMastIds,
-          list_to: ["support1@mact.ru"],
-          template: objReques.id_event,
-        });
-        console.log({
+        const resReq = await apiRequest.emailPostOne({
           message: objReques.name,
           list_to: uniqueMastIds,
-          template: objReques.id_event,
-          // query_params: {},
+          // list_to: ["support1@mact.ru"],
+          template: Number(objReques.id_event),
         });
+        if (resReq) {
+          setTimeout(() => {
+            setNewScenariosOffline(false);
+          }, 400);
+        }
+        // console.log({
+        //   message: objReques.name,
+        //   list_to: uniqueMastIds,
+        //   template: objReques.id_event,
+        // query_params: {},
+        // });
       }
-      setTimeout(() => {
-        setNewScenariosOffline(false);
-      }, 800);
+      // setTimeout(() => {
+
+      // }, 800);
     } catch (e) {
       console.error(e);
     }
@@ -350,9 +367,9 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
       setObjReques(objReques, ...(objReques.id_event = String(resID.id)));
       setObjReques({ ...objReques, id_event: String(resID.id) });
     }
-    if (typeEventString !== "рассылка") {
-      setNameVisible(true);
-    }
+    // if (typeEventString !== "рассылка") {
+    setNameVisible(true);
+    // }
   };
 
   const onChangeName = (e) => {
@@ -361,7 +378,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   };
   const onChangeDescription = (e) => {
     setDescription(e.target.value);
-    setObjReques(objReques, ...(objReques.description = e.target.value));
+    // setObjReques(objReques, ...(objReques.description = e.target.value));
     setObjReques({ ...objReques, description: e.target.value });
   };
 
@@ -453,7 +470,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                 <></>
               )}
               {nameVisible ? (
-                <div className="selected_container">
+                <>
                   {/* <p>Опишите сценарий</p> */}
                   <textarea
                     placeholder="Описание сценария"
@@ -461,33 +478,34 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                     onChange={onChangeDescription}
                     className="textarea_v1"
                   />
-                </div>
+                </>
               ) : (
                 <></>
               )}
               {nameVisible ? (
-                <div className="selected_container">
+                <>
                   {/* <p>Напишите название сценария</p> */}
                   <ScenariosInpt
-                    placeholder="Название сценария"
+                    placeholder={
+                      objReques.type !== "templates"
+                        ? "Название сценария"
+                        : "Название рассылки"
+                    }
                     value={name}
                     onChange={onChangeName}
                     style={{ width: "250px" }}
                   />
-                </div>
+                </>
               ) : (
                 <></>
               )}
-              {objReques.type === "templates" ? (
-                <div className="selected_container">
-                  {/* <p>Напишите название сценария</p> */}
-                  <ScenariosInpt
-                    placeholder="Заголовок рассылки"
-                    value={name}
-                    onChange={onChangeName}
-                    style={{ width: "250px" }}
-                  />
-                </div>
+              {nameVisible && objReques.name ? (
+                <img
+                  className="scenarios_filter_play_icon"
+                  onClick={playScenarios}
+                  src={playIcon}
+                  alt=""
+                />
               ) : (
                 <></>
               )}
@@ -503,13 +521,6 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
           ) : (
             <></>
           )}
-
-          <img
-            className="scenarios_filter_play_icon"
-            onClick={playScenarios}
-            src={playIcon}
-            alt=""
-          />
         </div>
       </div>
       <ul>

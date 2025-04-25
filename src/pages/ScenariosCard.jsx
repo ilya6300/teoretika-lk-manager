@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useParams, useLocation, Link } from "react-router";
+import { useParams, useLocation, Link, useNavigate } from "react-router";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import apiRequest from "../service/api/api.request";
 import stateScenarios from "../service/state/state.scenarios";
@@ -15,6 +15,7 @@ import { AddBtn } from "../UI/components/AddBtn";
 import playIcon from "../images/icons/save.png";
 import iconRefresh from "../images/icons/reload.png";
 import { PageComponent } from "../components/PageComponent";
+import LoaderScenarios from "../UI/components/LoaderScenarios";
 
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
@@ -29,9 +30,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     is_active,
   } = location.state || {};
 
+  const navigate = useNavigate();
+  const [scenariosIsLoad, setScenariosIsLoad] = useState(false);
+
   const [nameRequest, setNameRequest] = useState("");
   const [selectVisible, setSelectVisible] = useState(false);
-  const first_data = ["клиент", "пользователь", "посетитель"];
+  // const first_data = ["клиент", "пользователь", "посетитель"];
   const [selectEvent, setSelectEvent] = useState(false);
   const [name, setName] = useState("");
   const [typeEventString, setTypeEventString] = useState("");
@@ -39,8 +43,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const eventData = ["popup", "чат-строка", "рассылка"];
   const [nameVisible, setNameVisible] = useState(false);
   const [description, setDescription] = useState("");
-  const [firstNameScenarios, setFirstNameScenarios] = useState("Выберите");
+  // const [firstNameScenarios, setFirstNameScenarios] = useState("Выберите");
   const [firstNameEvent, setFirstNameEvent] = useState("Событие");
+  const [firstNameEventID, setFirstNameEventID] = useState("Событие");
   const [objReques, setObjReques] = useState({
     type: "",
     name: "",
@@ -106,7 +111,26 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       //   }, 300);
     } catch (e) {
       console.error(e);
+    } finally {
+      setScenariosIsLoad(true);
     }
+  };
+
+  const getAutoRequestNameEvent = async () => {
+    let res;
+    if (event === "popup") {
+      res = await apiRequest.getHTMLTemplatePopup();
+      console.log("getAutoRequestNameEvent", res);
+    }
+    if (event === "чат-строка") {
+      res = await apiRequest.getHTMLTemplatString();
+      console.log("getAutoRequestNameEvent", res);
+    }
+    const nameEvent = res.find((e) => e.id === id_event);
+    if (nameEvent) {
+      setFirstNameEventID(nameEvent.name);
+    }
+    console.log("nameEvent", nameEvent);
   };
 
   useLayoutEffect(() => {
@@ -117,11 +141,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setName(nameScenarios);
     setDescription(descriptionScenarios);
     setFirstNameEvent(event);
+    console.log(id_event);
     // objReques = {...objReques, name: nameScenarios, }
     objReques.name = nameScenarios;
     objReques.description = descriptionScenarios;
     objReques.id_event = id_event;
-
+    getAutoRequestNameEvent();
     // stateScenarios.resetData("join_data");
     // showSelec();
     // setTimeout(() => {
@@ -187,32 +212,54 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
 
   const playScenarios = async () => {
     try {
-      function extractMastIds(obj, result = new Set()) {
+      // console.log(
+      //   toJS(stateScenarios.offlineScenariosInterface),
+      //   toJS(stateScenarios.join_data),
+      //   toJS(stateScenarios.resultevent)
+      // );
+      function extractMastIds(obj, result = new Set(), name) {
         if (obj && typeof obj === "object") {
-          if (obj.mast_id) {
-            result.add(` &${obj.mast_id}`); // Добавляем mast_id в Set
+          // if (obj.mast_id) {
+          if (obj[`${name}`]) {
+            // console.log(obj["mast_id"]);
+            if (name === "mast_id") {
+              result.add(` &${obj[`${name}`]},`); // Добавляем mast_id в Set
+            } else {
+              result.add(`${obj[`${name}`]}`); // Добавляем mast_id в Set
+            }
           }
           // Рекурсивно обходим все ключи объекта
-          Object.values(obj).forEach((value) => extractMastIds(value, result));
+          Object.values(obj).forEach((value) =>
+            extractMastIds(value, result, name)
+          );
         }
         return result;
       }
+      // console.log(1);
       // Собираем все уникальные mast_id
-      const uniqueMastIds = [
-        ...stateScenarios.resultevent.reduce((acc, item) => {
-          extractMastIds(item, acc); // Обрабатываем каждый объект в массиве
-          return acc;
-        }, new Set()),
-      ];
-      if (objReques.name === "") {
-        return alert("Имя не задано");
+
+      // console.log(2);
+
+      if (JSON.stringify(stateScenarios.filter_data) === "{}") {
+        // return alert("Филтры не настроены");
       }
-      if (objReques.description === "") {
-        return alert("Описание не задано");
-      }
-      console.log(objReques);
-      if (JSON.stringify(stateScenarios.filter_data) !== "{}") {
-        apiRequest.patchOnlineScenarios(id, {
+
+      if (objReques.type !== "templates") {
+        if (objReques.name === "") {
+          // return alert("Имя не задано");
+        }
+        if (objReques.description === "") {
+          // return alert("Описание не задано");
+        }
+        const uniqueMastIds = [
+          ...stateScenarios.resultevent.reduce((acc, item) => {
+            extractMastIds(item, acc, "mast_id"); // Обрабатываем каждый объект в массиве
+            return acc;
+          }, new Set()),
+        ];
+        // console.log(uniqueMastIds);
+        console.log("Это проверка описания", objReques);
+        const resReq = await apiRequest.patchOnlineScenarios(id, {
           type: objReques.type,
           name: objReques.name,
           event: objReques.event,
@@ -221,7 +268,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             join: stateScenarios.join_data,
             filter: stateScenarios.filter_data,
             order: "{}",
-            is_active: is_active,
+            is_active: true,
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
@@ -229,8 +276,11 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             .replace(/^ /g, "")
             .replace(/$/g, ","),
         });
-      } else {
-        alert("Филтры не настроены");
+        if (resReq) {
+          setTimeout(() => {
+            navigate("/scenarios");
+          }, 400);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -290,36 +340,32 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
 
   const onChangeName = (e) => {
     setName(e.target.value);
-    setObjReques(objReques, ...(objReques.name = e.target.value));
+    setObjReques({ ...objReques, name: e.target.value });
   };
   const onChangeDescription = (e) => {
+    console.log(e.target.value, objReques.description);
     setDescription(e.target.value);
-    setObjReques(objReques, ...(objReques.description = e.target.value));
+    setObjReques({ ...objReques, description: e.target.value });
   };
 
   const filterBarRef = useRef(null);
-  return (
-    <PageComponent>
-      <div className="scenarios_container">
-        <Link to={`/scenarios`}>
-          <BtnBackHeaderPage />
-        </Link>
+  if (scenariosIsLoad) {
+    return (
+      <PageComponent>
         <div className="scenarios_container">
-          <span>
-            Выбрано:{" "}
-            {stateScenarios.resultevent !== "Нет данных"
-              ? stateScenarios.resultevent.length
-              : 0}
-          </span>
-          <div className="scenarios_container_filter">
-            <div className="scenarios_filter_bar" ref={filterBarRef}></div>
-            {!selectVisible ? (
-              <SelectedScenarios
-                firstName={firstNameScenarios}
-                data={first_data}
-                onChange={onChangeSelectNew}
-              />
-            ) : (
+          <Link to={`/scenarios`}>
+            <BtnBackHeaderPage />
+          </Link>
+          <div className="scenarios_container">
+            <span>
+              Выбрано:{" "}
+              {stateScenarios.resultevent !== "Нет данных"
+                ? stateScenarios.resultevent.length
+                : 0}
+            </span>
+            <div className="scenarios_container_filter">
+              <div className="scenarios_filter_bar" ref={filterBarRef}></div>
+
               <div className="scenarios_filter_container scenarios_filter_span">
                 <div className="scenarios_filter_span">
                   <div className="select_container">
@@ -344,90 +390,94 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                   />
                 </div>
               </div>
-            )}
-            {stateScenarios.offlineScenariosInterface.map((c) => (
-              <CurrentElementOffline
-                removeElement={removeElement}
-                c={c}
-                key={c.id}
-                onChangeSelect={onChangeSelect}
-                // addFilterElement={addFilterElement}
-              />
-            ))}
 
-            {selectEvent ? (
-              <div className="scenarios_container_filter_select_event">
-                <SelectedScenarios
-                  refValue={refValueEvent}
-                  firstName={firstNameEvent}
-                  data={eventData}
-                  onChange={onChangeEvent}
+              {stateScenarios.offlineScenariosInterface.map((c) => (
+                <CurrentElementOffline
+                  removeElement={removeElement}
+                  c={c}
+                  key={c.id}
+                  onChangeSelect={onChangeSelect}
+                  // addFilterElement={addFilterElement}
                 />
-                {typeEvent !== null ? (
-                  <SelectedScenariosName
-                    data={typeEvent}
-                    onChange={onChangeEventID}
-                    cls="inpt_v1"
-                  />
-                ) : (
-                  <></>
-                )}
-                {nameVisible ? (
-                  <div className="selected_container">
-                    {/* <p>Опишите сценарий</p> */}
-                    <textarea
-                      placeholder="Описание сценария"
-                      value={description}
-                      onChange={onChangeDescription}
-                      className="textarea_v1"
-                    />
-                  </div>
-                ) : (
-                  <></>
-                )}
-                {nameVisible ? (
-                  <div className="selected_container">
-                    {/* <p>Напишите название сценария</p> */}
-                    <ScenariosInpt
-                      placeholder="Название сценария"
-                      value={name}
-                      onChange={onChangeName}
-                      style={{ width: "250px" }}
-                    />
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-            ) : (
-              <></>
-            )}
-            {!nameVisible ? (
-              <AddBtn
-                help="Выбрать инструмент"
-                onClick={() => setSelectEvent(!selectEvent)}
-              />
-            ) : (
-              <></>
-            )}
+              ))}
 
-            <img
-              className="scenarios_filter_play_icon"
-              onClick={playScenarios}
-              src={playIcon}
-              alt=""
-            />
+              {selectEvent ? (
+                <>
+                  <SelectedScenarios
+                    refValue={refValueEvent}
+                    firstName={firstNameEvent}
+                    data={eventData}
+                    onChange={onChangeEvent}
+                  />
+                  {typeEvent !== null ? (
+                    <SelectedScenariosName
+                      data={typeEvent}
+                      firstName={firstNameEventID}
+                      onChange={onChangeEventID}
+                      cls="inpt_v1"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {nameVisible ? (
+                    <div className="selected_container">
+                      {/* <p>Опишите сценарий</p> */}
+                      <textarea
+                        placeholder="Описание сценария"
+                        value={description}
+                        onChange={onChangeDescription}
+                        className="textarea_v1"
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  {nameVisible ? (
+                    <div className="selected_container">
+                      {/* <p>Напишите название сценария</p> */}
+                      <ScenariosInpt
+                        placeholder="Название сценария"
+                        value={name}
+                        onChange={onChangeName}
+                        style={{ width: "250px" }}
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
+              {!nameVisible ? (
+                <AddBtn
+                  help="Выбрать инструмент"
+                  onClick={() => setSelectEvent(!selectEvent)}
+                />
+              ) : (
+                <></>
+              )}
+
+              <img
+                className="scenarios_filter_play_icon"
+                onClick={playScenarios}
+                src={playIcon}
+                alt=""
+              />
+            </div>
           </div>
+          <ul>
+            <li> "build": {JSON.stringify(stateScenarios.build_data)},</li>
+            <li> "join": {JSON.stringify(stateScenarios.join_data)},</li>
+            <li> "filter": {JSON.stringify(stateScenarios.filter_data)}</li>
+            <li> "order": {JSON.stringify({})}</li>
+          </ul>
         </div>
-        <ul>
-          <li> "build": {JSON.stringify(stateScenarios.build_data)},</li>
-          <li> "join": {JSON.stringify(stateScenarios.join_data)},</li>
-          <li> "filter": {JSON.stringify(stateScenarios.filter_data)}</li>
-          <li> "order": {JSON.stringify({})}</li>
-        </ul>
-      </div>
-    </PageComponent>
-  );
+      </PageComponent>
+    );
+  } else {
+    return <LoaderScenarios />;
+  }
 });
 
 export default ScenariosCard;

@@ -23,6 +23,7 @@ req.interceptors.response.use(
   (e) => {
     // const navigate = useNavigate();
     if (axios.isAxiosError(e)) {
+      if (e.status === 404) return;
       console.error(e);
       if (e.message === "Network Error") {
         return alert("Нет подключения к серверу");

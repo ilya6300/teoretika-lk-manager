@@ -1,4 +1,4 @@
 {
-  "url_api": "http://10.76.10.145:5053/api/v1/",
-  "url_api_planer": "http://10.76.10.145:8031/"
+  "url_api": "https://teorika.ru/api/v1/",
+  "url_api_planer": "https://teorika.ru/"
 }
