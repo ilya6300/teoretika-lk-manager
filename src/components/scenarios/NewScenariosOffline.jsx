@@ -251,24 +251,40 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         if (emailReques.start_date === "") {
           return alert("Не выбран дата на начала");
         }
-        if (emailReques.end_date === "") {
+        if (emailReques.end_date === "" && emailReques.trigger !== "date") {
           return alert("Не выбран дата на окончания");
         }
         if (objReques.id_event === "") {
           return alert("Не выбран шаблон");
         }
         console.log(objReques, emailReques);
-        const resReq = await apiRequest.emailPostPlaner({
-          trigger: emailReques.trigger,
-          // "message_id": "string",
-          message: objReques.name,
-          list_to: uniqueMastIds,
-          template: objReques.id_event,
-          sent_every_: emailReques.sent_every_,
-          interval: Number(emailReques.interval),
-          start_date: emailReques.start_date,
-          end_date: emailReques.end_date,
-        });
+        let resReq;
+        if (emailReques.sent_every_ !== "run_date") {
+          resReq = await apiRequest.emailPostPlaner({
+            trigger: emailReques.trigger,
+            // "message_id": "string",
+            message: objReques.name,
+            list_to: uniqueMastIds,
+            template: Number(objReques.id_event),
+            sent_every_: emailReques.sent_every_,
+            interval: Number(emailReques.interval),
+            start_date: emailReques.start_date,
+            end_date: emailReques.end_date,
+          });
+        } else {
+          resReq = await apiRequest.emailPostPlaner({
+            trigger: emailReques.trigger,
+            // "message_id": "string",
+            message: objReques.name,
+            list_to: uniqueMastIds,
+            template: Number(objReques.id_event),
+            sent_every_: emailReques.sent_every_,
+            // interval: Number(emailReques.interval),
+            start_date: emailReques.start_date,
+            // end_date: emailReques.end_date,
+          });
+        }
+
         if (resReq) {
           setTimeout(() => {
             setNewScenariosOffline(false);

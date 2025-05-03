@@ -10,7 +10,11 @@ export const EmailScenariosBlock = observer(
 
     const onChangeTrigger = (e) => {
       if (e.target.value === "Единожды") {
-        return setEmailReques({ ...emailReques, trigger: "date" });
+        return setEmailReques({
+          ...emailReques,
+          trigger: "date",
+          sent_every_: "run_date",
+        });
       } else if (e.target.value === "Повтор интервально") {
         return setEmailReques({ ...emailReques, trigger: "interval" });
       } else if (e.target.value === "Повтор по времени") {
@@ -65,16 +69,17 @@ export const EmailScenariosBlock = observer(
             type="datetime-local"
           />
         </label>
-        <label>
-          Конец выполнения сценария{" "}
-          <ScenariosInpt
-            value={endDate}
-            onChange={onChangeEndDate}
-            type="datetime-local"
-          />
-        </label>
+
         {emailReques.trigger === "interval" ? (
           <>
+            <label>
+              Конец выполнения сценария{" "}
+              <ScenariosInpt
+                value={endDate}
+                onChange={onChangeEndDate}
+                type="datetime-local"
+              />
+            </label>
             <label>
               Каждый(ую){" "}
               <SelectedScenarios

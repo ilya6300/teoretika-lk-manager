@@ -196,7 +196,7 @@ class apiRequest {
 
   getFilterJoin = async (name) => {
     try {
-      const res = await req.post("search/fields", {
+      const res = await req.post("search/fields/", {
         fields: name,
       });
       console.log("getFilter", res.data.data);
@@ -235,7 +235,7 @@ class apiRequest {
   getTemplaterList = async () => {
     try {
       const res = await reqPlaner(
-        "notifications_task_scheduler/get_scheduler_tasks"
+        "notifications/notifications_task_scheduler/get_scheduler_tasks"
       );
       console.log("getTemplaterList", res);
       if (!res) return;
@@ -280,7 +280,7 @@ class apiRequest {
   emailPostOne = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_user_email/add_message",
+        "notifications/notifications_user_email/add_message",
         data
       );
       console.log(res);
@@ -293,7 +293,7 @@ class apiRequest {
   emailPostPlaner = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_task_scheduler/post_scheduler_email",
+        "notifications/notifications_task_scheduler/post_scheduler_email",
         data
       );
       console.log(res);
