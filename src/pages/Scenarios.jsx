@@ -31,31 +31,24 @@ export const Scenarios = observer(() => {
 
   if (!newScenariosOffline) {
     return (
-      <PageComponent title="Сценарии">
+      <div className="container_main_top">
         <div className="tabContainer">
           <span onClick={selectedTabOffline} className={tabOfflineCls}>
             Сценарии на сайте
           </span>
         </div>
-        {tabOffline ? (
-          <ScenariosOffline
-            setNewScenariosOnline={setNewScenariosOnline}
-            setNewScenariosOffline={setNewScenariosOffline}
-          />
-        ) : (
-          <></>
-        )}
-      </PageComponent>
+        {tabOffline ? <ScenariosOffline setNewScenariosOnline={setNewScenariosOnline} setNewScenariosOffline={setNewScenariosOffline} /> : <></>}
+      </div>
     );
   }
   if (newScenariosOffline) {
     return (
-      <PageComponent title="Создание сценария">
+      <div className="container_main_top">
         <NewScenariosOffline
           setNewScenariosOffline={setNewScenariosOffline}
           // goCard={goCard}
         />
-      </PageComponent>
+      </div>
     );
   }
 });

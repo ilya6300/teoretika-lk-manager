@@ -283,8 +283,7 @@ class apiRequest {
         "notifications_user_email/add_message",
         data
       );
-      console.log(res);
-      return res.data.success;
+      return res.data.response;
     } catch (e) {
       console.error(e);
     }

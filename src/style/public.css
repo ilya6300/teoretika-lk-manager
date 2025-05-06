@@ -43,7 +43,7 @@ a.active {
   width: 100%;
   position: relative;
   background: #f4f4f4;
-  overflow: auto;
+  overflow: hidden;
 }
 .container_50 {
   width: 50%;

@@ -4,6 +4,7 @@ import stateScenarios from "../../service/state/state.scenarios";
 import SelectedConditionFilter from "./SelectedConditionFilter";
 import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
+import iconEventListBtn from "../../images/icons/list_btn.png";
 
 const TypeValue = observer(({ f, id, c }) => {
   const [value, setValue] = useState("");
@@ -13,9 +14,17 @@ const TypeValue = observer(({ f, id, c }) => {
   // const [conditionName, setConditionName] = useState("");
 
   const getTypeValue = (name) => {
+    console.log(name);
     if (name === "==") {
       // setCondition("==");
       const conditionValue = { target: { value: "равно" } };
+      return conditionValue;
+      // setCondition("равно");
+    }
+    if (name === "!=") {
+      // setCondition("==");
+
+      const conditionValue = { target: { value: "не равно" } };
       return conditionValue;
       // setCondition("равно");
     }
@@ -47,14 +56,7 @@ const TypeValue = observer(({ f, id, c }) => {
 
   useLayoutEffect(() => {
     setValue(f.value);
-    // getTypeValue(f.condition);
     console.log("TypeValue", toJS(f), f.condition);
-    // const changeValue = {
-    //   target: {
-    //     value: f.condition,
-    //   },
-    // };
-    // setConditionName()
     onChangeCondition(getTypeValue(f.condition));
   }, [f.value, f.condition]);
   const updateOr = () => {
@@ -71,12 +73,16 @@ const TypeValue = observer(({ f, id, c }) => {
   };
   useEffect(() => {
     stateScenarios.updateValueFilter(id, f.name, value, condition, f);
+    console.log("useEffect TypeValue");
   }, [f, condition]);
   const onChangeCondition = (e) => {
     if (!e) return;
     // console.log(e.target.value);
     if (e.target.value === "равно") {
       setCondition("==");
+    }
+    if (e.target.value === "не равно") {
+      setCondition("!=");
     }
     if (e.target.value === "больше или равно") {
       setCondition(">=");
@@ -102,14 +108,53 @@ const TypeValue = observer(({ f, id, c }) => {
   };
   const onChangeDateTime = (e) => {
     setValue(`${e.target.value.replace(/T/g, " ")}:00`);
-    stateScenarios.updateValueFilter(
-      id,
-      f.name,
-      `${e.target.value.replace(/T/g, " ")}:00`,
-      condition,
-      f
-    );
+    stateScenarios.updateValueFilter(id, f.name, `${e.target.value.replace(/T/g, " ")}:00`, condition, f);
   };
+
+  const eventChange = (e) => {
+    const item = {
+      target: {
+        value: e.target.textContent,
+      },
+    };
+    onChange(item);
+    setEventFlag(false);
+  };
+
+  const eventsList = [
+    "УДАЛИЛ ТОВАР ИЗ КОРЗИНЫ",
+    "НАЧАЛ ЗВОНОК",
+    "СДЕЛАЛ ЗАКАЗ",
+    "ОСТАВИЛ ЗАЯВКУ",
+    "ДОБАВИЛ ТОВАР В КОРЗИНУ",
+    "ЗАКАЗАЛ УСЛУГУ",
+    "ОСТАВИЛ ОТЗЫВ",
+    "УСПЕШНО АВТОРИЗОВАЛСЯ",
+  ];
+
+  const [eventFlag, setEventFlag] = useState(false);
+  const EventList = () => {
+    if (f.name === "event_name") {
+      return (
+        <div className="event_btn_list">
+          {eventFlag ? (
+            <ul className="event_list_container">
+              {eventsList.map((e) => (
+                <li onClick={eventChange} className="event_list_item">
+                  {e}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <></>
+          )}
+
+          <img onClick={() => setEventFlag(!eventFlag)} className="event_btn_list_img" src={iconEventListBtn} alt="Кнопка вызова событий" />
+        </div>
+      );
+    }
+  };
+
   if (
     f.info.type === "UUID" ||
     f.info.type === "TEXT" ||
@@ -120,8 +165,7 @@ const TypeValue = observer(({ f, id, c }) => {
   ) {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} />{" "}
-        {/* {orValue === "И" ? ( */}
+        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} /> {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           // data={c.condition}
           condition={condition}
@@ -134,18 +178,13 @@ const TypeValue = observer(({ f, id, c }) => {
         <span className="or_btn" onClick={updateOr}>
           {orValue}
         </span>
+        <EventList />
       </div>
     );
-  } else if (f.info.type === "BIGINT" || f.info.type === "NUMERIC(50, 4)") {
+  } else if (f.info.type === "BIGINT" || f.info.type === "NUMERIC(50, 4)" || f.info.type === "FLOAT" || f.info.type === "NUMERIC(15, 2)") {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt
-          value={value}
-          onChange={onChange}
-          placeholder={f.name}
-          type="number"
-        />{" "}
-        {/* {orValue === "И" ? ( */}
+        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} type="number" /> {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
           // data={c.condition}
@@ -162,12 +201,7 @@ const TypeValue = observer(({ f, id, c }) => {
   } else if (f.info.type === "TIMESTAMP") {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt
-          value={value}
-          onChange={onChangeDateTime}
-          placeholder={f.name}
-          type="datetime-local"
-        />
+        <ScenariosInpt value={value} onChange={onChangeDateTime} placeholder={f.name} type="datetime-local" />
         {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
@@ -187,10 +221,7 @@ const TypeValue = observer(({ f, id, c }) => {
       <div className="filter_inpt_container">
         <label
           onClick={() => onChangeBoolean(valueBooleanReg, setValueBooleanReg)}
-          className={
-            valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"
-          }
-        ></label>
+          className={valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"}></label>
         {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}

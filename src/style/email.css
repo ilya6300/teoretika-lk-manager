@@ -239,6 +239,7 @@
   border-radius: 8px;
   padding: 4px 5px;
   height: 50vh;
+  overflow-y: auto;
 }
 .textarea_script_popup {
   width: 90%;

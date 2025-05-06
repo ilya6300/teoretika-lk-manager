@@ -78,7 +78,7 @@ export const CardHTML = ({ html, setHtmlFlagViewer }) => {
           {!edit ? (
             <div
               className="textarea_popup_container"
-              style={{ height: "auto" }}
+              style={{ height: "70vh" }}
             >
               {htmlFile}
             </div>
