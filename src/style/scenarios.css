@@ -148,14 +148,14 @@
   border-right: 1px solid #00000030;
 }
 .description_tr_scenarios_row {
-  width: 60%;
+  width: 70%;
   padding: 8px;
   height: 100%;
   display: inline-block;
   border-right: 1px solid #00000030;
 }
 .utilite_tr_scenarios_row {
-  width: 10%;
+  width: 20%;
   padding: 0 8px;
   display: inline-block;
   border-right: 1px solid #00000030;
@@ -236,4 +236,35 @@
 }
 .event_list_item:hover {
   color: var(--my_lazur_v2);
+}
+.scenarios_tools_btn_text {
+  cursor: pointer;
+  border: 1px solid #3dd4e1bf;
+  display: inline-block;
+  width: 96px;
+  font-size: 14px;
+  text-align: center;
+  padding: 4px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+.scenarios_tools_btn_remove_text {
+  cursor: pointer;
+  border: 1px solid var(--error);
+  color: var(--error);
+  display: inline-block;
+  width: 96px;
+  font-size: 14px;
+  text-align: center;
+  padding: 4px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+.scenarios_tools_btn_text:hover {
+  background: #3dd4e1bf;
+  color: white;
+}
+.scenarios_tools_btn_remove_text:hover {
+  background: var(--error);
+  color: white;
 }

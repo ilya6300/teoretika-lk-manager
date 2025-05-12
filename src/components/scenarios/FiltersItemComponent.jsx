@@ -28,39 +28,43 @@ const FiltersItemComponent = observer(({ id, c }) => {
     // }
     // console.log(f);
   };
+
   return (
     <div className="offline_filter_container">
       <div className="offline_filter_nav" onClick={filterVisibleFunc}>
         {filterVisibleName}
       </div>
       {filterVisible
-        ? stateScenarios.offlineScenariosInterface[id].filter.map((f) => (
-            <div className="offline_filter_row_current" key={f.name}>
-              <div className="offline_filter_row_filter_container">
-                {f.info.comment}
-                <label
-                  onClick={() => switchFilter(f)}
-                  className={
-                    f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"
-                  }
-                ></label>
+        ? stateScenarios.offlineScenariosInterface[id].filter
+            .filter((f) => f.info.type !== "JSONB")
+            .map((f) => (
+              <div className="offline_filter_row_current" key={f.name}>
+                <div className="offline_filter_row_filter_container">
+                  {f.info.comment}
+                  <label
+                    onClick={() => switchFilter(f)}
+                    className={
+                      f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"
+                    }
+                  ></label>
+                </div>
+                {f.filter ? (
+                  <TypeValue
+                    f={f}
+                    c={c}
+                    id={stateScenarios.offlineScenariosInterface[id].id}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
-              {f.filter ? (
-                <TypeValue
-                  f={f}
-                  c={c}
-                  id={stateScenarios.offlineScenariosInterface[id].id}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-          ))
+            ))
         : stateScenarios.offlineScenariosInterface[id].filter.map((f) =>
             f.filter ? (
               <div className="offline_filter_row_current" key={f.name}>
                 <div className="offline_filter_row_filter_container">
                   {f.info.comment}
+
                   <label
                     onClick={() => switchFilter(f)}
                     className={

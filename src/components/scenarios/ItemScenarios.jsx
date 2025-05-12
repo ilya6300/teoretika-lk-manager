@@ -61,20 +61,27 @@ const ItemScenarios = observer((props) => {
         <label onClick={changeActive}>
           {" "}
           {isActive ? (
-            <div className="stop_scenarios_btn"></div>
+            <span className="scenarios_tools_btn_text">Остановить</span>
           ) : (
-            <img
-              className="play_scenarios_btn"
-              src={iconPlay}
-              alt="Остановлен"
-            />
+            <span className="scenarios_tools_btn_text">Запустить</span>
+            // <img
+            //   className="play_scenarios_btn"
+            //   src={iconPlay}
+            //   alt="Остановлен"
+            // />
           )}
         </label>
         {count}
-        <button
+        {/* <button
           className="delete_icon"
           onClick={() => props.removeScenarios(props.s)}
-        ></button>
+        ></button> */}
+        <span
+          onClick={() => props.removeScenarios(props.s)}
+          className="scenarios_tools_btn_remove_text"
+        >
+          Удалить
+        </span>
       </div>
     </li>
   );

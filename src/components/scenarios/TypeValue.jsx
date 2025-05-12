@@ -108,7 +108,13 @@ const TypeValue = observer(({ f, id, c }) => {
   };
   const onChangeDateTime = (e) => {
     setValue(`${e.target.value.replace(/T/g, " ")}:00`);
-    stateScenarios.updateValueFilter(id, f.name, `${e.target.value.replace(/T/g, " ")}:00`, condition, f);
+    stateScenarios.updateValueFilter(
+      id,
+      f.name,
+      `${e.target.value.replace(/T/g, " ")}:00`,
+      condition,
+      f
+    );
   };
 
   const eventChange = (e) => {
@@ -149,7 +155,12 @@ const TypeValue = observer(({ f, id, c }) => {
             <></>
           )}
 
-          <img onClick={() => setEventFlag(!eventFlag)} className="event_btn_list_img" src={iconEventListBtn} alt="Кнопка вызова событий" />
+          <img
+            onClick={() => setEventFlag(!eventFlag)}
+            className="event_btn_list_img"
+            src={iconEventListBtn}
+            alt="Кнопка вызова событий"
+          />
         </div>
       );
     }
@@ -165,7 +176,8 @@ const TypeValue = observer(({ f, id, c }) => {
   ) {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} /> {/* {orValue === "И" ? ( */}
+        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} />{" "}
+        {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           // data={c.condition}
           condition={condition}
@@ -181,10 +193,21 @@ const TypeValue = observer(({ f, id, c }) => {
         <EventList />
       </div>
     );
-  } else if (f.info.type === "BIGINT" || f.info.type === "NUMERIC(50, 4)" || f.info.type === "FLOAT" || f.info.type === "NUMERIC(15, 2)") {
+  } else if (
+    f.info.type === "BIGINT" ||
+    f.info.type === "NUMERIC(50, 4)" ||
+    f.info.type === "FLOAT" ||
+    f.info.type === "NUMERIC(15, 2)"
+  ) {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} type="number" /> {/* {orValue === "И" ? ( */}
+        <ScenariosInpt
+          value={value}
+          onChange={onChange}
+          placeholder={f.name}
+          type="number"
+        />{" "}
+        {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
           // data={c.condition}
@@ -201,7 +224,12 @@ const TypeValue = observer(({ f, id, c }) => {
   } else if (f.info.type === "TIMESTAMP") {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt value={value} onChange={onChangeDateTime} placeholder={f.name} type="datetime-local" />
+        <ScenariosInpt
+          value={value}
+          onChange={onChangeDateTime}
+          placeholder={f.name}
+          type="datetime-local"
+        />
         {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
@@ -221,7 +249,10 @@ const TypeValue = observer(({ f, id, c }) => {
       <div className="filter_inpt_container">
         <label
           onClick={() => onChangeBoolean(valueBooleanReg, setValueBooleanReg)}
-          className={valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"}></label>
+          className={
+            valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"
+          }
+        ></label>
         {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
