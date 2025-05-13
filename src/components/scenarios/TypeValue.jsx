@@ -55,7 +55,7 @@ const TypeValue = observer(({ f, id, c }) => {
   };
 
   useLayoutEffect(() => {
-    setValue(f.value);
+    setValue(f.value.replace(/%/gm, ""));
     console.log("TypeValue", toJS(f), f.condition);
     onChangeCondition(getTypeValue(f.condition));
   }, [f.value, f.condition]);
