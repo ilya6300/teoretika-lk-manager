@@ -15,6 +15,7 @@ import appState from "../../service/state/app.state";
 import SelectedScenariosName from "../../UI/components/scenarios/SelectedScenariosName";
 import ScenariosInpt from "../../UI/components/scenarios/ScenariosInpt";
 import { EmailScenariosBlock } from "./EmailScenariosBlock";
+import { SettingsEvent } from "../../pages/SettingsEvent";
 
 const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const [nameRequest, setNameRequest] = useState("");
@@ -48,6 +49,13 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
     end_date: "",
     // "timezone": "string"
   });
+
+  // Дополнительные условия отображения сценария
+  const [addUrl, setAddUrl] = useState("");
+  const [addDate, setAddDate] = useState("");
+  const [addTimeout, setAddTimeout] = useState("");
+  const [addClick, setAddClick] = useState("");
+  //
 
   useLayoutEffect(() => {
     stateScenarios.resetData("join_data");
@@ -191,6 +199,9 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             filter: stateScenarios.filter_data,
             order: "{}",
             is_active: true,
+            url: addUrl,
+            date: addDate,
+            timeout: addTimeout,
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
@@ -433,7 +444,18 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                   {planer ? <EmailScenariosBlock emailReques={emailReques} setEmailReques={setEmailReques} /> : <></>}
                 </>
               ) : (
-                <></>
+                <>
+                  <SettingsEvent
+                    url={addUrl}
+                    onChangeUrl={(e) => setAddUrl(e.target.value)}
+                    click={addClick}
+                    onChangeClick={(e) => setAddClick(e.target.value)}
+                    date={addDate}
+                    onChangeDate={(e) => setAddDate(e.target.value)}
+                    timeout={addTimeout}
+                    onChangeTimeout={(e) => setAddTimeout(e.target.value)}
+                  />
+                </>
               )}
               {nameVisible ? (
                 <>

@@ -16,19 +16,12 @@ import playIcon from "../images/icons/save.png";
 import iconRefresh from "../images/icons/reload.png";
 import { PageComponent } from "../components/PageComponent";
 import LoaderScenarios from "../UI/components/LoaderScenarios";
+import { SettingsEvent } from "./SettingsEvent";
 
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
   const location = useLocation();
-  const {
-    body,
-    descriptionScenarios,
-    nameScenarios,
-    event,
-    type,
-    id_event,
-    is_active,
-  } = location.state || {};
+  const { body, descriptionScenarios, nameScenarios, event, type, id_event, is_active } = location.state || {};
 
   const navigate = useNavigate();
   const [scenariosIsLoad, setScenariosIsLoad] = useState(false);
@@ -55,6 +48,14 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   });
   const refValueEvent = useRef(null);
 
+  // Дополнительные условия отображения сценария
+  const [addUrl, setAddUrl] = useState("");
+  const [addDate, setAddDate] = useState("");
+  const [addTimeout, setAddTimeout] = useState("");
+  const [addClick, setAddClick] = useState("");
+  //
+
+  // Сбор фильров
   const autoRequest = async () => {
     try {
       let getKey = false;
@@ -63,9 +64,6 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         await getSelect(b);
       }
       setSelectVisible(true);
-
-      //   setTimeout(() => {
-      // stateScenarios.offlineScenariosInterface.map((d) => {
       let joinID = null;
       getKey = true;
       const e = {
@@ -76,39 +74,23 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       if (getKey) {
         onChangeEvent(e);
         for (let keyJoin in bodyBuild.filter) {
-          joinID = stateScenarios.offlineScenariosInterface.find(
-            (j) => j.current === keyJoin
-          );
+          console.log("keyJoin", keyJoin, "bodyBuild.filter", bodyBuild.filter, bodyBuild.filter[`${keyJoin}`]);
+          joinID = stateScenarios.offlineScenariosInterface.find((j) => j.current === keyJoin);
+          console.log("joinID", joinID);
           if (joinID) {
-            for (let keyFilter in bodyBuild.filter[keyJoin]) {
-              joinID = {
-                ...joinID,
-                value: bodyBuild.filter[keyJoin][keyFilter],
-                keyFilter: keyFilter,
-              };
+            for (let name in bodyBuild.filter[keyJoin]) {
+              console.log("let name in bodyBuild.filter", name, bodyBuild.filter[keyJoin][name]);
+              const filterID = joinID.filter.find((f) => f.name === name);
+              if (filterID) {
+                filterID.filter = true;
+                filterID.value = bodyBuild.filter[keyJoin][name][0];
+                filterID.condition = bodyBuild.filter[keyJoin][name][1];
+              }
+              stateScenarios.updateValueFilter(joinID.id, name, bodyBuild.filter[keyJoin][name][0], bodyBuild.filter[keyJoin][name][1], joinID);
             }
-          }
-          if (joinID) {
-            const filterID = joinID.filter.find(
-              (f) => f.name === joinID.keyFilter
-            );
-            console.log("filterID ==> fff", toJS(filterID), toJS(joinID));
-            filterID.filter = true;
-            filterID.value = joinID.value[0];
-            filterID.condition = joinID.value[1];
-            stateScenarios.updateValueFilter(
-              joinID.id,
-              joinID.keyFilter,
-              joinID.value[0],
-              joinID.value[1],
-              joinID
-            );
           }
         }
       }
-
-      // });
-      //   }, 300);
     } catch (e) {
       console.error(e);
     } finally {
@@ -141,6 +123,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setName(nameScenarios);
     setDescription(descriptionScenarios);
     setFirstNameEvent(event);
+    setAddUrl(JSON.parse(body).url);
+    setAddDate(JSON.parse(body).date);
+    setAddTimeout(JSON.parse(body).timeout);
     console.log(id_event);
     // objReques = {...objReques, name: nameScenarios, }
     objReques.name = nameScenarios;
@@ -166,18 +151,10 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         }
 
         if (!stateScenarios.offlineScenariosInterface.length) {
-          stateScenarios.pushOfflineScenariosInterface(
-            resSelect.current,
-            resSelect["join"],
-            resSelect["filter"]
-          );
+          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
           stateScenarios.addJoinData(resSelect.current, name);
         } else {
-          stateScenarios.pushOfflineScenariosInterface(
-            resSelect.current,
-            resSelect["join"],
-            resSelect["filter"]
-          );
+          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
 
           stateScenarios.addJoinData(resSelect.current, name);
         }
@@ -200,23 +177,18 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     }
   };
 
-  const onChangeSelectNew = async (e) => {
-    try {
-      setNameRequest(e.target.value);
-      await getSelect(e.target.value);
-      setSelectVisible(true);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // const onChangeSelectNew = async (e) => {
+  //   try {
+  //     setNameRequest(e.target.value);
+  //     await getSelect(e.target.value);
+  //     setSelectVisible(true);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   const playScenarios = async () => {
     try {
-      // console.log(
-      //   toJS(stateScenarios.offlineScenariosInterface),
-      //   toJS(stateScenarios.join_data),
-      //   toJS(stateScenarios.resultevent)
-      // );
       function extractMastIds(obj, result = new Set(), name) {
         if (obj && typeof obj === "object") {
           // if (obj.mast_id) {
@@ -229,9 +201,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             }
           }
           // Рекурсивно обходим все ключи объекта
-          Object.values(obj).forEach((value) =>
-            extractMastIds(value, result, name)
-          );
+          Object.values(obj).forEach((value) => extractMastIds(value, result, name));
         }
         return result;
       }
@@ -257,6 +227,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             return acc;
           }, new Set()),
         ];
+
         // console.log(uniqueMastIds);
         console.log("Это проверка описания", objReques);
         const resReq = await apiRequest.patchOnlineScenarios(id, {
@@ -268,13 +239,11 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             join: stateScenarios.join_data,
             filter: stateScenarios.filter_data,
             order: "{}",
-            is_active: true,
+            is_active: JSON.parse(body).is_active,
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
-          type_user: String(uniqueMastIds)
-            .replace(/^ /g, "")
-            .replace(/$/g, ","),
+          type_user: String(uniqueMastIds).replace(/^ /g, "").replace(/$/g, ","),
         });
         if (resReq) {
           setTimeout(() => {
@@ -307,21 +276,14 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setTypeEventString(value);
     if (value === "popup") {
       const res = await apiRequest.getHTMLTemplatePopup();
-      setObjReques(
-        objReques,
-        ...(objReques.event = value),
-        (objReques.type = "routing")
-      );
+      setObjReques(objReques, ...(objReques.event = value), (objReques.type = "routing"));
       if (res) {
         setTypeEvent(res);
       }
     }
     if (value === "чат-строка") {
       const res = await apiRequest.getHTMLTemplatString();
-      setObjReques(
-        objReques,
-        ...((objReques.event = value), (objReques.type = "strings"))
-      );
+      setObjReques(objReques, ...((objReques.event = value), (objReques.type = "strings")));
       if (res) {
         setTypeEvent(res);
       }
@@ -357,12 +319,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             <BtnBackHeaderPage />
           </Link>
           <div className="scenarios_container">
-            <span>
-              Выбрано:{" "}
-              {stateScenarios.resultevent !== "Нет данных"
-                ? stateScenarios.resultevent.length
-                : 0}
-            </span>
+            <span>Выбрано: {stateScenarios.resultevent !== "Нет данных" ? stateScenarios.resultevent.length : 0}</span>
             <div className="scenarios_container_filter">
               <div className="scenarios_filter_bar" ref={filterBarRef}></div>
 
@@ -375,19 +332,11 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                         {stateScenarios.build_data[0]}
                       </option>
                     </select>
-                    <img
-                      className="icon_reload"
-                      src={iconRefresh}
-                      alt="Сбросить"
-                      onClick={clearScenarios}
-                    />
+                    <img className="icon_reload" src={iconRefresh} alt="Сбросить" onClick={clearScenarios} />
                   </div>
                 </div>
                 <div>
-                  <FiltersItemComponent
-                    id={0}
-                    c={stateScenarios.offlineScenariosInterface[0]}
-                  />
+                  <FiltersItemComponent id={0} c={stateScenarios.offlineScenariosInterface[0]} />
                 </div>
               </div>
 
@@ -403,31 +352,26 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
 
               {selectEvent ? (
                 <>
-                  <SelectedScenarios
-                    refValue={refValueEvent}
-                    firstName={firstNameEvent}
-                    data={eventData}
-                    onChange={onChangeEvent}
-                  />
+                  <SelectedScenarios refValue={refValueEvent} firstName={firstNameEvent} data={eventData} onChange={onChangeEvent} />
                   {typeEvent !== null ? (
-                    <SelectedScenariosName
-                      data={typeEvent}
-                      firstName={firstNameEventID}
-                      onChange={onChangeEventID}
-                      cls="inpt_v1"
-                    />
+                    <SelectedScenariosName data={typeEvent} firstName={firstNameEventID} onChange={onChangeEventID} cls="inpt_v1" />
                   ) : (
                     <></>
                   )}
+                  <SettingsEvent
+                    url={addUrl}
+                    onChangeUrl={(e) => setAddUrl(e.target.value)}
+                    click={addClick}
+                    onChangeClick={(e) => setAddClick(e.target.value)}
+                    date={addDate}
+                    onChangeDate={(e) => setAddDate(e.target.value)}
+                    timeout={addTimeout}
+                    onChangeTimeout={(e) => setAddTimeout(e.target.value)}
+                  />
                   {nameVisible ? (
                     <div className="selected_container">
                       {/* <p>Опишите сценарий</p> */}
-                      <textarea
-                        placeholder="Описание сценария"
-                        value={description}
-                        onChange={onChangeDescription}
-                        className="textarea_v1"
-                      />
+                      <textarea placeholder="Описание сценария" value={description} onChange={onChangeDescription} className="textarea_v1" />
                     </div>
                   ) : (
                     <></>
@@ -435,12 +379,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                   {nameVisible ? (
                     <div className="selected_container">
                       {/* <p>Напишите название сценария</p> */}
-                      <ScenariosInpt
-                        placeholder="Название сценария"
-                        value={name}
-                        onChange={onChangeName}
-                        style={{ width: "250px" }}
-                      />
+                      <ScenariosInpt placeholder="Название сценария" value={name} onChange={onChangeName} style={{ width: "250px" }} />
                     </div>
                   ) : (
                     <></>
@@ -449,21 +388,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
               ) : (
                 <></>
               )}
-              {!nameVisible ? (
-                <AddBtn
-                  help="Выбрать инструмент"
-                  onClick={() => setSelectEvent(!selectEvent)}
-                />
-              ) : (
-                <></>
-              )}
+              {!nameVisible ? <AddBtn help="Выбрать инструмент" onClick={() => setSelectEvent(!selectEvent)} /> : <></>}
 
-              <img
-                className="scenarios_filter_play_icon"
-                onClick={playScenarios}
-                src={playIcon}
-                alt=""
-              />
+              <img className="scenarios_filter_play_icon" onClick={playScenarios} src={playIcon} alt="" />
             </div>
           </div>
           <ul>
