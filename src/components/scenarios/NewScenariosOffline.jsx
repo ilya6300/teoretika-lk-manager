@@ -202,6 +202,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             url: addUrl,
             date: addDate,
             timeout: addTimeout,
+            click: addClick,
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
