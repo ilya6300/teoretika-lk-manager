@@ -235,7 +235,7 @@ class apiRequest {
   getTemplaterList = async () => {
     try {
       const res = await reqPlaner(
-        "notifications/notifications_task_scheduler/get_scheduler_tasks"
+        "notifications_task_scheduler/get_scheduler_tasks"
       );
       console.log("getTemplaterList", res);
       if (!res) return;
@@ -280,7 +280,7 @@ class apiRequest {
   emailPostOne = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications/notifications_user_email/add_message",
+        "notifications_user_email/add_message",
         data
       );
       console.log(res);
@@ -293,7 +293,7 @@ class apiRequest {
   emailPostPlaner = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications/notifications_task_scheduler/post_scheduler_email",
+        "notifications_task_scheduler/post_scheduler_email",
         data
       );
       console.log(res);
@@ -312,6 +312,18 @@ class apiRequest {
     // } catch (e) {
     // console.error(e);
     // }
+  };
+
+  removeEmailPlaner = async (id) => {
+    try {
+      const res = await reqPlaner.delete(
+        `notifications_task_scheduler/delete_scheduler_tasks?message_id=${id}`
+      );
+      console.log("removeEmailPlaner", res);
+      return res.data;
+    } catch (e) {
+      console.error(e);
+    }
   };
 }
 export default new apiRequest();
