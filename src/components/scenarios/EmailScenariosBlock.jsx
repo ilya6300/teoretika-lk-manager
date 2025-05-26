@@ -18,7 +18,12 @@ export const EmailScenariosBlock = observer(
       } else if (e.target.value === "Повтор интервально") {
         return setEmailReques({ ...emailReques, trigger: "interval" });
       } else if (e.target.value === "Повтор по времени") {
-        return setEmailReques({ ...emailReques, trigger: "cron" });
+        // return setEmailReques({ ...emailReques, trigger: "cron" });
+        return setEmailReques({
+          ...emailReques,
+          trigger: "date",
+          sent_every_: "days",
+        });
       }
     };
 
@@ -44,20 +49,26 @@ export const EmailScenariosBlock = observer(
       if (e.target.value === "Час") {
         setEmailReques({ ...emailReques, sent_every_: "hours" });
       } else if (e.target.value === "День") {
-        setEmailReques({ ...emailReques, sent_every_: "day" });
+        setEmailReques({ ...emailReques, sent_every_: "days" });
       } else if (e.target.value === "Неделю") {
-        setEmailReques({ ...emailReques, sent_every_: "week" });
-      } else if (e.target.value === "Месяц") {
-        setEmailReques({ ...emailReques, sent_every_: "month" });
-      } else if (e.target.value === "Год") {
-        setEmailReques({ ...emailReques, sent_every_: "year" });
+        setEmailReques({ ...emailReques, sent_every_: "weeks" });
       }
+      // else if (e.target.value === "Месяц") {
+      //   setEmailReques({ ...emailReques, sent_every_: "months" });
+      // }
+      // else if (e.target.value === "Год") {
+      //   setEmailReques({ ...emailReques, sent_every_: "year" });
+      // }
     };
 
     return (
       <>
         <SelectedScenarios
-          data={["Единожды", "Повтор интервально", "Повтор по времени"]}
+          data={[
+            "Единожды",
+            "Повтор интервально",
+            // "Повтор по времени"
+          ]}
           firstName="Период"
           onChange={onChangeTrigger}
         />
@@ -70,7 +81,7 @@ export const EmailScenariosBlock = observer(
           />
         </label>
 
-        {emailReques.trigger === "interval" ? (
+        {emailReques.sent_every_ !== "run_date" ? (
           <>
             <label>
               Конец выполнения сценария{" "}
@@ -80,24 +91,36 @@ export const EmailScenariosBlock = observer(
                 type="datetime-local"
               />
             </label>
-            <label>
-              Каждый(ую){" "}
-              <SelectedScenarios
-                data={["Час", "День", "Неделю", "Месяц", "Год"]}
-                firstName="Период"
-                onChange={onChangeEvery}
-              />
-            </label>
-            <label>
-              Интервал{" "}
-              <input
-                type="number"
-                className="inpt_v1"
-                style={{ width: "70px" }}
-                value={interval}
-                onChange={setIntervalFucn}
-              />
-            </label>
+            {emailReques.trigger === "interval" ? (
+              <>
+                {" "}
+                <label>
+                  Каждый(ую){" "}
+                  <SelectedScenarios
+                    data={[
+                      "Час",
+                      "День",
+                      "Неделю",
+                      // , "Месяц", "Год"
+                    ]}
+                    firstName="Период"
+                    onChange={onChangeEvery}
+                  />
+                </label>
+                <label>
+                  Интервал{" "}
+                  <input
+                    type="number"
+                    className="inpt_v1"
+                    style={{ width: "70px" }}
+                    value={interval}
+                    onChange={setIntervalFucn}
+                  />
+                </label>
+              </>
+            ) : (
+              <></>
+            )}
           </>
         ) : (
           <></>

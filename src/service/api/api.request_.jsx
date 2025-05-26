@@ -208,7 +208,7 @@ class apiRequest {
 
   getFilter = async () => {
     try {
-      const res = await req.post("search/filter_user", {
+      const res = await req.post("search/filter_user/", {
         join: stateScenarios.join_data,
         filter: stateScenarios.filter_data,
         order: {},
@@ -304,14 +304,14 @@ class apiRequest {
   };
 
   getReport = async () => {
-    try {
-      const res = await req("report");
-      if (res) {
-        appState.setParameters("counter_scenarios", res.data.data.response);
-      }
-    } catch (e) {
-      // console.error(e);
-    }
+    // try {
+    // const res = await req("report");
+    // if (res) {
+    // appState.setParameters("counter_scenarios", res.data.data.response);
+    // }
+    // } catch (e) {
+    // console.error(e);
+    // }
   };
 }
 export default new apiRequest();
