@@ -214,7 +214,7 @@ class apiRequest {
         order: {},
       });
       stateScenarios.setParametr("resultevent", res.data.data);
-      // console.log("getFilter ==> ", res.data.data);
+      console.log("getFilter ==> ", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error("getFilter", e);
@@ -310,6 +310,18 @@ class apiRequest {
       }
     } catch (e) {
       // console.error(e);
+    }
+  };
+
+  removeEmailPlaner = async (id) => {
+    try {
+      const res = await reqPlaner.delete(
+        `notifications_task_scheduler/delete_scheduler_tasks?message_id=${id}`
+      );
+      console.log("removeEmailPlaner", res);
+      return res.data;
+    } catch (e) {
+      console.error(e);
     }
   };
 }

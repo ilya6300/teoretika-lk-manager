@@ -85,11 +85,13 @@ class stateScenarios {
     } catch (e) {
       console.error(e);
     } finally {
+      console.log("cutData");
       await apiRequest.getFilter();
     }
   };
 
   scenariosElementremove = async (len) => {
+    console.log("scenariosElementremove");
     this.offlineScenariosInterface.length = len;
     await apiRequest.getFilter();
   };
@@ -103,9 +105,10 @@ class stateScenarios {
   };
 
   updateValueFilter = async (id, name, value, condition, f) => {
+    console.log("updateValueFilter", typeof value);
     try {
       if (!value) return;
-      console.log("updateValueFilter", id, name, value, condition);
+      console.log("======= updateValueFilter =======");
       const rowFilterID = this.offlineScenariosInterface[id].filter.find(
         (row) => row.name === name
       );
@@ -166,14 +169,14 @@ class stateScenarios {
           ][`${rowFilterID.name}`];
         }
       }
+      await apiRequest.getFilter();
     } catch (e) {
       console.error(e);
-    } finally {
-      await apiRequest.getFilter();
     }
   };
 
   updateSwitchFilter = async (id, name) => {
+    console.log("updateSwitchFilter");
     try {
       const rowFilterID = this.offlineScenariosInterface[id].filter.find(
         (row) => row.name === name
@@ -185,17 +188,17 @@ class stateScenarios {
         delete this.filter_data[
           `${this.offlineScenariosInterface[id].current}`
         ][`${rowFilterID.name}`];
+        await apiRequest.getFilter();
       }
     } catch (e) {
       console.error(e);
-    } finally {
-      await apiRequest.getFilter();
     }
   };
 
   updateOrElementFilter = async (f) => {
     f.or = !f.or;
     setTimeout(async () => {
+      console.log("updateOrElementFilter");
       await apiRequest.getFilter();
     }, 200);
   };

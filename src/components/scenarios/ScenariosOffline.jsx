@@ -31,6 +31,14 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
   //   const taimer = checkLoad();
   //   return () => taimer;
   // }, []);
+
+  const removeEmailPlaner = async (e) => {
+    const res = await apiRequest.removeEmailPlaner(e.message_id);
+    if (res) {
+      getPlaner();
+    }
+  };
+
   let counterTimer = null;
   const getCounterFunc = async () => {
     await apiRequest.getReport();
@@ -115,6 +123,7 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
       <ListScenarios
         data={appState.online_scenarios}
         removeScenarios={removeScenarios}
+        removeEmailPlaner={removeEmailPlaner}
         // goCard={goCard}
       />
     </div>
