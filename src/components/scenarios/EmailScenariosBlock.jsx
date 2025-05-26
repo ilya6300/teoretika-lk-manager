@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import SelectedScenarios from "../../UI/components/scenarios/SelectedScenarios";
 import ScenariosInpt from "../../UI/components/scenarios/ScenariosInpt";
+import stateScenarios from "../../service/state/state.scenarios";
 export const EmailScenariosBlock = observer(
   ({ emailReques, setEmailReques }) => {
     const [startDate, setStartDate] = useState("");
@@ -15,14 +16,25 @@ export const EmailScenariosBlock = observer(
           trigger: "date",
           sent_every_: "run_date",
         });
-      } else if (e.target.value === "Повтор интервально") {
-        return setEmailReques({ ...emailReques, trigger: "interval" });
+      } else if (e.target.value === "Повторять по циклу") {
+        return setEmailReques({
+          ...emailReques,
+          trigger: "interval",
+          query_params: {},
+        });
       } else if (e.target.value === "Повтор по времени") {
         // return setEmailReques({ ...emailReques, trigger: "cron" });
         return setEmailReques({
           ...emailReques,
           trigger: "date",
           sent_every_: "days",
+          query_params: {},
+        });
+      } else if (e.target.value === "Динамическая рассылка") {
+        return setEmailReques({
+          ...emailReques,
+          trigger: "interval",
+          query_params: { updated_at: ["current_data", ">=", 1] },
         });
       }
     };
@@ -66,7 +78,8 @@ export const EmailScenariosBlock = observer(
         <SelectedScenarios
           data={[
             "Единожды",
-            "Повтор интервально",
+            "Повторять по циклу",
+            "Динамическая рассылка",
             // "Повтор по времени"
           ]}
           firstName="Период"
@@ -93,20 +106,24 @@ export const EmailScenariosBlock = observer(
             </label>
             {emailReques.trigger === "interval" ? (
               <>
-                {" "}
-                <label>
-                  Каждый(ую){" "}
-                  <SelectedScenarios
-                    data={[
-                      "Час",
-                      "День",
-                      "Неделю",
-                      // , "Месяц", "Год"
-                    ]}
-                    firstName="Период"
-                    onChange={onChangeEvery}
-                  />
-                </label>
+                {JSON.stringify(emailReques.query_params) === "{}" ? (
+                  <label>
+                    Каждый(ую){" "}
+                    <SelectedScenarios
+                      data={[
+                        "Час",
+                        "День",
+                        "Неделю",
+                        // , "Месяц", "Год"
+                      ]}
+                      firstName="Период"
+                      onChange={onChangeEvery}
+                    />
+                  </label>
+                ) : (
+                  <span>Проверять данные в указанное количество дней</span>
+                )}
+
                 <label>
                   Интервал{" "}
                   <input

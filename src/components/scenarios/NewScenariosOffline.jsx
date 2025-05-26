@@ -64,9 +64,9 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const getSelect = async (name) => {
     try {
       const resSelect = await apiRequest.getFilterJoin(name);
-      if (resSelect.current === undefined || resSelect.current === "new") {
-        // console.log("resSelect", resSelect);
-        // return;
+      if (resSelect.current === "new") {
+        console.log("resSelect", resSelect);
+        return;
       } else if (resSelect.current !== undefined) {
         // console.log(resSelect["join"]);
         let joinData = [];
@@ -96,6 +96,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
     } catch (e) {
       console.error("getSelect", e);
     } finally {
+      console.log("getSelect");
       await apiRequest.getFilter();
     }
   };
@@ -117,6 +118,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
       //     stateScenarios.offlineScenariosInterface.length - 1
       //   ]
       // );
+      console.log("showSelec");
       await getSelect(nameRequest);
     } catch (e) {
       console.error(e);
@@ -126,6 +128,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const onChangeSelect = async (e, c) => {
     try {
       stateScenarios.cutData(c.id);
+      console.log("onChangeSelect");
       await getSelect(e.target.value);
     } catch (e) {
       console.error(e);
@@ -135,6 +138,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
   const onChangeSelectNew = async (e) => {
     try {
       setNameRequest(e.target.value);
+      console.log("onChangeSelectNew");
       await getSelect(e.target.value);
       setSelectVisible(true);
     } catch (e) {
@@ -270,20 +274,59 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         }
         console.log(objReques, emailReques);
         let resReq;
+        // Когда надо запустить не один раз
         if (emailReques.sent_every_ !== "run_date") {
+          // Интервал
           if (emailReques.trigger !== "date") {
-            resReq = await apiRequest.emailPostPlaner({
-              trigger: emailReques.trigger,
-              // "message_id": "string",
-              message: objReques.name,
-              list_to: uniqueMastIds,
-              template: Number(objReques.id_event),
-              sent_every_: emailReques.sent_every_,
-              interval: Number(emailReques.interval),
-              // timezone: "UTC+3",
-              // start_date: emailReques.start_date,
-              // end_date: emailReques.end_date,
-            });
+            // Цикл (без query params)
+            if (JSON.stringify(objReques.query_params) === "{}") {
+              resReq = await apiRequest.emailPostPlaner({
+                trigger: emailReques.trigger,
+                // "message_id": "string",
+                message: objReques.name,
+                list_to: uniqueMastIds,
+                template: Number(objReques.id_event),
+                sent_every_: emailReques.sent_every_,
+                interval: Number(emailReques.interval),
+                body: JSON.stringify({
+                  build: stateScenarios.build_data,
+                  join: stateScenarios.join_data,
+                  filter: stateScenarios.filter_data,
+                  order: "{}",
+                }),
+                // timezone: "UTC+3",
+                // start_date: emailReques.start_date,
+                // end_date: emailReques.end_date,
+              });
+            } else {
+              // Ищем значение filter
+              const dynamicKey = Object.keys(stateScenarios.filter_data)[0];
+              stateScenarios.filter_data[dynamicKey].updated_at = [
+                "current_data",
+                ">=",
+                Number(emailReques.interval),
+              ];
+              // С query params
+              resReq = await apiRequest.emailPostPlaner({
+                trigger: emailReques.trigger,
+                // "message_id": "string",
+                message: objReques.name,
+                // list_to: uniqueMastIds,
+                query_params: stateScenarios.filter_data,
+                template: Number(objReques.id_event),
+                sent_every_: "days",
+                interval: Number(emailReques.interval),
+                body: JSON.stringify({
+                  build: stateScenarios.build_data,
+                  join: stateScenarios.join_data,
+                  filter: stateScenarios.filter_data,
+                  order: "{}",
+                }),
+                // timezone: "UTC+3",
+                // start_date: emailReques.start_date,
+                // end_date: emailReques.end_date,
+              });
+            }
           } else {
             // cron не используется
             resReq = await apiRequest.emailPostPlaner({
@@ -296,10 +339,17 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
               interval: Number(emailReques.interval),
               start_date: emailReques.start_date,
               end_date: emailReques.end_date,
+              body: JSON.stringify({
+                build: stateScenarios.build_data,
+                join: stateScenarios.join_data,
+                filter: stateScenarios.filter_data,
+                order: "{}",
+              }),
               // timezone: "UTC+3",
             });
           }
         } else {
+          // Когда запускаем один раз
           resReq = await apiRequest.emailPostPlaner({
             trigger: emailReques.trigger,
             // "message_id": "string",
@@ -494,16 +544,20 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                     onChange={onChangeEventID}
                     cls="inpt_v1"
                   />
-                  <SettingsEvent
-                    url={addUrl}
-                    onChangeUrl={(e) => setAddUrl(e.target.value)}
-                    click={addClick}
-                    onChangeClick={(e) => setAddClick(e.target.value)}
-                    date={addDate}
-                    onChangeDate={(e) => setAddDate(e.target.value)}
-                    timeout={addTimeout}
-                    onChangeTimeout={(e) => setAddTimeout(e.target.value)}
-                  />
+                  {objReques.type !== "templates" ? (
+                    <SettingsEvent
+                      url={addUrl}
+                      onChangeUrl={(e) => setAddUrl(e.target.value)}
+                      click={addClick}
+                      onChangeClick={(e) => setAddClick(e.target.value)}
+                      date={addDate}
+                      onChangeDate={(e) => setAddDate(e.target.value)}
+                      timeout={addTimeout}
+                      onChangeTimeout={(e) => setAddTimeout(e.target.value)}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <></>

@@ -214,7 +214,7 @@ class apiRequest {
         order: {},
       });
       stateScenarios.setParametr("resultevent", res.data.data);
-      // console.log("getFilter ==> ", res.data.data);
+      console.log("getFilter ==> ", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error("getFilter", e);
@@ -280,7 +280,7 @@ class apiRequest {
   emailPostOne = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_user_email/add_message/",
+        "notifications_user_email/add_message",
         data
       );
       return res.data.response;
@@ -292,7 +292,7 @@ class apiRequest {
   emailPostPlaner = async (data) => {
     try {
       const res = await reqPlaner.post(
-        "notifications_task_scheduler/post_scheduler_email/",
+        "notifications_task_scheduler/post_scheduler_email",
         data
       );
       console.log(res);
@@ -304,10 +304,10 @@ class apiRequest {
 
   getReport = async () => {
     try {
-      // const res = await req("report");
-      // if (res) {
-      //   appState.setParameters("counter_scenarios", res.data.data.response);
-      // }
+      const res = await req("report");
+      if (res) {
+        appState.setParameters("counter_scenarios", res.data.data.response);
+      }
     } catch (e) {
       // console.error(e);
     }

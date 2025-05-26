@@ -3,6 +3,7 @@ import ItemScenarios from "./ItemScenarios";
 import { observer } from "mobx-react-lite";
 import stateScenarios from "../../service/state/state.scenarios";
 import appState from "../../service/state/app.state";
+import { Link } from "react-router";
 
 const ListScenarios = observer(
   ({ data, removeScenarios, removeEmailPlaner }) => {
@@ -44,13 +45,24 @@ const ListScenarios = observer(
           appState.planer_scenarios.map((p) =>
             stateScenarios.type_scenarios.planer ? (
               <li key={p.message_id} className="tr_clients_row ">
-                <label className="w90">
+                <Link
+                  to={`/scenarios/${p.message_id}`}
+                  state={{
+                    body: p.body,
+                    descriptionScenarios: "",
+                    id_event: p.template,
+                    nameScenarios: p.message,
+                    event: "рассылка",
+                    type: "templates",
+                  }}
+                  className="w90"
+                >
                   <span className="name_tr_scenarios_row">{p.message}</span>
                   <span className="description_tr_scenarios_row">
                     Период: {p.trigger}. Расылка id - {p.template}
                   </span>
                   <span className="event_tr_scenarios_row">Рассылки</span>
-                </label>
+                </Link>
                 <div className="utilite_tr_scenarios_row">
                   <span
                     onClick={() => removeEmailPlaner(p)}
