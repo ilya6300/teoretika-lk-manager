@@ -17,16 +17,7 @@ const FiltersItemComponent = observer(({ id, c }) => {
     setFilterVisible(!filterVisible);
   };
   const switchFilter = (f) => {
-    stateScenarios.updateSwitchFilter(
-      stateScenarios.offlineScenariosInterface[id].id,
-      f.name
-    );
-    // if (f.filter) {
-    //   stateScenarios.addJoinData(f.name);
-    // } else {
-    //   stateScenarios.removeJoinData(f.name);
-    // }
-    // console.log(f);
+    stateScenarios.updateSwitchFilter(stateScenarios.offlineScenariosInterface[id].id, f.name);
   };
 
   return (
@@ -36,27 +27,14 @@ const FiltersItemComponent = observer(({ id, c }) => {
       </div>
       {filterVisible
         ? stateScenarios.offlineScenariosInterface[id].filter
-            .filter((f) => f.info.type !== "JSONB")
+            .filter((f) => f.info.type !== "JSONB" && f.name !== "updated_at")
             .map((f) => (
               <div className="offline_filter_row_current" key={f.name}>
                 <div className="offline_filter_row_filter_container">
                   {f.info.comment}
-                  <label
-                    onClick={() => switchFilter(f)}
-                    className={
-                      f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"
-                    }
-                  ></label>
+                  <label onClick={() => switchFilter(f)} className={f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"}></label>
                 </div>
-                {f.filter ? (
-                  <TypeValue
-                    f={f}
-                    c={c}
-                    id={stateScenarios.offlineScenariosInterface[id].id}
-                  />
-                ) : (
-                  <></>
-                )}
+                {f.filter ? <TypeValue f={f} c={c} id={stateScenarios.offlineScenariosInterface[id].id} /> : <></>}
               </div>
             ))
         : stateScenarios.offlineScenariosInterface[id].filter.map((f) =>
@@ -65,22 +43,9 @@ const FiltersItemComponent = observer(({ id, c }) => {
                 <div className="offline_filter_row_filter_container">
                   {f.info.comment}
 
-                  <label
-                    onClick={() => switchFilter(f)}
-                    className={
-                      f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"
-                    }
-                  ></label>
+                  <label onClick={() => switchFilter(f)} className={f.filter ? "my_checkbox_v1_active" : "my_checkbox_v1"}></label>
                 </div>
-                {f.filter ? (
-                  <TypeValue
-                    f={f}
-                    c={c}
-                    id={stateScenarios.offlineScenariosInterface[id].id}
-                  />
-                ) : (
-                  <></>
-                )}
+                {f.filter ? <TypeValue f={f} c={c} id={stateScenarios.offlineScenariosInterface[id].id} /> : <></>}
               </div>
             ) : (
               <></>

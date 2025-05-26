@@ -17,19 +17,13 @@ import iconRefresh from "../images/icons/reload.png";
 import { PageComponent } from "../components/PageComponent";
 import LoaderScenarios from "../UI/components/LoaderScenarios";
 import { SettingsEvent } from "./SettingsEvent";
+import { EmailScenariosBlock } from "../components/scenarios/EmailScenariosBlock";
 
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
   const location = useLocation();
-  const {
-    body,
-    descriptionScenarios,
-    nameScenarios,
-    event,
-    type,
-    id_event,
-    is_active,
-  } = location.state || {};
+  const { body, descriptionScenarios, nameScenarios, event, type, id_event, is_active, message_id, trigger, list_to, query_params } =
+    location.state || {};
 
   const navigate = useNavigate();
   const [scenariosIsLoad, setScenariosIsLoad] = useState(false);
@@ -54,6 +48,20 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     id_event: "",
     description: "",
   });
+
+  const [emailReques, setEmailReques] = useState({
+    trigger: "",
+    // "message_id": "string",
+    message: "",
+    list_to: [],
+    // "template": 0,
+    query_params: {},
+    sent_every_: "",
+    interval: 1,
+    start_date: "",
+    end_date: "",
+  });
+
   const refValueEvent = useRef(null);
 
   // Дополнительные условия отображения сценария
@@ -82,41 +90,22 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       if (getKey) {
         onChangeEvent(e);
         for (let keyJoin in bodyBuild.filter) {
-          console.log(
-            "keyJoin",
-            keyJoin,
-            "bodyBuild.filter",
-            bodyBuild.filter,
-            bodyBuild.filter[`${keyJoin}`]
-          );
-          joinID = stateScenarios.offlineScenariosInterface.find(
-            (j) => j.current === keyJoin
-          );
-          console.log(
-            "stateScenarios.offlineScenariosInterface",
-            toJS(stateScenarios.offlineScenariosInterface)
-          );
+          console.log("keyJoin", keyJoin, "bodyBuild.filter", bodyBuild.filter, bodyBuild.filter[`${keyJoin}`]);
+
+          joinID = stateScenarios.offlineScenariosInterface.find((j) => j.current === keyJoin);
+          console.log("stateScenarios.offlineScenariosInterface", toJS(stateScenarios.offlineScenariosInterface));
           console.log("joinID", joinID);
           if (joinID) {
             for (let name in bodyBuild.filter[keyJoin]) {
-              console.log(
-                "let name in bodyBuild.filter",
-                name,
-                bodyBuild.filter[keyJoin][name]
-              );
+              console.log("let name in bodyBuild.filter", name, bodyBuild.filter[keyJoin][name]);
               const filterID = joinID.filter.find((f) => f.name === name);
-              if (filterID) {
+              if (filterID && filterID.name !== "updated_at") {
+                console.log("filter id", filterID);
                 filterID.filter = true;
                 filterID.value = bodyBuild.filter[keyJoin][name][0];
                 filterID.condition = bodyBuild.filter[keyJoin][name][1];
               }
-              stateScenarios.updateValueFilter(
-                joinID.id,
-                name,
-                bodyBuild.filter[keyJoin][name][0],
-                bodyBuild.filter[keyJoin][name][1],
-                joinID
-              );
+              stateScenarios.updateValueFilter(joinID.id, name, bodyBuild.filter[keyJoin][name][0], bodyBuild.filter[keyJoin][name][1], joinID);
             }
           }
         }
@@ -185,18 +174,10 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         }
 
         if (!stateScenarios.offlineScenariosInterface.length) {
-          stateScenarios.pushOfflineScenariosInterface(
-            resSelect.current,
-            resSelect["join"],
-            resSelect["filter"]
-          );
+          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
           stateScenarios.addJoinData(resSelect.current, name);
         } else {
-          stateScenarios.pushOfflineScenariosInterface(
-            resSelect.current,
-            resSelect["join"],
-            resSelect["filter"]
-          );
+          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
 
           stateScenarios.addJoinData(resSelect.current, name);
         }
@@ -243,9 +224,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             }
           }
           // Рекурсивно обходим все ключи объекта
-          Object.values(obj).forEach((value) =>
-            extractMastIds(value, result, name)
-          );
+          Object.values(obj).forEach((value) => extractMastIds(value, result, name));
         }
         return result;
       }
@@ -291,9 +270,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
-          type_user: String(uniqueMastIds)
-            .replace(/^ /g, "")
-            .replace(/$/g, ","),
+          type_user: String(uniqueMastIds).replace(/^ /g, "").replace(/$/g, ","),
         });
         if (resReq) {
           setTimeout(() => {
@@ -326,21 +303,21 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setTypeEventString(value);
     if (value === "popup") {
       const res = await apiRequest.getHTMLTemplatePopup();
-      setObjReques(
-        objReques,
-        ...(objReques.event = value),
-        (objReques.type = "routing")
-      );
+      setObjReques(objReques, ...(objReques.event = value), (objReques.type = "routing"));
       if (res) {
         setTypeEvent(res);
       }
     }
     if (value === "чат-строка") {
       const res = await apiRequest.getHTMLTemplatString();
-      setObjReques(
-        objReques,
-        ...((objReques.event = value), (objReques.type = "strings"))
-      );
+      setObjReques(objReques, ...((objReques.event = value), (objReques.type = "strings")));
+      if (res) {
+        setTypeEvent(res);
+      }
+    }
+    if (value === "рассылка") {
+      const res = await apiRequest.getHTMLTemplatString();
+      setObjReques(objReques, ...((objReques.event = value), (objReques.type = "strings")));
       if (res) {
         setTypeEvent(res);
       }
@@ -350,10 +327,13 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     const resID =
       typeEventString === "popup"
         ? appState.templatesHTMLPopup.find((p) => p.name === e.target.value)
-        : appState.templatesHTMLString.find((p) => p.name === e.target.value);
+        : typeEventString === "чат-строка"
+        ? appState.templatesHTMLString.find((p) => p.name === e.target.value)
+        : appState.templatesHTMLEmail.find((p) => p.name === e.target.value);
     if (resID) {
       setObjReques(objReques, ...(objReques.id_event = String(resID.id)));
     }
+    console.log("onChangeEventID", e, resID);
     setNameVisible(true);
   };
 
@@ -376,12 +356,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             <BtnBackHeaderPage />
           </Link>
           <div className="scenarios_container">
-            <span>
-              Выбрано:{" "}
-              {stateScenarios.resultevent !== "Нет данных"
-                ? stateScenarios.resultevent.length
-                : 0}
-            </span>
+            <span>Выбрано: {stateScenarios.resultevent !== "Нет данных" ? stateScenarios.resultevent.length : 0}</span>
             <div className="scenarios_container_filter">
               <div className="scenarios_filter_bar" ref={filterBarRef}></div>
 
@@ -394,19 +369,11 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                         {stateScenarios.build_data[0]}
                       </option>
                     </select>
-                    <img
-                      className="icon_reload"
-                      src={iconRefresh}
-                      alt="Сбросить"
-                      onClick={clearScenarios}
-                    />
+                    <img className="icon_reload" src={iconRefresh} alt="Сбросить" onClick={clearScenarios} />
                   </div>
                 </div>
                 <div>
-                  <FiltersItemComponent
-                    id={0}
-                    c={stateScenarios.offlineScenariosInterface[0]}
-                  />
+                  <FiltersItemComponent id={0} c={stateScenarios.offlineScenariosInterface[0]} />
                 </div>
               </div>
 
@@ -422,19 +389,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
 
               {selectEvent ? (
                 <>
-                  <SelectedScenarios
-                    refValue={refValueEvent}
-                    firstName={firstNameEvent}
-                    data={eventData}
-                    onChange={onChangeEvent}
-                  />
+                  <SelectedScenarios refValue={refValueEvent} firstName={firstNameEvent} data={eventData} onChange={onChangeEvent} />
                   {typeEvent !== null ? (
-                    <SelectedScenariosName
-                      data={typeEvent}
-                      firstName={firstNameEventID}
-                      onChange={onChangeEventID}
-                      cls="inpt_v1"
-                    />
+                    <SelectedScenariosName data={typeEvent} firstName={firstNameEventID} onChange={onChangeEventID} cls="inpt_v1" />
                   ) : (
                     <></>
                   )}
@@ -456,25 +413,24 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                   {nameVisible && event !== "рассылка" ? (
                     <div className="selected_container">
                       {/* <p>Опишите сценарий</p> */}
-                      <textarea
-                        placeholder="Описание сценария"
-                        value={description}
-                        onChange={onChangeDescription}
-                        className="textarea_v1"
-                      />
+                      <textarea placeholder="Описание сценария" value={description} onChange={onChangeDescription} className="textarea_v1" />
                     </div>
+                  ) : (
+                    <></>
+                  )}
+                  {nameVisible && event === "рассылка" ? (
+                    <EmailScenariosBlock
+                      emailReques={emailReques}
+                      setEmailReques={setEmailReques}
+                      _new={{ trigger: trigger, query_params: query_params }}
+                    />
                   ) : (
                     <></>
                   )}
                   {nameVisible ? (
                     <div className="selected_container">
                       {/* <p>Напишите название сценария</p> */}
-                      <ScenariosInpt
-                        placeholder="Название сценария"
-                        value={name}
-                        onChange={onChangeName}
-                        style={{ width: "250px" }}
-                      />
+                      <ScenariosInpt placeholder="Название сценария" value={name} onChange={onChangeName} style={{ width: "250px" }} />
                     </div>
                   ) : (
                     <></>
@@ -483,21 +439,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
               ) : (
                 <></>
               )}
-              {!nameVisible ? (
-                <AddBtn
-                  help="Выбрать инструмент"
-                  onClick={() => setSelectEvent(!selectEvent)}
-                />
-              ) : (
-                <></>
-              )}
+              {!nameVisible ? <AddBtn help="Выбрать инструмент" onClick={() => setSelectEvent(!selectEvent)} /> : <></>}
 
-              <img
-                className="scenarios_filter_play_icon"
-                onClick={playScenarios}
-                src={playIcon}
-                alt=""
-              />
+              <img className="scenarios_filter_play_icon" onClick={playScenarios} src={playIcon} alt="" />
             </div>
           </div>
           <ul>
