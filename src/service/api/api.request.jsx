@@ -265,6 +265,7 @@ class apiRequest {
     }
   };
 
+
   removeOnlineScenarios = async (id) => {
     try {
       const res = await req.delete(`online_scripts/`, {

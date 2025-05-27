@@ -11,7 +11,18 @@ const TypeValue = observer(({ f, id, c }) => {
   const [orValue, setOrValue] = useState("И");
   const [valueBooleanReg, setValueBooleanReg] = useState(false);
   const [condition, setCondition] = useState("");
+  const [currentDate, setCurrentDate] = useState(false);
+  const [currentDateName, setCurrentDateName] = useState("Текущая");
   // const [conditionName, setConditionName] = useState("");
+
+  const editCurrentDateName = () => {
+    if (currentDate) {
+      setCurrentDateName("Текущая")
+    } else {
+      setCurrentDateName("Динамическая")
+    }
+    setCurrentDate(!currentDate);
+  };
 
   const getTypeValue = (name) => {
     console.log(name);
@@ -254,24 +265,31 @@ const TypeValue = observer(({ f, id, c }) => {
   } else if (f.info.type === "TIMESTAMP") {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt
-          value={value}
-          onChange={onChangeDateTime}
-          placeholder={f.name}
-          type="datetime-local"
-        />
-        {/* {orValue === "И" ? ( */}
-        <SelectedConditionFilter
-          condition={condition}
-          // data={c.condition}
-          onChangeCondition={onChangeCondition}
-          c={c}
-        />
-        {/* // ) : ( // <span>Точное совпадение</span>
+        {!currentDate ? (
+          <>
+            <ScenariosInpt
+              value={value}
+              onChange={onChangeDateTime}
+              placeholder={f.name}
+              type="datetime-local"
+            />
+            {/* {orValue === "И" ? ( */}
+            <SelectedConditionFilter
+              condition={condition}
+              // data={c.condition}
+              onChangeCondition={onChangeCondition}
+              c={c}
+            />
+            {/* // ) : ( // <span>Точное совпадение</span>
         // )} */}
-        <span className="or_btn" onClick={updateOr}>
-          {orValue}
-        </span>
+            <span className="or_btn" onClick={updateOr}>
+              {orValue}
+            </span>
+          </>
+        ) : (
+          <></>
+        )}
+        <span onClick={editCurrentDateName}>{currentDateName}</span>
       </div>
     );
   } else if (f.info.type === "BOOLEAN") {

@@ -37,23 +37,8 @@ export const ClientCard = ({ setClientCard }) => {
     setTabTreadsCls("tab_active");
   };
 
-  // const tempObj = {
-  //   cms_user_id: 1236,
-  //   crm_contact_name: "Владимир",
-  //   crm_contact_second_name: "",
-  //   crm_contact_last_name: "Кабанов",
-  //   crm_contact_phones:
-  //     '[\n    "+79695381346",\n    "+79599952199",\n    "+7 (995) 506-56-99"\n]',
-  //   crm_contact_emails:
-  //     '[\n    "kabanovv.s@yandex.ru",\n    "vladimir_kabanov12@vk.com",\n    "sobakapes@pes.ru"\n]',
-  //   history: "['Смотрел ККТ АТОЛ',\n 'Смотрел расходку чековую ленту']",
-  //   leads: "['Не знаю что тут будет',\n 'Это второй лид']",
-  //   traeds: '["Купил ККТ Эвотор",\n "Положир в корзину бананы"]',
-  //   devices: '["Телефон Гриши",\n neApple]',
-  //   url_point: "www.google.com",
-  // };
-
   const HandlerString = (props) => {
+    console.log("props", props);
     try {
       return (
         <ul className="mb25">
@@ -84,8 +69,7 @@ export const ClientCard = ({ setClientCard }) => {
       <div className="card_info_container">
         <ul className="card_info_container_column">
           <li className="card_info_row_name mb25">
-            {stateClient.client.first_name}{" "}
-            {stateClient.client.last_name}{" "}
+            {stateClient.client.first_name} {stateClient.client.last_name}{" "}
             {stateClient.client.second_name}{" "}
           </li>
           <HandlerString data={stateClient.client.emails} />

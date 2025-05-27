@@ -75,10 +75,18 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         }
 
         if (!stateScenarios.offlineScenariosInterface.length) {
-          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
+          stateScenarios.pushOfflineScenariosInterface(
+            resSelect.current,
+            resSelect["join"],
+            resSelect["filter"]
+          );
           stateScenarios.addJoinData(resSelect.current, name);
         } else {
-          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
+          stateScenarios.pushOfflineScenariosInterface(
+            resSelect.current,
+            resSelect["join"],
+            resSelect["filter"]
+          );
 
           stateScenarios.addJoinData(resSelect.current, name);
         }
@@ -165,7 +173,9 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             }
           }
           // Рекурсивно обходим все ключи объекта
-          Object.values(obj).forEach((value) => extractMastIds(value, result, name));
+          Object.values(obj).forEach((value) =>
+            extractMastIds(value, result, name)
+          );
         }
         return result;
       }
@@ -209,7 +219,9 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
           }),
           description: objReques.description,
           id_event: Number(objReques.id_event),
-          type_user: String(uniqueMastIds).replace(/^ /g, "").replace(/$/g, ","),
+          type_user: String(uniqueMastIds)
+            .replace(/^ /g, "")
+            .replace(/$/g, ","),
         });
         if (resReq) {
           setTimeout(() => {
@@ -223,6 +235,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             return acc;
           }, new Set()),
         ];
+        if (uniqueMastIds.length === 0) {
+          return alert(
+            "По заданным фильтрам не найдено ни одной почты для отправки"
+          );
+        }
         console.log(uniqueMastIds);
         setEmailReques({ ...emailReques, list_to: uniqueMastIds });
         // console.log({
@@ -262,12 +279,16 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
         }
         console.log(objReques, emailReques);
         let resReq;
+        console.log("objReques.query_params", objReques);
         // Когда надо запустить не один раз
         if (emailReques.sent_every_ !== "run_date") {
           // Интервал
           if (emailReques.trigger !== "date") {
             // Цикл (без query params)
-            if (JSON.stringify(objReques.query_params) === "{}") {
+            if (
+              JSON.stringify(objReques.query_params) === "{}" ||
+              !objReques.query_params
+            ) {
               resReq = await apiRequest.emailPostPlaner({
                 trigger: emailReques.trigger,
                 // "message_id": "string",
@@ -282,6 +303,7 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                   filter: stateScenarios.filter_data,
                   order: "{}",
                 }),
+                query_params: {},
                 // timezone: "UTC+3",
                 // start_date: emailReques.start_date,
                 // end_date: emailReques.end_date,
@@ -289,7 +311,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             } else {
               // Ищем значение filter
               const dynamicKey = Object.keys(stateScenarios.filter_data)[0];
-              stateScenarios.filter_data[dynamicKey].updated_at = ["current_data", ">=", Number(emailReques.interval)];
+              stateScenarios.filter_data[dynamicKey].updated_at = [
+                "current_data",
+                ">=",
+                Number(emailReques.interval),
+              ];
               // С query params
               resReq = await apiRequest.emailPostPlaner({
                 trigger: emailReques.trigger,
@@ -313,24 +339,24 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             }
           } else {
             // cron не используется
-            resReq = await apiRequest.emailPostPlaner({
-              trigger: emailReques.trigger,
-              // "message_id": "string",
-              message: objReques.name,
-              list_to: uniqueMastIds,
-              template: Number(objReques.id_event),
-              sent_every_: emailReques.sent_every_,
-              interval: Number(emailReques.interval),
-              start_date: emailReques.start_date,
-              end_date: emailReques.end_date,
-              body: JSON.stringify({
-                build: stateScenarios.build_data,
-                join: stateScenarios.join_data,
-                filter: stateScenarios.filter_data,
-                order: "{}",
-              }),
-              // timezone: "UTC+3",
-            });
+            // resReq = await apiRequest.emailPostPlaner({
+            //   trigger: emailReques.trigger,
+            //   // "message_id": "string",
+            //   message: objReques.name,
+            //   list_to: uniqueMastIds,
+            //   template: Number(objReques.id_event),
+            //   sent_every_: emailReques.sent_every_,
+            //   interval: Number(emailReques.interval),
+            //   start_date: emailReques.start_date,
+            //   end_date: emailReques.end_date,
+            //   body: JSON.stringify({
+            //     build: stateScenarios.build_data,
+            //     join: stateScenarios.join_data,
+            //     filter: stateScenarios.filter_data,
+            //     order: "{}",
+            //   }),
+            //   // timezone: "UTC+3",
+            // });
           }
         } else {
           // Когда запускаем один раз
@@ -343,6 +369,12 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
             template: Number(objReques.id_event),
             sent_every_: emailReques.sent_every_,
             interval: emailReques.start_date,
+            body: JSON.stringify({
+              build: stateScenarios.build_data,
+              join: stateScenarios.join_data,
+              filter: stateScenarios.filter_data,
+              order: "{}",
+            }),
             // start_date: emailReques.start_date,
             // end_date: emailReques.end_date,
           });
@@ -467,11 +499,20 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
     <div className="scenarios_container">
       <BtnBackHeaderPage onClick={() => setNewScenariosOffline(false)} />
       <div className="scenarios_container">
-        <span>Выбрано: {stateScenarios.resultevent !== "Нет данных" ? stateScenarios.resultevent.length : 0}</span>
+        <span>
+          Выбрано:{" "}
+          {stateScenarios.resultevent !== "Нет данных"
+            ? stateScenarios.resultevent.length
+            : 0}
+        </span>
         <div className="scenarios_container_filter">
           <div className="scenarios_filter_bar" ref={filterBarRef}></div>
           {!selectVisible ? (
-            <SelectedScenarios firstName="Выберите" data={first_data} onChange={onChangeSelectNew} />
+            <SelectedScenarios
+              firstName="Выберите"
+              data={first_data}
+              onChange={onChangeSelectNew}
+            />
           ) : (
             <div className="scenarios_filter_container scenarios_filter_span">
               <div className="scenarios_filter_span">
@@ -479,11 +520,19 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                   <select className="inpt_v1">
                     <option defaultValue>{nameRequest}</option>
                   </select>
-                  <img className="icon_reload" src={iconRefresh} alt="Сбросить" onClick={clearScenarios} />
+                  <img
+                    className="icon_reload"
+                    src={iconRefresh}
+                    alt="Сбросить"
+                    onClick={clearScenarios}
+                  />
                 </div>
               </div>
               <div>
-                <FiltersItemComponent id={0} c={stateScenarios.offlineScenariosInterface[0]} />
+                <FiltersItemComponent
+                  id={0}
+                  c={stateScenarios.offlineScenariosInterface[0]}
+                />
               </div>
             </div>
           )}
@@ -499,10 +548,18 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
 
           {selectEvent ? (
             <>
-              <SelectedScenarios firstName="Событие" data={eventData} onChange={onChangeEvent} />
+              <SelectedScenarios
+                firstName="Событие"
+                data={eventData}
+                onChange={onChangeEvent}
+              />
               {typeEvent !== null ? (
                 <>
-                  <SelectedScenariosName data={typeEvent} onChange={onChangeEventID} cls="inpt_v1" />
+                  <SelectedScenariosName
+                    data={typeEvent}
+                    onChange={onChangeEventID}
+                    cls="inpt_v1"
+                  />
                   {objReques.type !== "templates" ? (
                     <SettingsEvent
                       url={addUrl}
@@ -523,8 +580,20 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
               )}
               {objReques.type === "templates" ? (
                 <>
-                  <SelectedScenarios firstName="Тип отправки" data={["Разовая отправка", "Планировщик"]} onChange={onChangePlaner} />
-                  {planer ? <EmailScenariosBlock emailReques={emailReques} setEmailReques={setEmailReques} _new={null} /> : <></>}
+                  <SelectedScenarios
+                    firstName="Тип отправки"
+                    data={["Разовая отправка", "Планировщик"]}
+                    onChange={onChangePlaner}
+                  />
+                  {planer ? (
+                    <EmailScenariosBlock
+                      emailReques={emailReques}
+                      setEmailReques={setEmailReques}
+                      _new={null}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <>
@@ -543,7 +612,12 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
               {nameVisible ? (
                 <>
                   {/* <p>Опишите сценарий</p> */}
-                  <textarea placeholder="Описание сценария" value={description} onChange={onChangeDescription} className="textarea_v1" />
+                  <textarea
+                    placeholder="Описание сценария"
+                    value={description}
+                    onChange={onChangeDescription}
+                    className="textarea_v1"
+                  />
                 </>
               ) : (
                 <></>
@@ -552,7 +626,11 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
                 <>
                   {/* <p>Напишите название сценария</p> */}
                   <ScenariosInpt
-                    placeholder={objReques.type !== "templates" ? "Название сценария" : "Название рассылки"}
+                    placeholder={
+                      objReques.type !== "templates"
+                        ? "Название сценария"
+                        : "Название рассылки"
+                    }
                     value={name}
                     onChange={onChangeName}
                     style={{ width: "250px" }}
@@ -561,12 +639,28 @@ const NewScenariosOffline = observer(({ setNewScenariosOffline }) => {
               ) : (
                 <></>
               )}
-              {nameVisible && objReques.name ? <img className="scenarios_filter_play_icon" onClick={playScenarios} src={playIcon} alt="" /> : <></>}
+              {nameVisible && objReques.name ? (
+                <img
+                  className="scenarios_filter_play_icon"
+                  onClick={playScenarios}
+                  src={playIcon}
+                  alt=""
+                />
+              ) : (
+                <></>
+              )}
             </>
           ) : (
             <></>
           )}
-          {!nameVisible ? <AddBtn help="Выбрать инструмент" onClick={() => setSelectEvent(!selectEvent)} /> : <></>}
+          {!nameVisible ? (
+            <AddBtn
+              help="Выбрать инструмент"
+              onClick={() => setSelectEvent(!selectEvent)}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <ul>

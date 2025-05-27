@@ -48,7 +48,7 @@ export const ListUsersRow = observer(({ clientCard, setClientCard }) => {
               onClick={() => openClientCard(c)}
               // to={`/users/:${c.cms_user_id}`}
             >
-              <ItemUsersRow c={c} key={c.cms_user_id} />
+              <ItemUsersRow c={c} />
             </div>
           ))}
         </ul>

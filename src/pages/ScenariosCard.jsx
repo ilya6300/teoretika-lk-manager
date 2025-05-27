@@ -22,8 +22,21 @@ import { EmailScenariosBlock } from "../components/scenarios/EmailScenariosBlock
 const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const { id } = useParams();
   const location = useLocation();
-  const { body, descriptionScenarios, nameScenarios, event, type, id_event, is_active, message_id, trigger, list_to, query_params } =
-    location.state || {};
+  const {
+    body,
+    descriptionScenarios,
+    nameScenarios,
+    event,
+    type,
+    id_event,
+    is_active,
+    message_id,
+    trigger,
+    list_to,
+    query_params,
+    start_date,
+    end_date,
+  } = location.state || {};
 
   const navigate = useNavigate();
   const [scenariosIsLoad, setScenariosIsLoad] = useState(false);
@@ -50,7 +63,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   });
 
   const [emailReques, setEmailReques] = useState({
-    trigger: "",
+    trigger: trigger,
     // "message_id": "string",
     message: "",
     list_to: [],
@@ -75,6 +88,7 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
   const autoRequest = async () => {
     try {
       let getKey = false;
+      console.log(body);
       const bodyBuild = JSON.parse(body);
       for (const b of bodyBuild.build) {
         await getSelect(b);
@@ -90,14 +104,29 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
       if (getKey) {
         onChangeEvent(e);
         for (let keyJoin in bodyBuild.filter) {
-          console.log("keyJoin", keyJoin, "bodyBuild.filter", bodyBuild.filter, bodyBuild.filter[`${keyJoin}`]);
+          console.log(
+            "keyJoin",
+            keyJoin,
+            "bodyBuild.filter",
+            bodyBuild.filter,
+            bodyBuild.filter[`${keyJoin}`]
+          );
 
-          joinID = stateScenarios.offlineScenariosInterface.find((j) => j.current === keyJoin);
-          console.log("stateScenarios.offlineScenariosInterface", toJS(stateScenarios.offlineScenariosInterface));
+          joinID = stateScenarios.offlineScenariosInterface.find(
+            (j) => j.current === keyJoin
+          );
+          console.log(
+            "stateScenarios.offlineScenariosInterface",
+            toJS(stateScenarios.offlineScenariosInterface)
+          );
           console.log("joinID", joinID);
           if (joinID) {
             for (let name in bodyBuild.filter[keyJoin]) {
-              console.log("let name in bodyBuild.filter", name, bodyBuild.filter[keyJoin][name]);
+              console.log(
+                "let name in bodyBuild.filter",
+                name,
+                bodyBuild.filter[keyJoin][name]
+              );
               const filterID = joinID.filter.find((f) => f.name === name);
               if (filterID && filterID.name !== "updated_at") {
                 console.log("filter id", filterID);
@@ -105,7 +134,13 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                 filterID.value = bodyBuild.filter[keyJoin][name][0];
                 filterID.condition = bodyBuild.filter[keyJoin][name][1];
               }
-              stateScenarios.updateValueFilter(joinID.id, name, bodyBuild.filter[keyJoin][name][0], bodyBuild.filter[keyJoin][name][1], joinID);
+              stateScenarios.updateValueFilter(
+                joinID.id,
+                name,
+                bodyBuild.filter[keyJoin][name][0],
+                bodyBuild.filter[keyJoin][name][1],
+                joinID
+              );
             }
           }
         }
@@ -144,16 +179,21 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setSelectEvent(true);
     setNameVisible(true);
     setName(nameScenarios);
-    setDescription(descriptionScenarios);
-    setFirstNameEvent(event);
-    setAddUrl(JSON.parse(body).url);
-    setAddDate(JSON.parse(body).date);
-    setAddTimeout(JSON.parse(body).timeout);
-    console.log(id_event);
+    if (body) {
+      console.log(body);
+      setDescription(descriptionScenarios);
+      setFirstNameEvent(event);
+      setAddUrl(JSON.parse(body).url);
+      setAddDate(JSON.parse(body).date);
+      setAddTimeout(JSON.parse(body).timeout);
+    }
+
+    console.log(type);
     // objReques = {...objReques, name: nameScenarios, }
     objReques.name = nameScenarios;
     objReques.description = descriptionScenarios;
     objReques.id_event = id_event;
+
     getAutoRequestNameEvent();
     // stateScenarios.resetData("join_data");
     // showSelec();
@@ -174,10 +214,18 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         }
 
         if (!stateScenarios.offlineScenariosInterface.length) {
-          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
+          stateScenarios.pushOfflineScenariosInterface(
+            resSelect.current,
+            resSelect["join"],
+            resSelect["filter"]
+          );
           stateScenarios.addJoinData(resSelect.current, name);
         } else {
-          stateScenarios.pushOfflineScenariosInterface(resSelect.current, resSelect["join"], resSelect["filter"]);
+          stateScenarios.pushOfflineScenariosInterface(
+            resSelect.current,
+            resSelect["join"],
+            resSelect["filter"]
+          );
 
           stateScenarios.addJoinData(resSelect.current, name);
         }
@@ -224,7 +272,9 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             }
           }
           // Рекурсивно обходим все ключи объекта
-          Object.values(obj).forEach((value) => extractMastIds(value, result, name));
+          Object.values(obj).forEach((value) =>
+            extractMastIds(value, result, name)
+          );
         }
         return result;
       }
@@ -237,6 +287,8 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         // return alert("Филтры не настроены");
       }
 
+      let resReq;
+      let uniqueMastIds;
       if (objReques.type !== "templates") {
         if (objReques.name === "") {
           // return alert("Имя не задано");
@@ -244,39 +296,154 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
         if (objReques.description === "") {
           // return alert("Описание не задано");
         }
-        const uniqueMastIds = [
+        uniqueMastIds = [
           ...stateScenarios.resultevent.reduce((acc, item) => {
             extractMastIds(item, acc, "mast_id"); // Обрабатываем каждый объект в массиве
             return acc;
           }, new Set()),
         ];
-
+        if (uniqueMastIds.length === 0) {
+          return alert(
+            "По заданным фильтрам не найдено ни одной почты для отправки"
+          );
+        }
         // console.log(uniqueMastIds);
         console.log("Это проверка описания", objReques);
-        const resReq = await apiRequest.patchOnlineScenarios(id, {
-          type: objReques.type,
-          name: objReques.name,
-          event: objReques.event,
-          body: JSON.stringify({
-            build: stateScenarios.build_data,
-            join: stateScenarios.join_data,
-            filter: stateScenarios.filter_data,
-            order: "{}",
-            is_active: JSON.parse(body).is_active,
-            url: addUrl,
-            date: addDate,
-            timeout: addTimeout,
-            click: addClick,
-          }),
-          description: objReques.description,
-          id_event: Number(objReques.id_event),
-          type_user: String(uniqueMastIds).replace(/^ /g, "").replace(/$/g, ","),
-        });
-        if (resReq) {
-          setTimeout(() => {
-            navigate("/scenarios");
-          }, 400);
+
+        if (event !== "рассылка") {
+          resReq = await apiRequest.patchOnlineScenarios(id, {
+            type: objReques.type,
+            name: objReques.name,
+            event: objReques.event,
+            body: JSON.stringify({
+              build: stateScenarios.build_data,
+              join: stateScenarios.join_data,
+              filter: stateScenarios.filter_data,
+              order: "{}",
+              is_active: JSON.parse(body).is_active,
+              url: addUrl,
+              date: addDate,
+              timeout: addTimeout,
+              click: addClick,
+            }),
+            description: objReques.description,
+            id_event: Number(objReques.id_event),
+            type_user: String(uniqueMastIds)
+              .replace(/^ /g, "")
+              .replace(/$/g, ","),
+          });
         }
+      } else {
+        uniqueMastIds = [
+          ...stateScenarios.resultevent.reduce((acc, item) => {
+            extractMastIds(item, acc, "email"); // Обрабатываем каждый объект в массиве
+            return acc;
+          }, new Set()),
+        ];
+        if (uniqueMastIds.length === 0) {
+          return alert(
+            "По заданным фильтрам не найдено ни одной почты для отправки"
+          );
+        }
+        console.log("emailReques", emailReques);
+        // Когда надо запустить не один раз
+        if (emailReques.sent_every_ !== "run_date") {
+          // Интервал
+          if (emailReques.trigger !== "date") {
+            // Цикл (без query params)
+            if (
+              JSON.stringify(objReques.query_params) === "{}" ||
+              !objReques.query_params
+            ) {
+              resReq = await apiRequest.emailPostPlaner({
+                trigger: "interval",
+                message_id: message_id,
+                message: objReques.name,
+                list_to: uniqueMastIds,
+                template: Number(objReques.id_event),
+                sent_every_: emailReques.sent_every_,
+                interval: Number(emailReques.interval),
+                body: JSON.stringify({
+                  build: stateScenarios.build_data,
+                  join: stateScenarios.join_data,
+                  filter: stateScenarios.filter_data,
+                  order: "{}",
+                }),
+                query_params: {},
+                // timezone: "UTC+3",
+                // start_date: emailReques.start_date,
+                // end_date: emailReques.end_date,
+              });
+            } else {
+              // Ищем значение filter
+              const dynamicKey = Object.keys(stateScenarios.filter_data)[0];
+              stateScenarios.filter_data[dynamicKey].updated_at = [
+                "current_data",
+                ">=",
+                Number(emailReques.interval),
+              ];
+              // С query params
+              resReq = await apiRequest.emailPostPlaner({
+                trigger: "interval",
+                message_id: message_id,
+                message: objReques.name,
+                // list_to: uniqueMastIds,
+                query_params: stateScenarios.filter_data,
+                template: Number(objReques.id_event),
+                sent_every_: "days",
+                interval: Number(emailReques.interval),
+                body: JSON.stringify({
+                  build: stateScenarios.build_data,
+                  join: stateScenarios.join_data,
+                  filter: stateScenarios.filter_data,
+                  order: "{}",
+                }),
+                // timezone: "UTC+3",
+                // start_date: emailReques.start_date,
+                // end_date: emailReques.end_date,
+              });
+            }
+          } else {
+            // cron не используется
+            // resReq = await apiRequest.emailPostPlaner({
+            //   trigger: emailReques.trigger,
+            //   // "message_id": "string",
+            //   message: objReques.name,
+            //   list_to: uniqueMastIds,
+            //   template: Number(objReques.id_event),
+            //   sent_every_: emailReques.sent_every_,
+            //   interval: Number(emailReques.interval),
+            //   start_date: emailReques.start_date,
+            //   end_date: emailReques.end_date,
+            //   body: JSON.stringify({
+            //     build: stateScenarios.build_data,
+            //     join: stateScenarios.join_data,
+            //     filter: stateScenarios.filter_data,
+            //     order: "{}",
+            //   }),
+            //   // timezone: "UTC+3",
+            // });
+          }
+        } else {
+          // Когда запускаем один раз
+          resReq = await apiRequest.emailPostPlaner({
+            trigger: "date",
+            message_id: message_id,
+            message: objReques.name,
+            list_to: uniqueMastIds,
+            // list_to: ["support1@mact.ru"],
+            template: Number(objReques.id_event),
+            sent_every_: emailReques.sent_every_,
+            interval: emailReques.start_date,
+            // start_date: emailReques.start_date,
+            // end_date: emailReques.end_date,
+          });
+        }
+      }
+      if (resReq) {
+        setTimeout(() => {
+          navigate("/scenarios");
+        }, 400);
       }
     } catch (e) {
       console.error(e);
@@ -303,21 +470,31 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
     setTypeEventString(value);
     if (value === "popup") {
       const res = await apiRequest.getHTMLTemplatePopup();
-      setObjReques(objReques, ...(objReques.event = value), (objReques.type = "routing"));
+      setObjReques(
+        objReques,
+        ...(objReques.event = value),
+        (objReques.type = "routing")
+      );
       if (res) {
         setTypeEvent(res);
       }
     }
     if (value === "чат-строка") {
       const res = await apiRequest.getHTMLTemplatString();
-      setObjReques(objReques, ...((objReques.event = value), (objReques.type = "strings")));
+      setObjReques(
+        objReques,
+        ...((objReques.event = value), (objReques.type = "strings"))
+      );
       if (res) {
         setTypeEvent(res);
       }
     }
     if (value === "рассылка") {
       const res = await apiRequest.getHTMLTemplatString();
-      setObjReques(objReques, ...((objReques.event = value), (objReques.type = "strings")));
+      setObjReques(
+        objReques,
+        ...((objReques.event = value), (objReques.type = "templates"))
+      );
       if (res) {
         setTypeEvent(res);
       }
@@ -356,7 +533,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
             <BtnBackHeaderPage />
           </Link>
           <div className="scenarios_container">
-            <span>Выбрано: {stateScenarios.resultevent !== "Нет данных" ? stateScenarios.resultevent.length : 0}</span>
+            <span>
+              Выбрано:{" "}
+              {stateScenarios.resultevent !== "Нет данных"
+                ? stateScenarios.resultevent.length
+                : 0}
+            </span>
             <div className="scenarios_container_filter">
               <div className="scenarios_filter_bar" ref={filterBarRef}></div>
 
@@ -369,11 +551,19 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                         {stateScenarios.build_data[0]}
                       </option>
                     </select>
-                    <img className="icon_reload" src={iconRefresh} alt="Сбросить" onClick={clearScenarios} />
+                    <img
+                      className="icon_reload"
+                      src={iconRefresh}
+                      alt="Сбросить"
+                      onClick={clearScenarios}
+                    />
                   </div>
                 </div>
                 <div>
-                  <FiltersItemComponent id={0} c={stateScenarios.offlineScenariosInterface[0]} />
+                  <FiltersItemComponent
+                    id={0}
+                    c={stateScenarios.offlineScenariosInterface[0]}
+                  />
                 </div>
               </div>
 
@@ -389,9 +579,19 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
 
               {selectEvent ? (
                 <>
-                  <SelectedScenarios refValue={refValueEvent} firstName={firstNameEvent} data={eventData} onChange={onChangeEvent} />
+                  <SelectedScenarios
+                    refValue={refValueEvent}
+                    firstName={firstNameEvent}
+                    data={eventData}
+                    onChange={onChangeEvent}
+                  />
                   {typeEvent !== null ? (
-                    <SelectedScenariosName data={typeEvent} firstName={firstNameEventID} onChange={onChangeEventID} cls="inpt_v1" />
+                    <SelectedScenariosName
+                      data={typeEvent}
+                      firstName={firstNameEventID}
+                      onChange={onChangeEventID}
+                      cls="inpt_v1"
+                    />
                   ) : (
                     <></>
                   )}
@@ -413,7 +613,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                   {nameVisible && event !== "рассылка" ? (
                     <div className="selected_container">
                       {/* <p>Опишите сценарий</p> */}
-                      <textarea placeholder="Описание сценария" value={description} onChange={onChangeDescription} className="textarea_v1" />
+                      <textarea
+                        placeholder="Описание сценария"
+                        value={description}
+                        onChange={onChangeDescription}
+                        className="textarea_v1"
+                      />
                     </div>
                   ) : (
                     <></>
@@ -422,7 +627,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                     <EmailScenariosBlock
                       emailReques={emailReques}
                       setEmailReques={setEmailReques}
-                      _new={{ trigger: trigger, query_params: query_params }}
+                      _new={{
+                        trigger: trigger,
+                        query_params: query_params,
+                        start_date: start_date,
+                        end_date: end_date,
+                      }}
                     />
                   ) : (
                     <></>
@@ -430,7 +640,12 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
                   {nameVisible ? (
                     <div className="selected_container">
                       {/* <p>Напишите название сценария</p> */}
-                      <ScenariosInpt placeholder="Название сценария" value={name} onChange={onChangeName} style={{ width: "250px" }} />
+                      <ScenariosInpt
+                        placeholder="Название сценария"
+                        value={name}
+                        onChange={onChangeName}
+                        style={{ width: "250px" }}
+                      />
                     </div>
                   ) : (
                     <></>
@@ -439,9 +654,21 @@ const ScenariosCard = observer(({ setNewScenariosOffline }) => {
               ) : (
                 <></>
               )}
-              {!nameVisible ? <AddBtn help="Выбрать инструмент" onClick={() => setSelectEvent(!selectEvent)} /> : <></>}
+              {!nameVisible ? (
+                <AddBtn
+                  help="Выбрать инструмент"
+                  onClick={() => setSelectEvent(!selectEvent)}
+                />
+              ) : (
+                <></>
+              )}
 
-              <img className="scenarios_filter_play_icon" onClick={playScenarios} src={playIcon} alt="" />
+              <img
+                className="scenarios_filter_play_icon"
+                onClick={playScenarios}
+                src={playIcon}
+                alt=""
+              />
             </div>
           </div>
           <ul>

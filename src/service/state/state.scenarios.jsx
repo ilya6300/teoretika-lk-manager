@@ -105,14 +105,14 @@ class stateScenarios {
   };
 
   updateValueFilter = async (id, name, value, condition, f) => {
-    console.log("updateValueFilter", typeof value);
     try {
       if (!value) return;
-      console.log("======= updateValueFilter =======");
+
       const rowFilterID = this.offlineScenariosInterface[id].filter.find(
         (row) => row.name === name
       );
-      if (rowFilterID) {
+      console.log("======= updateValueFilter =======");
+      if (rowFilterID && rowFilterID.name !== "updated_at") {
         rowFilterID.value = value;
         if (!f.or) {
           // Если И
@@ -168,6 +168,12 @@ class stateScenarios {
             `${this.offlineScenariosInterface[id].current}`
           ][`${rowFilterID.name}`];
         }
+      }
+      if (rowFilterID && rowFilterID.name === "updated_at") {
+        this.filter_data[`${this.offlineScenariosInterface[id].current}`] = {
+          ...this.filter_data[`${this.offlineScenariosInterface[id].current}`],
+          updated_at: ["current_data", ">=", 1],
+        };
       }
       await apiRequest.getFilter();
     } catch (e) {
