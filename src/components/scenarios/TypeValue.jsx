@@ -13,19 +13,20 @@ const TypeValue = observer(({ f, id, c }) => {
   const [condition, setCondition] = useState("");
   const [currentDate, setCurrentDate] = useState(false);
   const [currentDateName, setCurrentDateName] = useState("Текущая");
+  const [valueInterval, setValueInterval] = useState(1);
   // const [conditionName, setConditionName] = useState("");
 
   const editCurrentDateName = () => {
     if (currentDate) {
-      setCurrentDateName("Текущая")
+      setCurrentDateName("Факт.");
     } else {
-      setCurrentDateName("Динамическая")
+      stateScenarios.updateValueFilterCurrentDate(id, f.name, valueInterval);
+      setCurrentDateName("Динам.");
     }
     setCurrentDate(!currentDate);
   };
 
   const getTypeValue = (name) => {
-    console.log(name);
     if (name === "==") {
       // setCondition("==");
       const conditionValue = { target: { value: "равно" } };
@@ -66,11 +67,12 @@ const TypeValue = observer(({ f, id, c }) => {
   };
 
   useLayoutEffect(() => {
-    setValue(
-      typeof f.value === "string" ? f.value.replace(/%/gm, "") : f.value
-    );
-    console.log("TypeValue", toJS(f), f.condition);
-    onChangeCondition(getTypeValue(f.condition));
+    if (f.value !== "current_data") {
+      setValue(typeof f.value === "string" ? f.value.replace(/%/gm, "") : f.value);
+      onChangeCondition(getTypeValue(f.condition));
+    } else {
+      editCurrentDateName();
+    }
   }, [f.value, f.condition]);
 
   const updateOr = () => {
@@ -88,30 +90,16 @@ const TypeValue = observer(({ f, id, c }) => {
 
   // Проверяем, является ли тип поля числовым
   const isNumeric = (type) => {
-    return (
-      type === "BIGINT" ||
-      type === "NUMERIC(50, 4)" ||
-      type === "FLOAT" ||
-      type === "NUMERIC(15, 2)"
-    );
+    return type === "BIGINT" || type === "NUMERIC(50, 4)" || type === "FLOAT" || type === "NUMERIC(15, 2)";
   };
 
   useEffect(() => {
     if (value === "" || condition === "") return;
-
-    console.log(
-      "useEffect TypeValue",
-      typeof condition,
-      condition,
-      typeof value,
-      value
-    );
     const parsedValue = isNumeric(f.info.type) ? Number(value) : value;
     stateScenarios.updateValueFilter(id, f.name, parsedValue, condition, f);
   }, [f, condition, value]);
   const onChangeCondition = (e) => {
     if (!e) return;
-    // console.log(e.target.value);
     if (e.target.value === "равно") {
       setCondition("==");
     }
@@ -132,7 +120,6 @@ const TypeValue = observer(({ f, id, c }) => {
     }
   };
   const onChange = (e) => {
-    console.log("onChange", e);
     const inputValue = e.target.value;
 
     // Если поле числовое, разрешаем только цифры и точку
@@ -148,14 +135,13 @@ const TypeValue = observer(({ f, id, c }) => {
     funcboolean(!boolean);
   };
   const onChangeDateTime = (e) => {
-    setValue(`${e.target.value.replace(/T/g, " ")}:00`);
-    stateScenarios.updateValueFilter(
-      id,
-      f.name,
-      `${e.target.value.replace(/T/g, " ")}:00`,
-      condition,
-      f
-    );
+    if (!currentDate) {
+      setValue(`${e.target.value.replace(/T/g, " ")}:00`);
+      stateScenarios.updateValueFilter(id, f.name, `${e.target.value.replace(/T/g, " ")}:00`, condition, f);
+    } else {
+      setValueInterval(e.target.value);
+      stateScenarios.updateValueFilterCurrentDate(id, f.name, e.target.value);
+    }
   };
 
   const eventChange = (e) => {
@@ -196,12 +182,7 @@ const TypeValue = observer(({ f, id, c }) => {
             <></>
           )}
 
-          <img
-            onClick={() => setEventFlag(!eventFlag)}
-            className="event_btn_list_img"
-            src={iconEventListBtn}
-            alt="Кнопка вызова событий"
-          />
+          <img onClick={() => setEventFlag(!eventFlag)} className="event_btn_list_img" src={iconEventListBtn} alt="Кнопка вызова событий" />
         </div>
       );
     }
@@ -217,8 +198,7 @@ const TypeValue = observer(({ f, id, c }) => {
   ) {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} />{" "}
-        {/* {orValue === "И" ? ( */}
+        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} /> {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           // data={c.condition}
           condition={condition}
@@ -234,21 +214,10 @@ const TypeValue = observer(({ f, id, c }) => {
         <EventList />
       </div>
     );
-  } else if (
-    f.info.type === "BIGINT" ||
-    f.info.type === "NUMERIC(50, 4)" ||
-    f.info.type === "FLOAT" ||
-    f.info.type === "NUMERIC(15, 2)"
-  ) {
+  } else if (f.info.type === "BIGINT" || f.info.type === "NUMERIC(50, 4)" || f.info.type === "FLOAT" || f.info.type === "NUMERIC(15, 2)") {
     return (
       <div className="filter_inpt_container">
-        <ScenariosInpt
-          value={value}
-          onChange={onChange}
-          placeholder={f.name}
-          type="number"
-        />{" "}
-        {/* {orValue === "И" ? ( */}
+        <ScenariosInpt value={value} onChange={onChange} placeholder={f.name} type="number" /> {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}
           // data={c.condition}
@@ -267,12 +236,7 @@ const TypeValue = observer(({ f, id, c }) => {
       <div className="filter_inpt_container">
         {!currentDate ? (
           <>
-            <ScenariosInpt
-              value={value}
-              onChange={onChangeDateTime}
-              placeholder={f.name}
-              type="datetime-local"
-            />
+            <ScenariosInpt value={value} onChange={onChangeDateTime} placeholder={f.name} type="datetime-local" />
             {/* {orValue === "И" ? ( */}
             <SelectedConditionFilter
               condition={condition}
@@ -287,9 +251,15 @@ const TypeValue = observer(({ f, id, c }) => {
             </span>
           </>
         ) : (
-          <></>
+          <div className="current_date_container">
+            <span>дата текущего времени минус</span>{" "}
+            <ScenariosInpt value={valueInterval} onChange={onChangeDateTime} placeholder={f.name} type="number" style={{ width: "50px" }} />
+            <span>день</span>
+          </div>
         )}
-        <span onClick={editCurrentDateName}>{currentDateName}</span>
+        <span className="current_date_btn" onClick={editCurrentDateName}>
+          {currentDateName}
+        </span>
       </div>
     );
   } else if (f.info.type === "BOOLEAN") {
@@ -297,10 +267,7 @@ const TypeValue = observer(({ f, id, c }) => {
       <div className="filter_inpt_container">
         <label
           onClick={() => onChangeBoolean(valueBooleanReg, setValueBooleanReg)}
-          className={
-            valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"
-          }
-        ></label>
+          className={valueBooleanReg ? "my_checkbox_v1_active" : "my_checkbox_v1"}></label>
         {/* {orValue === "И" ? ( */}
         <SelectedConditionFilter
           condition={condition}

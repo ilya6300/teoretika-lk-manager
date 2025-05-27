@@ -32,9 +32,7 @@ export const Auth = () => {
       }
       return;
     }
-    console.log(name, password);
     const res = await apiRequest.login(name, password);
-    console.log(res);
     if (res === undefined) return;
     if (res.data.success) {
       const t = res.data.data.access_token.replace(/..$/, "");

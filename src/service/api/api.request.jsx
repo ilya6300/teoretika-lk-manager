@@ -15,7 +15,7 @@ class apiRequest {
       if (!res) return;
       return res;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       if (e.message === "Network Error") {
         return alert("Нет подключения к серверу");
       }
@@ -60,13 +60,10 @@ class apiRequest {
   getProfile = async () => {
     const res = await req("my_profile/");
     if (!res) return;
-    // console.log(res.data.data);
     return res.data.data;
   };
   patchDateProfile = async (obj) => {
-    // console.log(obj);
     const res = await req.patch("my_profile/", obj);
-    // console.log(res);
   };
 
   changePass = async (pass) => {
@@ -110,7 +107,6 @@ class apiRequest {
   postHTMLTemplate = async (obj) => {
     try {
       const res = await req.post("templates/", obj);
-      // console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -119,22 +115,15 @@ class apiRequest {
 
   removeHTMLTemplate = async (obj) => {
     try {
-      // console.log(obj);
       const res = await axios.delete(`${config.url_api}templates/`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${
-            appState.d(localStorage.getItem("at")) +
-            appState.rk(appState.d(localStorage.getItem("k")))
-          }`,
+          Authorization: `Bearer ${appState.d(localStorage.getItem("at")) + appState.rk(appState.d(localStorage.getItem("k")))}`,
         },
         data: {
           id_template: [obj.id],
         },
       });
-      // console.log(res);
-
-      // return res.data.success;
     } catch (e) {
       console.error(e);
     } finally {
@@ -147,7 +136,6 @@ class apiRequest {
   postPopup = async (obj) => {
     try {
       const res = await req.post(`routing/`, obj);
-      console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -157,7 +145,6 @@ class apiRequest {
   patchPopup = async (id, obj) => {
     try {
       const res = await req.patch(`routing/${id}`, obj);
-      console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -167,7 +154,6 @@ class apiRequest {
   postString = async (obj) => {
     try {
       const res = await req.post(`strings/`, obj);
-      console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -177,7 +163,6 @@ class apiRequest {
   patchString = async (id, obj) => {
     try {
       const res = await req.patch(`strings/${id}`, obj);
-      console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -187,7 +172,6 @@ class apiRequest {
   patchEmail = async (id, obj) => {
     try {
       const res = await req.patch(`templates/${id}`, obj);
-      console.log(res);
       return res.data.success;
     } catch (e) {
       console.error(e);
@@ -199,7 +183,6 @@ class apiRequest {
       const res = await req.post("search/fields", {
         fields: name,
       });
-      console.log("getFilter", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error(e);
@@ -214,7 +197,6 @@ class apiRequest {
         order: {},
       });
       stateScenarios.setParametr("resultevent", res.data.data);
-      console.log("getFilter ==> ", res.data.data);
       return res.data.data;
     } catch (e) {
       console.error("getFilter", e);
@@ -225,7 +207,6 @@ class apiRequest {
     try {
       const res = await req("online_scripts");
       if (!res) return;
-      console.log("getOnlineScenarios", res.data.data.response);
       appState.setScenarios(res.data.data.response);
       return res.data.data.response;
     } catch (e) {
@@ -234,12 +215,8 @@ class apiRequest {
   };
   getTemplaterList = async () => {
     try {
-      const res = await reqPlaner(
-        "notifications_task_scheduler/get_scheduler_tasks"
-      );
-      console.log("getTemplaterList", res);
+      const res = await reqPlaner("notifications_task_scheduler/get_scheduler_tasks");
       if (!res) return;
-      console.log("getTemplaterList", res.data.response);
       appState.getPlanerList(res.data.response);
       return res.data.response;
     } catch (e) {
@@ -249,8 +226,7 @@ class apiRequest {
   postOnlineScenarios = async (obj) => {
     try {
       const res = await req.post(`online_scripts/`, obj);
-      console.log("postOnlineScenarios", res);
-      return res.data;
+            return res.data;
     } catch (e) {
       console.error(e);
     }
@@ -258,21 +234,18 @@ class apiRequest {
   patchOnlineScenarios = async (id, obj) => {
     try {
       const res = await req.patch(`online_scripts/${id}`, obj);
-      console.log("postOnlineScenarios", res);
-      return res.data;
+            return res.data;
     } catch (e) {
       console.error(e);
     }
   };
-
 
   removeOnlineScenarios = async (id) => {
     try {
       const res = await req.delete(`online_scripts/`, {
         data: { id_scripts: [id] },
       });
-      console.log("postOnlineScenarios", res);
-      return res.data;
+            return res.data;
     } catch (e) {
       console.error(e);
     }
@@ -280,10 +253,7 @@ class apiRequest {
 
   emailPostOne = async (data) => {
     try {
-      const res = await reqPlaner.post(
-        "notifications_user_email/add_message",
-        data
-      );
+      const res = await reqPlaner.post("notifications_user_email/add_message", data);
       return res.data.response;
     } catch (e) {
       console.error(e);
@@ -292,12 +262,8 @@ class apiRequest {
 
   emailPostPlaner = async (data) => {
     try {
-      const res = await reqPlaner.post(
-        "notifications_task_scheduler/post_scheduler_email",
-        data
-      );
-      console.log(res);
-      return res.data.success;
+      const res = await reqPlaner.post("notifications_task_scheduler/post_scheduler_email", data);
+            return res.data.success;
     } catch (e) {
       console.error(e);
     }
@@ -316,11 +282,8 @@ class apiRequest {
 
   removeEmailPlaner = async (id) => {
     try {
-      const res = await reqPlaner.delete(
-        `notifications_task_scheduler/delete_scheduler_tasks?message_id=${id}`
-      );
-      console.log("removeEmailPlaner", res);
-      return res.data;
+      const res = await reqPlaner.delete(`notifications_task_scheduler/delete_scheduler_tasks?message_id=${id}`);
+            return res.data;
     } catch (e) {
       console.error(e);
     }

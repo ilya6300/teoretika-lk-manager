@@ -19,13 +19,10 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
     if (html !== "new") {
       try {
         const handlerHTML = async () => {
-          // const string = await objID(html.string_data);
           const popup = await objID(html.data);
           const script = await objID(html.script_data);
-          // setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
           setHtmlPopup(popup);
           setHtmlScript(script);
-          // console.log(string, popup, script);
           refPopup.current.innerHTML = popup;
         };
         handlerHTML();
@@ -55,27 +52,17 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
     setHtmlPopup(e.target.value);
     refPopup.current.innerHTML = e.target.value;
   };
-  // const changeHTMLString = (e) => {
-  //   setHtmlString(e.target.value);
-  // };
   const changeScript = (e) => {
     setHtmlScript(e.target.value);
   };
 
   const playScript = () => {
     const checkTag = /<script>/.test(htmlScript);
-    console.log(refScript);
     if (checkTag) {
-      console.log(1, htmlScript);
-      const scriptEl = document
-        .createRange()
-        .createContextualFragment(htmlScript);
+      const scriptEl = document.createRange().createContextualFragment(htmlScript);
       refScript.current.append(scriptEl);
     } else {
-      console.log(2);
-      const scriptEl = document
-        .createRange()
-        .createContextualFragment(`<script>${htmlScript}</script>`);
+      const scriptEl = document.createRange().createContextualFragment(`<script>${htmlScript}</script>`);
       refScript.current.append(scriptEl);
     }
   };
@@ -90,9 +77,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
         // ),
         script_data: /<script>/.test(htmlScript)
           ? window.btoa(unescape(encodeURIComponent(htmlScript)))
-          : window.btoa(
-              unescape(encodeURIComponent(`<script>${htmlScript}</script>`))
-            ),
+          : window.btoa(unescape(encodeURIComponent(`<script>${htmlScript}</script>`))),
       });
     } else {
       if (htmlName === "") {
@@ -109,9 +94,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
         // ),
         script_data: /<script>/.test(htmlScript)
           ? window.btoa(unescape(encodeURIComponent(htmlScript)))
-          : window.btoa(
-              unescape(encodeURIComponent(`<script>${htmlScript}</script>`))
-            ),
+          : window.btoa(unescape(encodeURIComponent(`<script>${htmlScript}</script>`))),
       });
     }
     apiRequest.getHTMLTemplatePopup();
@@ -127,12 +110,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
         {edit ? (
           <div className="btn_edit_container">
             <span>Введите новое название шаблона</span>
-            <input
-              className="inpt_popup_edit_name"
-              value={htmlName}
-              onChange={(e) => setHtmlName(e.target.value)}
-              placeholder="Название шаблона"
-            />
+            <input className="inpt_popup_edit_name" value={htmlName} onChange={(e) => setHtmlName(e.target.value)} placeholder="Название шаблона" />
           </div>
         ) : (
           <span>Шаблон popup: {htmlName}</span>
@@ -165,8 +143,7 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
           </div> */}
           <div className="item_popup_container">
             <div className="item_popup_name">
-              Всплывающее окно. Введите html и css код, который будет отображать
-              всплывающее окошко. Внимание! Код указывайте по правилам html
+              Всплывающее окно. Введите html и css код, который будет отображать всплывающее окошко. Внимание! Код указывайте по правилам html
               разметки - {"<div>... ваш код ... </div>"}
             </div>
             {edit ? (
@@ -195,18 +172,14 @@ export const CardPopup = ({ html, setHtmlFlagViewer }) => {
 </div>`}
               />
             ) : (
-              <div
-                className="textarea_popup_container"
-                style={{ border: "none" }}
-              >
+              <div className="textarea_popup_container" style={{ border: "none" }}>
                 {htmlPopup}
               </div>
             )}
           </div>
           <div className="item_popup_container">
             <div className="item_popup_name">
-              Скрипт. Введите код на JavaScript который будет срабатывать на
-              сайте. Внимание! Не указывайте открывающийся и закрывающийся тэг{" "}
+              Скрипт. Введите код на JavaScript который будет срабатывать на сайте. Внимание! Не указывайте открывающийся и закрывающийся тэг{" "}
               {"<script> и </script>"}. Он будет передан автоматически.
             </div>
             <div className="textarea_script_popup_container">
@@ -236,39 +209,20 @@ teorikaBtn1.onclick = () => {
 Но не забудьте раскомментировать обратно!"
                 />
               ) : (
-                <div
-                  className="textarea_script_popup"
-                  style={{ border: "none" }}
-                >
+                <div className="textarea_script_popup" style={{ border: "none" }}>
                   {htmlScript.replace(/<script>|<\/script>/gm, "")}
                 </div>
               )}
 
-              <button
-                className="btn_icon_play_script_container"
-                onClick={playScript}
-              >
-                <img
-                  className="btn_icon_play_script"
-                  src={iconPlay}
-                  alt="Воспроизвести скрипт"
-                />
+              <button className="btn_icon_play_script_container" onClick={playScript}>
+                <img className="btn_icon_play_script" src={iconPlay} alt="Воспроизвести скрипт" />
               </button>
             </div>
           </div>
         </div>
-        <div
-          ref={refPreview}
-          className="preview_email container_block_50 emulator_site"
-        >
-          <div
-            ref={refPopup}
-            className="preview_email_popup popup_container"
-          ></div>
-          <div
-            ref={refScript}
-            className="preview_email_script popup_container"
-          ></div>
+        <div ref={refPreview} className="preview_email container_block_50 emulator_site">
+          <div ref={refPopup} className="preview_email_popup popup_container"></div>
+          <div ref={refScript} className="preview_email_script popup_container"></div>
           {/* <LidBotClone string={htmlString} /> */}
         </div>
       </div>

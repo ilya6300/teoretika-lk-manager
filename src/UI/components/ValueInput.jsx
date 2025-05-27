@@ -11,7 +11,6 @@ export const ValueInput = ({ valueName, name, nameRus }) => {
   const closedBlockTextPosition = (e) => {
     if (refValue.current && !refValue.current.contains(e.target)) {
       setValue(defaultValue);
-      console.log(defaultValue);
       setEditValue(false);
     }
   };
@@ -21,13 +20,11 @@ export const ValueInput = ({ valueName, name, nameRus }) => {
   }, []);
 
   const openEdit = () => {
-    console.log(value);
     defaultValue = value;
     setEditValue(true);
   };
 
   const apiFunc = () => {
-    console.log(name, value);
     apiRequest.patchDateProfile({ [`${name}`]: value });
     setEditValue(false);
   };
@@ -48,12 +45,7 @@ export const ValueInput = ({ valueName, name, nameRus }) => {
         <span className="container_value_name">{nameRus}:</span>
         <div className="container_input">
           {/* <label className="input-wrapper"> */}
-          <input
-            type="text"
-            className="container_value-inpt"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          <input type="text" className="container_value-inpt" value={value} onChange={(e) => setValue(e.target.value)} />
           <span className="container_value-inpt_span hidden">{value}</span>
           {/* </label> */}
           <button className="container_value-btn" onClick={apiFunc}>

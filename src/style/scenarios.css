@@ -111,6 +111,7 @@
 }
 .filter_inpt_container {
   display: flex;
+  position: relative;
   gap: 2px;
 }
 .or_btn {
@@ -276,4 +277,35 @@
 .settings_event_row_name {
   color: var(--my_black);
   margin-bottom: 3px;
+}
+.current_date_btn {
+  cursor: pointer;
+  display: flex;
+  border: 1px solid var(--my_lazur_v2);
+  align-items: center;
+  justify-content: center;
+  padding: 7px 3px;
+  border-radius: 6px;
+  background: #f4f4f4;
+  position: absolute;
+  right: -75px;
+}
+.current_date_container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn_view_selected_element {
+  border: 1px solid var(--my_lazur_v2);
+  border-radius: 4px;
+  padding: 4px 5px;
+  cursor: pointer;
+  margin-left: 100px;
+  transition: all 0.3s ease-in;
+}
+.btn_view_selected_element:hover {
+  background: var(--my_lazur_v2);
+  color: white;
 }

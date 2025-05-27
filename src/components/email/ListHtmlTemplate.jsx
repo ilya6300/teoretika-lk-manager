@@ -16,11 +16,9 @@ export const ListHtmlTemplate = observer(() => {
   const [htmlFlagViewer, setHtmlFlagViewer] = useState(false);
 
   const removeHTML = async (e) => {
-    console.log(e, "remove");
     apiRequest.removeHTMLTemplate(e);
   };
   const viewHTML = async (e) => {
-    console.log(e, "view");
     setHtml(e);
     setHtmlFlagViewer(true);
   };

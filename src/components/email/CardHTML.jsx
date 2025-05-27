@@ -8,7 +8,6 @@ import { PageComponent } from "../PageComponent";
 export const CardHTML = ({ html, setHtmlFlagViewer }) => {
   useLayoutEffect(() => {
     const decode = decodeURIComponent(escape(window.atob(html.data)));
-    console.log(decode);
     refPreview.current.innerHTML = decode;
     setHtmlFile(decode);
   }, []);
@@ -35,7 +34,6 @@ export const CardHTML = ({ html, setHtmlFlagViewer }) => {
   };
 
   const changeHtml = (e) => {
-    console.log(e.target.value);
     setHtmlFile(e.target.value);
     refPreview.current.innerHTML = e.target.value;
   };

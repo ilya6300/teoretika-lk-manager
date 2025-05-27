@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, {  useState } from "react";
 import { PageComponent } from "../components/PageComponent";
 import stateClient from "../service/state/state.client";
 import { BtnBackHeaderPage } from "../UI/components/BtnBackHeaderPage";
@@ -38,7 +38,6 @@ export const ClientCard = ({ setClientCard }) => {
   };
 
   const HandlerString = (props) => {
-    console.log("props", props);
     try {
       return (
         <ul className="mb25">
@@ -58,9 +57,6 @@ export const ClientCard = ({ setClientCard }) => {
     }
   };
 
-  useLayoutEffect(() => {
-    console.log(stateClient.client);
-  }, []);
   return (
     <PageComponent title="Карточка клиента">
       <BtnBackHeaderPage

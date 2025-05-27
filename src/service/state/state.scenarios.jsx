@@ -85,13 +85,11 @@ class stateScenarios {
     } catch (e) {
       console.error(e);
     } finally {
-      console.log("cutData");
       await apiRequest.getFilter();
     }
   };
 
   scenariosElementremove = async (len) => {
-    console.log("scenariosElementremove");
     this.offlineScenariosInterface.length = len;
     await apiRequest.getFilter();
   };
@@ -104,77 +102,58 @@ class stateScenarios {
     this.join_data = this.join_data.filter((j) => j !== current);
   };
 
+  updateValueFilterCurrentDate = async (id, name, interval, currentDate) => {
+    try {
+      const rowFilterID = this.offlineScenariosInterface[id].filter.find((row) => row.name === name);
+      if (rowFilterID) {
+        this.filter_data[`${this.offlineScenariosInterface[id].current}`] = {
+          ...this.filter_data[`${this.offlineScenariosInterface[id].current}`],
+          [`${rowFilterID.name}`]: ["current_data", ">=", interval],
+        };
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   updateValueFilter = async (id, name, value, condition, f) => {
     try {
       if (!value) return;
 
-      const rowFilterID = this.offlineScenariosInterface[id].filter.find(
-        (row) => row.name === name
-      );
-      console.log("======= updateValueFilter =======");
-      if (rowFilterID && rowFilterID.name !== "updated_at") {
+      const rowFilterID = this.offlineScenariosInterface[id].filter.find((row) => row.name === name);
+      if (rowFilterID && rowFilterID.name) {
         rowFilterID.value = value;
         if (!f.or) {
           // Если И
           if (rowFilterID.value !== "") {
-            this.filter_data[`${this.offlineScenariosInterface[id].current}`] =
-              {
-                ...this.filter_data[
-                  `${this.offlineScenariosInterface[id].current}`
-                ],
-                [`${rowFilterID.name}`]: [
-                  condition !== "like"
-                    ? rowFilterID.value
-                    : `%${rowFilterID.value}%`,
-                  condition,
-                ],
-              };
+            this.filter_data[`${this.offlineScenariosInterface[id].current}`] = {
+              ...this.filter_data[`${this.offlineScenariosInterface[id].current}`],
+              [`${rowFilterID.name}`]: [condition !== "like" ? rowFilterID.value : `%${rowFilterID.value}%`, condition],
+            };
           }
         } else {
           // Если ИЛИ
           if (rowFilterID.value !== "") {
             const newValue = rowFilterID.value.split(",");
-            const likeNewValue = newValue.map(
-              (v) => `%${v.replace(/ /g, "")}%`
-            );
+            const likeNewValue = newValue.map((v) => `%${v.replace(/ /g, "")}%`);
             // const modifiedArray = array.map(item => `%${item}%`);
-            console.log(likeNewValue, "newValue");
             // const or = rowFilterID.value.replace(/,\s/gm, ",");
-            // console.log("orrrrrrr", or);
-            this.filter_data[`${this.offlineScenariosInterface[id].current}`] =
-              {
-                ...this.filter_data[
-                  `${this.offlineScenariosInterface[id].current}`
-                ],
-                [`${rowFilterID.name}`]:
-                  condition !== "like" ? newValue : likeNewValue,
-                condition,
-                // [
-                //     condition !== "like"
-                //     ? rowFilterID.value
-                //     : `%${rowFilterID.value}%`,
-                //   condition,
-                // ]
-              };
+            this.filter_data[`${this.offlineScenariosInterface[id].current}`] = {
+              ...this.filter_data[`${this.offlineScenariosInterface[id].current}`],
+              [`${rowFilterID.name}`]: condition !== "like" ? newValue : likeNewValue,
+              condition,
+             };
           }
         }
-        // console.log("rowFilterID", rowFilterID, rowFilterID.filter);
         if (
           rowFilterID.value === "" &&
           JSON.stringify(this.filter_data) !== "{}" &&
           this.filter_data[`${this.offlineScenariosInterface[id].current}`]
         ) {
-          delete this.filter_data[
-            `${this.offlineScenariosInterface[id].current}`
-          ][`${rowFilterID.name}`];
+          delete this.filter_data[`${this.offlineScenariosInterface[id].current}`][`${rowFilterID.name}`];
         }
       }
-      if (rowFilterID && rowFilterID.name === "updated_at") {
-        this.filter_data[`${this.offlineScenariosInterface[id].current}`] = {
-          ...this.filter_data[`${this.offlineScenariosInterface[id].current}`],
-          updated_at: ["current_data", ">=", 1],
-        };
-      }
+
       await apiRequest.getFilter();
     } catch (e) {
       console.error(e);
@@ -182,18 +161,13 @@ class stateScenarios {
   };
 
   updateSwitchFilter = async (id, name) => {
-    console.log("updateSwitchFilter");
     try {
-      const rowFilterID = this.offlineScenariosInterface[id].filter.find(
-        (row) => row.name === name
-      );
+      const rowFilterID = this.offlineScenariosInterface[id].filter.find((row) => row.name === name);
       if (rowFilterID) {
         rowFilterID.filter = !rowFilterID.filter;
       }
       if (!rowFilterID.filter && JSON.stringify(this.filter_data) !== "{}") {
-        delete this.filter_data[
-          `${this.offlineScenariosInterface[id].current}`
-        ][`${rowFilterID.name}`];
+        delete this.filter_data[`${this.offlineScenariosInterface[id].current}`][`${rowFilterID.name}`];
         await apiRequest.getFilter();
       }
     } catch (e) {
@@ -204,7 +178,6 @@ class stateScenarios {
   updateOrElementFilter = async (f) => {
     f.or = !f.or;
     setTimeout(async () => {
-      console.log("updateOrElementFilter");
       await apiRequest.getFilter();
     }, 200);
   };

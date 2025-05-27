@@ -1,10 +1,7 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React from "react";
 
 const SelectedScenariosName = observer(({ data, onChange, firstName, cls }) => {
-  useEffect(() => {
-    console.log("Selected", data);
-  }, []);
   return (
     <select className={cls} onChange={onChange}>
       <option defaultValue hidden>

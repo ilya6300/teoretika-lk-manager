@@ -56,7 +56,6 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
     getPlaner();
   }, []);
   const removeScenarios = async (e) => {
-    console.log(e);
     const remove = await apiRequest.removeOnlineScenarios(e.id);
     if (remove) {
       await apiRequest.getOnlineScenarios();
@@ -83,10 +82,8 @@ const ScenariosOffline = observer(({ setNewScenariosOffline, goCard }) => {
     ];
 
     const switchFilter = async (e) => {
-      // console.log(e);
       const typeID = typesFilter.find((t) => t.id === e.id);
       if (typeID) {
-        console.log(typeID);
         stateScenarios.setParametrTypeParametr(e.id, !typeID.filter);
         typeID.filter = !typeID.filter;
       }

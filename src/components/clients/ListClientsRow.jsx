@@ -23,7 +23,6 @@ export const ListClientsRow = observer(({ clientCard, setClientCard }) => {
   }, [appState.collection]);
 
   const openClientCard = (c) => {
-    console.log(c);
     stateClient.setParameters("client", c);
     setClientCard(true);
   };

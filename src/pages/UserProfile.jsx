@@ -29,7 +29,6 @@ export const UserProfile = () => {
 
   const getProfile = async () => {
     const res = await apiRequest.getProfile();
-    console.log(res);
     setProfile(res);
   };
 

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { DashboardList } from "../components/dashboard/DashboardList";
 import { PageComponent } from "../components/PageComponent";
 import { useLocation } from "react-router";
@@ -8,9 +8,6 @@ import { ListUsersRow } from "../components/clients/ListUsersRow";
 export const Users = observer(() => {
   const [clientCard, setClientCard] = useState(false);
   const location = useLocation();
-  useLayoutEffect(() => {
-    console.log(location.pathname);
-  }, []);
   return (
     <PageComponent>
       {!clientCard ? (

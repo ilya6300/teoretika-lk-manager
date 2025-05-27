@@ -1,7 +1,6 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import apiRequest from "../../service/api/api.request";
-import iconPlay from "../../images/icons/play.png";
 import { observer } from "mobx-react-lite";
 import appState from "../../service/state/app.state";
 
@@ -21,13 +20,9 @@ const ItemScenarios = observer((props) => {
       (c) => c.id_online_scripts === props.s.id
     );
     if (countID) {
-      // console.log(countID);
       setCount(countID.count_event);
     }
   }, [appState.counter_scenarios]);
-  useLayoutEffect(() => {
-    console.log("ItemScenarios", props.s);
-  }, []);
   return (
     <li className="tr_clients_row ">
       <Link

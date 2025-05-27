@@ -18,12 +18,10 @@ export const ListUsersRow = observer(({ clientCard, setClientCard }) => {
   }, []);
   useEffect(() => {
     const data = appState.collection.data.find((d) => d.link === "users");
-    console.log(data);
     return setUsers(data.data);
   }, [appState.collection]);
 
   const openClientCard = (c) => {
-    console.log(c);
     stateClient.setParameters("client", c);
     setClientCard(true);
   };

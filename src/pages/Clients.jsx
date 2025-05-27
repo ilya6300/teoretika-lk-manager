@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { DashboardList } from "../components/dashboard/DashboardList";
 import { PageComponent } from "../components/PageComponent";
 import { ListClientsRow } from "../components/clients/ListClientsRow";
@@ -8,9 +8,6 @@ import { observer } from "mobx-react-lite";
 export const Clients = observer(() => {
   const [clientCard, setClientCard] = useState(false);
   const location = useLocation();
-  useLayoutEffect(() => {
-    console.log(location.pathname);
-  }, []);
   return (
     <PageComponent>
       {!clientCard ? (

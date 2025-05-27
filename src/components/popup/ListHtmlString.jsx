@@ -11,7 +11,6 @@ export const ListHtmlString = observer(({ data }) => {
   const [htmlFlagViewer, setHtmlFlagViewer] = useState(false);
 
   const viewHTML = async (e) => {
-    console.log(e, "view");
     setHtml(e);
     setHtmlFlagViewer(true);
   };

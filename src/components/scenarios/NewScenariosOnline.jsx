@@ -62,7 +62,6 @@ const NewScenariosOnline = observer(({ setNewScenariosOnline }) => {
   };
 
   const saveScenarios = async () => {
-    console.log(objReques);
     if (objReques.type === "") {
       return alert("Не выбран тип сценария");
     }
@@ -94,21 +93,18 @@ const NewScenariosOnline = observer(({ setNewScenariosOnline }) => {
       const res = await apiRequest.getHTMLTemplatePopup();
       setObjReques(objReques, ...(objReques.event = value));
       if (res) {
-        console.log(res);
         setTypeEvent(res);
       }
     }
   };
 
   const onChangeEventID = async (e) => {
-    console.log(e, objReques);
     const resID =
       typeEventString === "popup"
         ? appState.templatesHTMLPopup.find((p) => p.name === e.target.value)
         : appState.templatesHTMLString.find((p) => p.name === e.target.value);
     if (resID) {
       setObjReques(objReques, ...(objReques.id_event = String(resID.id)));
-      console.log(resID);
     }
   };
 

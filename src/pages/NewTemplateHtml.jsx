@@ -23,10 +23,8 @@ export const NewTemplateHtml = () => {
       file = e[0];
     } else {
       file = e.target.files[0];
-      // file = e.ta;
     }
     // setHtml(file);
-    console.log(e[0]);
     if (file.type !== "text/plain" && file.type !== "text/html") {
       refFile.current.value = "";
       setFileUpload(false);
@@ -39,7 +37,6 @@ export const NewTemplateHtml = () => {
 
     const reader = new FileReader();
     reader.onload = () => {
-      // console.log(reader.result);
       refPreview.current.innerHTML = reader.result;
       setHtml(reader.result);
     };
@@ -63,7 +60,6 @@ export const NewTemplateHtml = () => {
     e.preventDefault();
     refFile.current.files = e.dataTransfer.files;
     selectFile(e.dataTransfer.files);
-    console.log(clsDrop);
     setClsDrop("grey_text_body drop_html_container");
   };
 
@@ -83,7 +79,6 @@ export const NewTemplateHtml = () => {
   };
 
   const saveTemplate = async () => {
-    console.log(html);
     if (name.length < 3) {
       return alert("Слишком короткое название");
     }

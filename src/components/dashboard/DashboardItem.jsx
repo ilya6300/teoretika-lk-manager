@@ -1,12 +1,10 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router";
 
 export const DashboardItem = observer((props) => {
   const location = useLocation();
-  useEffect(() => {
-    console.log(location, props.d);
-  }, []);
+
 
   return (
     <Link

@@ -16,7 +16,6 @@ const ScenariosOnline = observer(({ setNewScenariosOnline }) => {
     getScenarios();
   }, []);
   const goCard = (e) => {
-    // console.log(e);
     setCard(e);
     setCardFlag(true);
   };

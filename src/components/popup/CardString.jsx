@@ -14,14 +14,12 @@ export const CardString = ({ html, setHtmlFlagViewer }) => {
   const refPopup = useRef(null);
   const refScript = useRef(null);
   useLayoutEffect(() => {
-    console.log(html);
     if (html !== "new") {
       // const decode = JSON.parse(
       //   decodeURIComponent(escape(window.atob(html.data)))
       // );
       const handlerHTML = async () => {
         const string = await objID(html.string_data);
-        console.log(string);
         setHtmlString(string.replace(/<div>|<\/div>/gm, ""));
         setHtmlName(html.name);
       };
@@ -33,7 +31,6 @@ export const CardString = ({ html, setHtmlFlagViewer }) => {
   }, []);
 
   const objID = async (obj) => {
-    console.log(html.string_data);
     return decodeURIComponent(escape(window.atob(obj)));
   };
 
